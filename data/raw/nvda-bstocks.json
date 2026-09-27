@@ -1,0 +1,48 @@
+{
+  "_metadata": {
+    "source": "GeckoTerminal DEX Indexer (BNB Smart Chain)",
+    "retrieved_at": "2026-09-27T23:28:08+01:00",
+    "endpoint": "https://api.geckoterminal.com/api/v2/networks/bsc/tokens/0x02fca66c1d1afb4e2a7884261eb00f63598a7436",
+    "auth_required": false,
+    "description": "Real sanitized on-chain token response for NVIDIA Corp (bStocks Tokenized Stock) - NVDAB on BNB Smart Chain."
+  },
+  "data": {
+    "id": "bsc_0x02fca66c1d1afb4e2a7884261eb00f63598a7436",
+    "type": "token",
+    "attributes": {
+      "address": "0x02fca66c1d1afb4e2a7884261eb00f63598a7436",
+      "name": "NVIDIA Corp",
+      "symbol": "NVDAB",
+      "decimals": 18,
+      "image_url": "https://coin-images.coingecko.com/coins/images/102173743/large/nvidia-tokenized-bStocks-nvdab.png?1781196662",
+      "coingecko_coin_id": "nvidia-bstocks",
+      "total_supply": "148337894698670000000000.0",
+      "normalized_total_supply": "148337.89469867",
+      "price_usd": "223.9252166578",
+      "fdv_usd": "33216594.706315",
+      "total_reserve_in_usd": "3550969.054021706443624483539186754405341341431884095484627083405766",
+      "volume_usd": {
+        "h24": "597184.907107279"
+      },
+      "market_cap_usd": "33214849.5091198"
+    },
+    "relationships": {
+      "top_pools": {
+        "data": [
+          {
+            "id": "bsc_0x8fb4243b553ac29ba088acf00b9b7da24bd6690c",
+            "type": "pool"
+          },
+          {
+            "id": "bsc_0xdd9d5164ccbc57be377a964fc064135b03d06177",
+            "type": "pool"
+          },
+          {
+            "id": "bsc_0x18d52270d09ab842c87acd45977dcf64a82fa4ad",
+            "type": "pool"
+          }
+        ]
+      }
+    }
+  }
+}

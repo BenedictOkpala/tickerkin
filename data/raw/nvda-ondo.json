@@ -1,0 +1,48 @@
+{
+  "_metadata": {
+    "source": "GeckoTerminal DEX Indexer (BNB Smart Chain)",
+    "retrieved_at": "2026-09-27T23:27:54+01:00",
+    "endpoint": "https://api.geckoterminal.com/api/v2/networks/bsc/tokens/0xa9ee28c80f960b889dfbd1902055218cba016f75",
+    "auth_required": false,
+    "description": "Real sanitized on-chain token response for NVIDIA (Ondo Tokenized) - NVDAon on BNB Smart Chain."
+  },
+  "data": {
+    "id": "bsc_0xa9ee28c80f960b889dfbd1902055218cba016f75",
+    "type": "token",
+    "attributes": {
+      "address": "0xa9ee28c80f960b889dfbd1902055218cba016f75",
+      "name": "NVIDIA (Ondo Tokenized)",
+      "symbol": "NVDAon",
+      "decimals": 18,
+      "image_url": "https://coin-images.coingecko.com/coins/images/68623/large/nvdaon_160x160.png?1756130268",
+      "coingecko_coin_id": "nvidia-ondo-tokenized-stock",
+      "total_supply": "71967704577741115781222.0",
+      "normalized_total_supply": "71967.7045777411",
+      "price_usd": "224.4999400543",
+      "fdv_usd": "16156743.8928829",
+      "total_reserve_in_usd": "14007.363038514113487002986225492415224521922697768081244465403386",
+      "volume_usd": {
+        "h24": "4512.18354851766"
+      },
+      "market_cap_usd": "38110910.1951146"
+    },
+    "relationships": {
+      "top_pools": {
+        "data": [
+          {
+            "id": "bsc_0xb90bdbfbdffd4af5a636b5805539edeafb969308",
+            "type": "pool"
+          },
+          {
+            "id": "bsc_0x883fbe44efccc45e79756c984cb1e3428bef44bb4363ed1a92196def784a6d1a",
+            "type": "pool"
+          },
+          {
+            "id": "bsc_0xe87cc61d3ad2c9f07a029b7f4501cb3f21e431ca2ab863b9615619f37a1c65f5",
+            "type": "pool"
+          }
+        ]
+      }
+    }
+  }
+}

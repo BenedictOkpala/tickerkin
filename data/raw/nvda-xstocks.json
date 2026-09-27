@@ -1,0 +1,35 @@
+{
+  "_metadata": {
+    "source": "GeckoTerminal DEX Indexer & Multi-chain Metadata (BNB Smart Chain)",
+    "retrieved_at": "2026-09-27T23:29:25+01:00",
+    "endpoint": "https://api.geckoterminal.com/api/v2/networks/bsc/tokens/0xc845b2894dbddd03858fd2d643b4ef725fe0849d",
+    "auth_required": false,
+    "description": "Real sanitized on-chain token response for NVIDIA xStock (NVDAx) on BNB Smart Chain."
+  },
+  "data": {
+    "id": "bsc_0xc845b2894dbddd03858fd2d643b4ef725fe0849d",
+    "type": "token",
+    "attributes": {
+      "address": "0xc845b2894dbddd03858fd2d643b4ef725fe0849d",
+      "name": "NVIDIA xStock",
+      "symbol": "nvdax",
+      "decimals": 18,
+      "image_url": "https://coin-images.coingecko.com/coins/images/55633/large/Ticker_NVDA__Company_Name_NVIDIA_Corp__size_200x200_2x.png?1746862704",
+      "coingecko_coin_id": "nvidia-xstock",
+      "total_supply": "41193603800530679932655.0",
+      "normalized_total_supply": "41193.6038005307",
+      "price_usd": null,
+      "fdv_usd": null,
+      "total_reserve_in_usd": "295.562325197495146128832103208",
+      "volume_usd": {
+        "h24": "0.0"
+      },
+      "market_cap_usd": null
+    },
+    "relationships": {
+      "top_pools": {
+        "data": []
+      }
+    }
+  }
+}

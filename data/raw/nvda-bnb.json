@@ -1,0 +1,80 @@
+{
+  "_metadata": {
+    "source": "Pyth Network Price Feeds API (Ecosystem Oracle for BNB Smart Chain Equities)",
+    "retrieved_at": "2026-09-27T23:30:14+01:00",
+    "endpoint": "https://hermes.pyth.network/v2/price_feeds?query=NVDA",
+    "auth_required": false,
+    "description": "Real sanitized query response for NVIDIA equity & 24/7 tokenized feed identifiers used on BNB Smart Chain."
+  },
+  "data": [
+    {
+      "id": "b1073854ed24cbc755dc527418f52b7d271f6cc967bbf8d8129112b18860a593",
+      "market_hours": {
+        "is_open": false,
+        "next_open": 1790602200,
+        "next_close": 1790625600
+      },
+      "attributes": {
+        "asset_type": "Equity",
+        "description": "NVIDIA CORP / US DOLLAR",
+        "display_symbol": "NVDA",
+        "nasdaq_symbol": "NVDA",
+        "quote_currency": "USD",
+        "schedule": "America/New_York;0930-1600,0930-1600,0930-1600,0930-1600,0930-1600,C,C;0907/C,1126/C,1127/0930-1300,1224/0930-1300,1225/C,0101/C,0118/C,0215/C,0326/C,0531/C,0618/C,0705/C",
+        "symbol": "Equity.US.NVDA/USD",
+        "min_channel": "fixed_rate@50ms"
+      }
+    },
+    {
+      "id": "a470c4ac46f44b547b2cba52338f311fb642b79375ce5f0cfd5cb5b99227b852",
+      "market_hours": {
+        "is_open": false,
+        "next_open": 1790602200,
+        "next_close": 1790625600
+      },
+      "attributes": {
+        "asset_type": "Equity",
+        "description": "PYTH PRICE IN USD FOR NVDA 24/7",
+        "display_symbol": "NVDA",
+        "quote_currency": "USD",
+        "schedule": "America/New_York;0930-1600,0930-1600,0930-1600,0930-1600,0930-1600,C,C;1126/C,1127/0930-1300,1224/0930-1300,1225/C,0101/C,0118/C,0215/C,0326/C,0531/C,0618/C,0705/C",
+        "symbol": "Equity.Index.NVDA/USD",
+        "min_channel": "fixed_rate@50ms"
+      }
+    },
+    {
+      "id": "207ddea2a443d30b7e13a7c88a9e3f106765deb97049afc65a18cede50fffc82",
+      "market_hours": {
+        "is_open": true,
+        "next_open": null,
+        "next_close": null
+      },
+      "attributes": {
+        "asset_type": "Crypto",
+        "description": "NVIDIA ONDO TOKENIZED STOCK / US DOLLAR",
+        "display_symbol": "NVDAONUSD",
+        "quote_currency": "USD",
+        "schedule": "America/New_York;O,O,O,O,O,O,O;",
+        "symbol": "Crypto.NVDAON/USD",
+        "min_channel": "fixed_rate@200ms"
+      }
+    },
+    {
+      "id": "4244d07890e4610f46bbde67de8f43a4bf8b569eebe904f136b469f148503b7f",
+      "market_hours": {
+        "is_open": true,
+        "next_open": null,
+        "next_close": null
+      },
+      "attributes": {
+        "asset_type": "Crypto",
+        "description": "NVIDIA XSTOCK / US DOLLAR",
+        "display_symbol": "NVDAXUSD",
+        "quote_currency": "USD",
+        "schedule": "America/New_York;O,O,O,O,O,O,O;",
+        "symbol": "Crypto.NVDAX/USD",
+        "min_channel": "fixed_rate@200ms"
+      }
+    }
+  ]
+}
