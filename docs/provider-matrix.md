@@ -1,6 +1,12 @@
-# Provider Feature & Integration Matrix
+# Provider Feature & Integration Matrix (Audited)
 
-This matrix tracks tokenized stock providers on **BNB Smart Chain (BSC)**, their technical integration capabilities, oracle standards, contract resolutions, and data availability.
+This matrix tracks tokenized stock providers on **BNB Smart Chain (BSC)**, with explicit evidence classification for all claims:
+- **`[FIRST-PARTY]`**: Verified via official provider documentation, portal, or official announcements.
+- **`[ON-CHAIN]`**: Verified via direct EVM `eth_call` queries on BNB Smart Chain mainnet RPC nodes.
+- **`[ORACLE]`**: Verified via Pyth Network oracle contracts and Hermes API feeds.
+- **`[THIRD-PARTY]`**: Sourced from DEX indexers (GeckoTerminal, DexScreener, CoinGecko) without first-party cryptographic confirmation.
+- **`[INFERRED]`**: Logical deductions based on verified adjacent behaviors.
+- **`[UNKNOWN]`**: Unverified or unconfirmed.
 
 ---
 
@@ -8,43 +14,42 @@ This matrix tracks tokenized stock providers on **BNB Smart Chain (BSC)**, their
 
 | Category | BNB Chain Ecosystem / Oracles | Ondo Finance | xStocks (Backed Finance) | bStocks |
 |---|---|---|---|---|
-| **Official Documentation** | [BNB Chain Docs](https://docs.bnbchain.org/)<br>[BNB Hack Tokenized Stocks](https://www.bnbchain.org/en/blog/bnb-hack-tokenized-stocks-edition) | [Ondo Docs](https://docs.ondo.finance/)<br>[Ondo Global Markets](https://ondo.finance/) | [Backed Finance Docs](https://docs.backed.fi/)<br>[xStocks Portal](https://xstocks.fi/) | [Binance bStocks Overview](https://www.binance.com/)<br>[BNB Chain RWA Hub](https://www.bnbchain.org/) |
-| **API Documentation** | [Pyth Hermes API](https://docs.pyth.network/price-feeds/api-reference/hermes-api)<br>[BscScan API](https://docs.bscscan.com/) | [Ondo API / Portal](https://docs.ondo.finance/) (Restricted/Institutional for mint/redeem) | [Backed Public / Developer Docs](https://docs.backed.fi/) | Binance Broker / Web3 aggregated hackathon endpoint |
-| **Relevant SDK** | [BNB Agent SDK](https://github.com/bnb-chain)<br>[@pythnetwork/pyth-evm-js](https://www.npmjs.com/package/@pythnetwork/pyth-evm-js) | Ethers / Viem standard BEP-20 integration | Ethers / Viem standard BEP-20 integration | Ethers / Viem standard BEP-20 integration |
-| **Smart Contract Standard** | BEP-20 / EVM standard contracts | BEP-20 (Upgradable proxy, 18 decimals) | BEP-20 (ERC-20 tracker certificate, 18 decimals) | BEP-20 (18 decimals) |
-| **Authentication Requirements** | Public RPC & Pyth `price_feeds` are public (no auth). Some enterprise RPCs / BscScan Pro require API keys. | Public DEX liquidity / on-chain reads are open. Direct issuance/redemption requires KYC & institutional credentials. | Public DEX reads / metadata are open. Direct issuance requires accredited KYC on Backed Assets. | Public DEX reads on BSC are open. Binance platform conversion requires authenticated KYC account. |
-| **Supported Networks** | BNB Smart Chain (BSC Mainnet & Testnet), opBNB | BNB Smart Chain, Ethereum, Solana, HyperEVM | BNB Smart Chain, Solana, Ethereum, Arbitrum, Base, Polygon, Avalanche, TON, Tron | BNB Smart Chain (BSC Mainnet) |
-| **BNB Smart Chain Support** | Native L1 host chain | Active (deployed & traded on BSC DEXes) | Active (multi-chain deployment on BSC) | Native to BNB Smart Chain |
-| **Oracle Integration** | Pyth Network, Chainlink, Binance Oracle | Pyth / Chainlink / Ondo price feeds | Pyth Network redemption rate feeds (`.RR`), Chainlink | Pyth / DEX TWAP / Binance internal pricing |
+| **Legal Issuer / Platform** | BNB Smart Chain / Pyth Network `[FIRST-PARTY]` | Ondo Global Markets / Ondo Finance `[FIRST-PARTY]` | Backed Assets (JE) Limited / Kraken `[FIRST-PARTY]` | BTech Holdings Limited / Binance Affiliate `[FIRST-PARTY]` |
+| **Official Documentation** | [BNB Chain Docs](https://docs.bnbchain.org/) `[FIRST-PARTY]`<br>[Pyth Docs](https://docs.pyth.network/) `[FIRST-PARTY]` | [Ondo Docs](https://docs.ondo.finance/) `[FIRST-PARTY]`<br>[Ondo Corporate Actions](https://docs.ondo.finance) `[FIRST-PARTY]` | [Backed Finance Docs](https://docs.backed.fi/) `[FIRST-PARTY]`<br>[xStocks Portal](https://xstocks.fi/) `[FIRST-PARTY]` | [Binance Tokenized Securities Docs](https://www.binance.com/) `[FIRST-PARTY]` |
+| **Product Line Status** | Active Ecosystem Oracles & L1 `[FIRST-PARTY]` | Active OGM Tokenized Stocks `[FIRST-PARTY]` | Migrating from legacy "bTokens" (e.g. `bNVDA`) to "xStocks" (e.g. `NVDAx`) `[FIRST-PARTY]` | Active BEP-20 bStocks `[FIRST-PARTY]` |
+| **Smart Contract Standard** | EVM Core / Oracles `[FIRST-PARTY]` | BEP-20 (18 decimals) `[ON-CHAIN]` | BEP-20 (18 decimals) `[ON-CHAIN]` | BEP-20 (18 decimals) `[ON-CHAIN]` |
+| **Token Exposure Mechanics** | Oracle benchmark feeds `[ORACLE]` | Total Return (Auto DRIP / Reinvestment) `[FIRST-PARTY]` | Total Return via Multiplier / Redemption Rate (`.RR`) `[FIRST-PARTY]` | Total Return via Multiplier (`Raw × Multiplier = Effective`) `[FIRST-PARTY]` |
+| **Authentication Requirements** | Public RPC and Pyth `price_feeds` are public `[FIRST-PARTY]` | DEX reads are permissionless `[ON-CHAIN]`; Primary mint/redeem requires KYC `[FIRST-PARTY]` | DEX reads are permissionless `[ON-CHAIN]`; Primary issuance requires KYC `[FIRST-PARTY]` | DEX reads are permissionless `[ON-CHAIN]`; Binance portal conversion requires KYC `[FIRST-PARTY]` |
+| **Supported Networks** | BNB Smart Chain, opBNB `[FIRST-PARTY]` | BSC, Ethereum, Solana, HyperEVM `[FIRST-PARTY]` | BSC, Solana, Ethereum, Arbitrum, Base, Polygon `[FIRST-PARTY]` | BNB Smart Chain `[FIRST-PARTY]` |
+| **Hackathon Redundancy** | Hackathon provides temporary aggregated API (swap routing, market data); does NOT provide an open canonical normalization layer `[FIRST-PARTY]` | N/A (Upstream Provider) | N/A (Upstream Provider) | N/A (Upstream Provider) |
 
 ---
 
 ## 2. Asset Discovery & Resolution Matrix (NVDA Focus)
 
-| Discovery Field | BNB Ecosystem Oracle (Pyth / BSC) | Ondo Finance (NVDAon) | xStocks / Backed (NVDAx / bNVDA) | bStocks (NVDAB) |
-|---|---|---|---|---|
-| **Underlying Company** | NVIDIA Corp | NVIDIA Corporation | NVIDIA Corp | NVIDIA Corp |
-| **Traditional Ticker** | `NVDA` | `NVDA` | `NVDA` | `NVDA` |
-| **Tokenized Symbol** | `Equity.US.NVDA/USD` / `NVDA` | `NVDAon` | `NVDAX` (or `bNVDA`) | `NVDAB` |
-| **Provider / Issuer** | Pyth Oracle Network on BSC | Ondo Global Markets / Ondo Finance | Backed Assets (JE) Limited (acquired by Kraken) | BTech Holdings Limited / Binance Affiliate |
-| **BSC Contract Address** | Oracle: `0x4D7E825f80bDf85e913E0DD2A2D54927e9dE1594` | Token: `0xa9ee28c80f960b889dfbd1902055218cba016f75` | Token: `0xc845b2894dbddd03858fd2d643b4ef725fe0849d` (xStock)<br>`0xa34c5e0abe843e10461e2c9586ea03e55dbcc495` (Backed) | Token: `0x02fca66c1d1afb4e2a7884261eb00f63598a7436` |
-| **Reference Price (TradFi)** | Live via NASDAQ schedule feed (`b10738...`) | Tracked to US market spot price | Tracked to US market spot price | Tracked to US market spot price |
-| **On-Chain / Token Price** | 24/7 Pyth feed (`a470c4...`) | Live BSC DEX Price (~$224.50) | UNKNOWN (thin BSC pool liquidity) / Solana pool active | Live BSC DEX Price (~$223.92) |
-| **Market Status (Open/Closed)** | Explicitly exposed via Pyth feed (`is_open: false/true`, schedules) | Implicit (underlying market hours 24/5; on-chain trades 24/7) | Exposed via Pyth schedule (`America/New_York`); trades 24/7 | Implicit (Binance conversion 24/7, on-chain trades 24/7) |
-| **Token-to-Share Multiplier** | 1:1 | 1:1 (Fractional up to 18 decimals) | 1:1 (Redemption rate feed: `Crypto.NVDAX/NVDA.RR`) | 1:1 (Fractional up to 18 decimals) |
-| **Backing / Collateral Info** | N/A (Oracle data feed) | 100% backed by underlying shares / notes held with qualified custodians | 1:1 collateralized with underlying shares in regulated custody | 1:1 backed by underlying shares held by regulated custodian |
-| **Attestation / Proof of Reserve** | Cryptographic signature from Pyth publishers | Periodic custodian attestations | Public daily attestation reports via `assets.backed.fi` | UNKNOWN on-chain; custodial confirmation via Binance portal |
-| **Liquidity & DEX Trading** | N/A (Oracle feed) | PancakeSwap BSC pools (`0xb90b...`) | Limited BSC liquidity; primary on Solana DEXes | High BSC liquidity on PancakeSwap (`$3.5M+` reserve) |
-| **Corporate Actions (Splits/Divs)** | Reflected in underlying price index | Reinvestment / token balance multiplier | Handled via certificate redemption rate adjustment | Handled via contract balance or multiplier adjustment |
-| **Data Timestamp / Freshness** | Millisecond-level oracle timestamp (`min_channel: 50ms`) | Block timestamp on BSC transfer / DEX swap | Block timestamp on BSC transfer | Block timestamp on BSC transfer |
-| **Provider-Specific Fields** | `nasdaq_symbol`, `schedule`, `min_channel` | `coingecko_coin_id`, `image_url`, Ondo vault addresses | `redemption_rate`, multi-chain identical CREATE2 addresses | Binance conversion rate, 24h Binance volume index |
+| Discovery Field | BNB Ecosystem Oracle (Pyth) | Ondo Finance (NVDAon) | xStocks (NVDAx) | Legacy Backed (bNVDA) | bStocks (NVDAB) |
+|---|---|---|---|---|---|
+| **Underlying Ticker** | `NVDA` `[ORACLE]` | `NVDA` `[FIRST-PARTY]` | `NVDA` `[FIRST-PARTY]` | `NVDA` `[FIRST-PARTY]` | `NVDA` `[FIRST-PARTY]` |
+| **Tokenized Symbol** | `Equity.US.NVDA/USD` `[ORACLE]` | `NVDAon` `[ON-CHAIN]` | `NVDAx` `[ON-CHAIN]` | `bNVDA` `[THIRD-PARTY]` | `NVDAB` `[ON-CHAIN]` |
+| **On-Chain Token Name** | N/A | `"NVIDIA (Ondo Tokenized)"` `[ON-CHAIN]` | `"NVIDIA xStock"` `[ON-CHAIN]` | `"Backed NVIDIA"` `[THIRD-PARTY]` | `"NVIDIA Corp"` `[ON-CHAIN]` |
+| **BSC Contract Address** | Oracle: `0x4D7E825f80bDf85e913E0DD2A2D54927e9dE1594` `[ON-CHAIN]` | `0xa9ee28c80f960b889dfbd1902055218cba016f75` `[ON-CHAIN]` | `0xc845b2894dbddd03858fd2d643b4ef725fe0849d` `[ON-CHAIN]` | `0xa34c5e0abe843e10461e2c9586ea03e55dbcc495` `[THIRD-PARTY]` | `0x02fca66c1d1afb4e2a7884261eb00f63598a7436` `[ON-CHAIN]` |
+| **Decimals** | N/A | `18` `[ON-CHAIN]` | `18` `[ON-CHAIN]` | `18` `[THIRD-PARTY]` | `18` `[ON-CHAIN]` |
+| **Market Status (Open/Closed)** | Real-time `is_open: false/true` and schedule `[ORACLE]` | TradFi market hours (trades 24/7 on DEX) `[FIRST-PARTY]` | TradFi market hours (trades 24/7 on DEX) `[FIRST-PARTY]` | TradFi market hours `[FIRST-PARTY]` | TradFi market hours (trades 24/7 on DEX) `[FIRST-PARTY]` |
+| **Share Exposure Multiplier** | 1.0 (Price feed) `[ORACLE]` | Dynamic DRIP / Total Return `[FIRST-PARTY]` | Dynamic Redemption Rate (`Crypto.NVDAX/NVDA.RR`) `[ORACLE]` | 1:1 nominal tracker (legacy) `[FIRST-PARTY]` | Dynamic Multiplier (`Raw × Multiplier = Effective`) `[FIRST-PARTY]` |
+| **BSC Secondary Liquidity** | N/A | Active on PancakeSwap `[THIRD-PARTY]` | Low on BSC; Primary on Solana `[THIRD-PARTY]` | Legacy / Phasing out `[FIRST-PARTY]` | High on PancakeSwap ($3.5M+ pool) `[THIRD-PARTY]` |
+| **Attestation / Proof of Reserve** | Cryptographic publisher quorum `[ORACLE]` | Custodian attestations `[FIRST-PARTY]` | Daily attestation reports via `assets.backed.fi` `[FIRST-PARTY]` | Daily attestation reports `[FIRST-PARTY]` | Custodial backing via Binance `[FIRST-PARTY]` |
 
 ---
 
-## 3. Cross-Asset Generalization Check (AAPL & TSLA)
+## 3. Cross-Asset Generalization Audit (AAPL & TSLA)
 
-| Asset Ticker | Pyth Feed ID (TradFi) | Pyth Feed ID (Ondo Feed) | Ondo BSC Contract Address | bStocks BSC Contract Address | xStocks BSC Contract Address | Generalization Consistency |
-|---|---|---|---|---|---|---|
-| **NVDA** | `b1073854ed24cbc...` | `207ddea2a443d30...` (`NVDAONUSD`) | `0xa9ee28c80f960b889dfbd1902055218cba016f75` | `0x02fca66c1d1afb4e2a7884261eb00f63598a7436` | `0xc845b2894dbddd03858fd2d643b4ef725fe0849d` | Baseline |
-| **AAPL** | `49f6b65cb1de6b1...` | `e6734de88a83d9d...` (`AAPLONUSD`) | `0x390a684EF9cADE28A7AD0DFa61AB1Eb3842618c4` | `0x1535492d5395A377aCd5386a51272C151A67a4e6` | `0x892a06bbd6c5dca9718db0d321523c932f91bbef` | **Consistent** across all fields |
-| **TSLA** | `16dad506d7db8da...` | `c09ef687ed07091...` (`TSLAONUSD`) | `0x2494b603319d4D9F9715c9f4496d9E0364B59d93` | `0x256CebE4cfA2576bA1aC26D68d7Fe2E7284fB144` | `0x7a305f6bf0b9795029e0ddcf952a13b680749ebc` | **Consistent** across all fields |
+| Asset | Provider | Claimed Symbol | Claimed BSC Contract | Evidence Class | Audit Verification Result |
+|---|---|---|---|---|---|
+| **AAPL** | Ondo | `AAPLon` | `0x390a684EF9cADE28A7AD0DFa61AB1Eb3842618c4` | **`[ON-CHAIN]`** | **CONFIRMED**: `symbol()`="AAPLon", `name()`="Apple (Ondo Tokenized)", `decimals`=18. |
+| **AAPL** | Pyth | `Equity.US.AAPL/USD` | Feed ID: `49f6b65cb1...` | **`[ORACLE]`** | **CONFIRMED**: Valid live feed on BSC Pyth contract. |
+| **AAPL** | bStocks | `AAPLB` | `0x1535492d5395A377aCd5386a51272C151A67a4e6` | **`[UNKNOWN]`** | **CORRECTED / UNVERIFIED**: Returned empty bytecode on BSC RPC. |
+| **AAPL** | xStocks | `AAPLX` | `0x892a06bbd6c5dca9718db0d321523c932f91bbef` | **`[THIRD-PARTY]`** | **PARTIAL**: Pyth feed exists; BSC pool unverified on-chain. |
+| **TSLA** | Ondo | `TSLAon` | `0x2494b603319d4D9F9715c9f4496d9E0364B59d93` | **`[ON-CHAIN]`** | **CONFIRMED**: `symbol()`="TSLAon", `name()`="Tesla (Ondo Tokenized)", `decimals`=18. |
+| **TSLA** | Pyth | `Equity.US.TSLA/USD` | Feed ID: `16dad506d7...` | **`[ORACLE]`** | **CONFIRMED**: Valid live feed on BSC Pyth contract. |
+| **TSLA** | bStocks | `TSLAB` | `0x256CebE4cfA2576bA1aC26D68d7Fe2E7284fB144` | **`[UNKNOWN]`** | **CORRECTED / UNVERIFIED**: Returned empty bytecode on BSC RPC. |
+| **TSLA** | xStocks | `TSLAX` | `0x7a305f6bf0b9795029e0ddcf952a13b680749ebc` | **`[THIRD-PARTY]`** | **PARTIAL**: Pyth feed exists; BSC pool unverified on-chain. |
