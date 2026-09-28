@@ -8,6 +8,18 @@ Developed for **BNB Hack: Tokenized Stocks Edition**.
 
 ---
 
+## StockDNA: Visual Equity Decomposition
+
+**StockDNA** is the flagship web application built directly on top of the RWA Lens public API. It transforms fragmented tokenized equity representations on BNB Smart Chain into an intuitive visual decomposition:
+
+- **DNA Spatial Canvas**: Visualizes the 1-to-N relationship from the traditional US equity root (e.g. `NVDA`) branching to multiple tokenized implementations (`Ondo`, `bStocks`, `xStocks`).
+- **Economic Mechanism Explainer**: Side-by-side comparative pills explaining the real accounting and yield mechanics (Ondo Auto-DRIP vs bStocks Balance Multiplier vs xStocks Redemption Rate Tracker) without hiding critical differences.
+- **Evidence & Audit Drawer**: Full cryptographic and provenance audit trail detailing on-chain deployment status, Pyth Oracle price feeds, official token registries, and confidence levels for every asset.
+- **Contract Reverse Lookup**: Paste any verified BNB Smart Chain BEP-20 address (or ticker) to immediately resolve token identity, provider attribution, and underlying asset metadata.
+- **Raw RWA Lens JSON Drawer**: Real-time developer inspector to inspect the raw normalized payload matching the RWA Lens REST API schema.
+
+---
+
 ## The Problem RWA Lens Solves
 
 Multiple institutional issuers (such as Ondo Finance, bStocks, and xStocks/Backed Finance) issue tokenized equities on BNB Smart Chain. However, the ecosystem suffers from substantial technical fragmentation:

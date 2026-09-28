@@ -55,3 +55,34 @@
 - Live HTTP smoke test passed with 100% accuracy across 6 endpoints.
 - TypeScript typecheck and ESLint passed with 0 warnings/errors.
 - Next.js production build succeeded with static discovery and dynamic route generation.
+
+---
+
+## Entry 6: Phase 4B StockDNA Frontend Visual Explorer Implementation
+**Date:** 2026-09-28  
+**Subject:** Building the StockDNA visual decomposition interface on top of the RWA Lens public API.
+
+### 1. What We Implemented
+- **Pure CSS Design System (`src/app/globals.css`)**: Built a customized institutional dark theme utilizing CSS variables inspired by Gambit/BNB palette (`#07090E` base, `#F0B90B` BNB gold, `#00F0FF` cyan accents, glassmorphic surfaces, SVG pulsing animations, and accessibility-compliant reduced motion).
+- **Client Query Hook (`src/hooks/useStockDna.ts`)**: Built a dedicated hook handling address vs ticker format auto-detection, REST API consumption (`/api/lens/ticker/:ticker` and `/api/lens/contract/:address`), loading lifecycle, caching, and structured error propagation.
+- **StockDNA Component Tree**:
+  - `SearchHeader.tsx`: Unified search bar with real-time input mode detection (Ticker vs EVM Contract) and instant quick-select chips (`NVDA`, `AAPL`, `TSLA`, and a live contract example).
+  - `DnaGraph.tsx` & `UnderlyingNode.tsx`: Responsive spatial branching canvas depicting the 1-to-N relationship from the traditional equity origin to tokenized implementations with live animated SVG connecting branches.
+  - `RepresentationCard.tsx` & `EconomicPill.tsx`: Comprehensive token representation cards displaying BEP-20 metadata, issuer verification, 1-click clipboard address copying, BscScan explorer links, and mechanism pills contrasting Auto-DRIP vs Multiplier vs Redemption Rate mechanics.
+  - `ProvenanceBadge.tsx` & `EvidenceDrawer.tsx`: Slide-over audit trail detailing data sources (On-Chain RPC, Pyth Oracle Hermes, official issuer registries) and confidence tiers.
+  - `RawLensDrawer.tsx`: Embedded JSON inspector allowing developers to inspect the exact normalized RWA Lens response payload.
+  - `LoadingSkeleton.tsx` & `ErrorBanner.tsx`: Shimmer loading skeleton and clear error cards for invalid queries and unverified contracts.
+  - `src/app/page.tsx`: Main page shell wiring all components into a cohesive, production-grade interface.
+- **UI Test Suite (`tests/ui.test.ts`)**: Added 5 unit tests validating client address detection, casing handling, and payload contract integrity.
+
+### 2. Engineering Observations & Experience
+- **Zero Frontend Data Duplication**:
+  - The UI does not bundle a redundant static registry. All data flows exclusively through the Next.js API endpoints (`/api/lens`), ensuring consistent verification and business logic.
+- **Data Integrity in Presentation**:
+  - Adhered strictly to Phase 2.1 findings: dynamic values (multipliers and redemption rates) that are not actively polled on-chain are clearly labeled as `"Live value: Polled on-chain"` / `"Live rate: Polled via Oracle"` rather than displaying fabricated placeholder floats (`1.0`).
+- **Responsive Layout & Accessibility**:
+  - The DNA graph cleanly transitions from a multi-column spatial branching layout on desktop (`min-width: 1024px`) to a streamlined vertical timeline card stack on mobile viewports.
+- **Full Test Suite & Build Green**:
+  - Vitest suite expanded to 33 passing tests (3 test files: `engine.test.ts`, `api.test.ts`, `ui.test.ts`).
+  - Next.js production build (`next build`) compiles without errors or warnings.
+
