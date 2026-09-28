@@ -1,34 +1,45 @@
-import type { StockDnaError } from "@/hooks/useStockDna";
+import type { TickerKinError } from "@/hooks/useStockDna";
 
 interface ErrorBannerProps {
-  readonly error: StockDnaError;
+  readonly error: TickerKinError;
   readonly onReset: () => void;
 }
 
 export function ErrorBanner({ error, onReset }: ErrorBannerProps) {
-  const isAddressError = error.code === "INVALID_ADDRESS" || error.code === "CONTRACT_NOT_FOUND";
-
   return (
     <div
       style={{
         width: "100%",
-        maxWidth: "600px",
-        margin: "2rem auto",
+        maxWidth: "540px",
+        margin: "2.5rem auto",
         padding: "1.5rem",
         backgroundColor: "var(--bg-card)",
-        border: "1px solid var(--accent-red)",
+        border: "1px solid var(--border-card)",
         borderRadius: "var(--radius-lg)",
-        boxShadow: "0 4px 20px rgba(239, 68, 68, 0.1)",
         textAlign: "center",
       }}
       className="animate-fade-in"
     >
-      <div style={{ fontSize: "1.8rem", marginBottom: "0.5rem" }}>
-        {isAddressError ? "🔍" : "⚠️"}
+      <div
+        style={{
+          display: "inline-flex",
+          alignItems: "center",
+          justifyContent: "center",
+          width: "36px",
+          height: "36px",
+          borderRadius: "50%",
+          backgroundColor: "var(--status-error-soft)",
+          border: "1px solid var(--status-error-border)",
+          color: "var(--status-error)",
+          fontSize: "1.1rem",
+          marginBottom: "0.75rem",
+        }}
+      >
+        !
       </div>
 
-      <h3 style={{ fontSize: "1.15rem", fontWeight: 700, color: "var(--text-primary)", marginBottom: "0.4rem" }}>
-        {error.code === "TICKER_NOT_FOUND" && "Ticker Not Yet Verified"}
+      <h3 style={{ fontSize: "1.05rem", fontWeight: 700, color: "var(--text-primary)", marginBottom: "0.35rem" }}>
+        {error.code === "TICKER_NOT_FOUND" && "Ticker Not In Verified Registry"}
         {error.code === "CONTRACT_NOT_FOUND" && "Contract Not In Verified Registry"}
         {error.code === "INVALID_ADDRESS" && "Invalid Contract Address Format"}
         {error.code !== "TICKER_NOT_FOUND" &&
@@ -37,24 +48,32 @@ export function ErrorBanner({ error, onReset }: ErrorBannerProps) {
           "Resolution Error"}
       </h3>
 
-      <p style={{ fontSize: "0.9rem", color: "var(--text-secondary)", marginBottom: "1.25rem", lineHeight: 1.5 }}>
+      <p style={{ fontSize: "0.82rem", color: "var(--text-secondary)", marginBottom: "1.25rem", lineHeight: 1.5 }}>
         {error.message}
       </p>
 
-      <div style={{ display: "flex", justifyContent: "center", gap: "0.75rem" }}>
+      <div style={{ display: "flex", justifyContent: "center" }}>
         <button
           type="button"
           onClick={onReset}
           style={{
-            padding: "0.45rem 1rem",
-            borderRadius: "var(--radius-md)",
-            backgroundColor: "var(--accent-gold)",
-            color: "#000",
+            padding: "0.38rem 0.9rem",
+            borderRadius: "var(--radius-sm)",
+            backgroundColor: "var(--bg-surface)",
+            color: "var(--text-primary)",
+            border: "1px solid var(--border-subtle)",
             fontWeight: 600,
-            fontSize: "0.85rem",
+            fontSize: "0.8rem",
+            transition: "all 0.15s",
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.borderColor = "var(--border-hover)";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.borderColor = "var(--border-subtle)";
           }}
         >
-          View Flagship NVDA
+          Reset to Flagship NVDA
         </button>
       </div>
     </div>

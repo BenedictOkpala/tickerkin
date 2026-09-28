@@ -55,7 +55,7 @@ export function RawLensDrawer({
         position: "fixed",
         inset: 0,
         backgroundColor: "rgba(0, 0, 0, 0.75)",
-        backdropFilter: "blur(4px)",
+        backdropFilter: "blur(2px)",
         zIndex: 100,
         display: "flex",
         justifyContent: "flex-end",
@@ -65,26 +65,26 @@ export function RawLensDrawer({
       <div
         style={{
           width: "100%",
-          maxWidth: "600px",
+          maxWidth: "620px",
           height: "100%",
           backgroundColor: "var(--bg-surface)",
           borderLeft: "1px solid var(--border-card)",
-          padding: "1.75rem 1.5rem",
+          padding: "1.5rem 1.25rem",
           display: "flex",
           flexDirection: "column",
-          gap: "1rem",
+          gap: "0.85rem",
         }}
         className="animate-slide-in"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+        <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between" }}>
           <div>
-            <h3 style={{ fontSize: "1.2rem", fontWeight: 800, color: "var(--text-primary)" }}>
-              Raw RWA Lens JSON
+            <h3 style={{ fontSize: "1.15rem", fontWeight: 700, color: "var(--text-primary)" }}>
+              RWA Lens API Response
             </h3>
-            <span style={{ fontSize: "0.8rem", color: "var(--text-secondary)" }}>
-              Canonical normalized output from HTTP API
+            <span style={{ fontSize: "0.78rem", color: "var(--text-secondary)" }}>
+              Normalized payload consumed by TickerKin
             </span>
           </div>
 
@@ -92,12 +92,12 @@ export function RawLensDrawer({
             type="button"
             onClick={onClose}
             style={{
-              padding: "0.3rem 0.6rem",
-              borderRadius: "var(--radius-sm)",
+              padding: "0.25rem 0.5rem",
+              borderRadius: "var(--radius-xs)",
               backgroundColor: "var(--bg-card)",
               color: "var(--text-secondary)",
               border: "1px solid var(--border-subtle)",
-              fontSize: "0.9rem",
+              fontSize: "0.85rem",
             }}
           >
             ✕
@@ -111,12 +111,12 @@ export function RawLensDrawer({
             alignItems: "center",
             justifyContent: "space-between",
             backgroundColor: "var(--bg-card)",
-            padding: "0.5rem 0.75rem",
-            borderRadius: "var(--radius-md)",
+            padding: "0.4rem 0.65rem",
+            borderRadius: "var(--radius-sm)",
             border: "1px solid var(--border-subtle)",
           }}
         >
-          <code style={{ fontSize: "0.8rem", fontFamily: "var(--font-mono)", color: "var(--accent-gold)" }}>
+          <code style={{ fontSize: "0.78rem", fontFamily: "var(--font-mono)", color: "var(--accent-primary)" }}>
             GET {endpointUrl}
           </code>
 
@@ -124,30 +124,31 @@ export function RawLensDrawer({
             type="button"
             onClick={handleCopy}
             style={{
-              fontSize: "0.75rem",
+              fontSize: "0.74rem",
               fontWeight: 600,
-              padding: "0.25rem 0.6rem",
-              borderRadius: "var(--radius-sm)",
-              backgroundColor: copied ? "var(--accent-green-soft)" : "var(--accent-gold)",
-              color: copied ? "var(--accent-green)" : "#000",
+              padding: "0.2rem 0.55rem",
+              borderRadius: "var(--radius-xs)",
+              backgroundColor: copied ? "var(--status-active-soft)" : "var(--bg-surface)",
+              color: copied ? "var(--status-active)" : "var(--text-primary)",
+              border: "1px solid var(--border-subtle)",
               transition: "all 0.15s",
             }}
           >
-            {copied ? "✓ Copied JSON" : "Copy JSON"}
+            {copied ? "Copied" : "Copy JSON"}
           </button>
         </div>
 
-        {/* JSON Code Inspector */}
+        {/* JSON Code Area */}
         <pre
           style={{
             flex: 1,
-            backgroundColor: "var(--bg-primary)",
+            backgroundColor: "var(--bg-app)",
             border: "1px solid var(--border-subtle)",
             borderRadius: "var(--radius-md)",
-            padding: "1rem",
+            padding: "0.85rem",
             color: "var(--text-primary)",
             fontFamily: "var(--font-mono)",
-            fontSize: "0.8rem",
+            fontSize: "0.78rem",
             lineHeight: 1.5,
             overflowX: "auto",
             overflowY: "auto",

@@ -3,9 +3,9 @@ import type { ReactNode } from "react";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "StockDNA — Tokenized Equities Explorer | RWA Lens",
+  title: "TickerKin — Trace Tokenized Equities on BNB Chain",
   description:
-    "Explore, verify, and compare tokenized stock representations on BNB Smart Chain across Ondo, bStocks, and xStocks.",
+    "Trace an equity across its verified tokenized representations on BNB Smart Chain. Powered by RWA Lens normalization engine.",
 };
 
 export default function RootLayout({

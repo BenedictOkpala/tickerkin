@@ -1,9 +1,15 @@
 import { describe, it, expect } from "vitest";
-import { isValidEvmAddress } from "../src/hooks/useStockDna";
+import { isValidEvmAddress, useTickerKin, useStockDna } from "../src/hooks/useStockDna";
 import { lookupByTicker, lookupByContract } from "../src/lens/engine";
 
-describe("StockDNA Frontend UI Integration & Validation", () => {
-  describe("1. Query Format Auto-Detection", () => {
+describe("TickerKin Frontend UI Integration & Validation", () => {
+  describe("1. Hook & Query Format Auto-Detection", () => {
+    it("should export both useTickerKin and backward-compatible useStockDna", () => {
+      expect(typeof useTickerKin).toBe("function");
+      expect(typeof useStockDna).toBe("function");
+      expect(useTickerKin).toBe(useStockDna);
+    });
+
     it("should recognize standard 40-character hex contract addresses", () => {
       const validAddress = "0xa9ee28c80f960b889dfbd1902055218cba016f75";
       expect(isValidEvmAddress(validAddress)).toBe(true);
@@ -27,7 +33,7 @@ describe("StockDNA Frontend UI Integration & Validation", () => {
   });
 
   describe("2. Flagship NVDA Rendering Payload Integrity", () => {
-    it("should supply all necessary UI fields for NVDA representations", () => {
+    it("should supply all necessary UI fields for 3 NVDA representations", () => {
       const result = lookupByTicker("NVDA");
       expect(result.success).toBe(true);
 
@@ -56,6 +62,17 @@ describe("StockDNA Frontend UI Integration & Validation", () => {
         expect(xstocks).toBeDefined();
         expect(xstocks?.tokenSymbol).toBe("NVDAx");
         expect(xstocks?.economicModel.mechanism).toBe("redemption_rate");
+      }
+    });
+
+    it("should accurately render narrower representation count for AAPL (1 representation)", () => {
+      const result = lookupByTicker("AAPL");
+      expect(result.success).toBe(true);
+
+      if (result.success) {
+        expect(result.underlying.ticker).toBe("AAPL");
+        expect(result.representations.length).toBe(1);
+        expect(result.representations[0].tokenSymbol).toBe("AAPLon");
       }
     });
   });

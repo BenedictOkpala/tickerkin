@@ -3,24 +3,24 @@ export function LoadingSkeleton() {
     <div
       style={{
         width: "100%",
-        maxWidth: "1000px",
+        maxWidth: "1140px",
         margin: "0 auto",
         padding: "2rem 1rem",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        gap: "2rem",
+        gap: "1.5rem",
       }}
     >
-      {/* Anchor Skeleton */}
+      {/* Underlying Root Skeleton */}
       <div
         style={{
           width: "360px",
-          height: "120px",
+          height: "110px",
           backgroundColor: "var(--bg-card)",
           borderRadius: "var(--radius-lg)",
           border: "1px solid var(--border-subtle)",
-          opacity: 0.6,
+          opacity: 0.5,
         }}
       />
 
@@ -37,11 +37,11 @@ export function LoadingSkeleton() {
           <div
             key={i}
             style={{
-              height: "260px",
+              height: "240px",
               backgroundColor: "var(--bg-card)",
               borderRadius: "var(--radius-lg)",
               border: "1px solid var(--border-subtle)",
-              opacity: 0.5,
+              opacity: 0.4,
             }}
           />
         ))}

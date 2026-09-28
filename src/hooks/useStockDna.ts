@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import type { UnderlyingEquity } from "@/types/equity";
 import type { TokenizedRepresentation } from "@/types/token";
 
-export interface StockDnaResolvedData {
+export interface TickerKinResolvedData {
   readonly query: string;
   readonly lookupType: "ticker" | "contract";
   readonly underlying: UnderlyingEquity;
@@ -13,20 +13,26 @@ export interface StockDnaResolvedData {
   readonly rawJson: Record<string, unknown>;
 }
 
-export interface StockDnaError {
+// Backward-compatible alias
+export type StockDnaResolvedData = TickerKinResolvedData;
+
+export interface TickerKinError {
   readonly code: string;
   readonly message: string;
 }
+
+// Backward-compatible alias
+export type StockDnaError = TickerKinError;
 
 export function isValidEvmAddress(address: string): boolean {
   return /^0x[a-fA-F0-9]{40}$/.test(address.trim());
 }
 
-export function useStockDna(initialQuery = "NVDA") {
+export function useTickerKin(initialQuery = "NVDA") {
   const [query, setQuery] = useState(initialQuery);
   const [loading, setLoading] = useState(false);
-  const [data, setData] = useState<StockDnaResolvedData | null>(null);
-  const [error, setError] = useState<StockDnaError | null>(null);
+  const [data, setData] = useState<TickerKinResolvedData | null>(null);
+  const [error, setError] = useState<TickerKinError | null>(null);
 
   const executeSearch = useCallback(async (searchQuery: string) => {
     const clean = searchQuery.trim();
@@ -36,41 +42,73 @@ export function useStockDna(initialQuery = "NVDA") {
     setError(null);
 
     const isContract = isValidEvmAddress(clean);
-    const endpoint = isContract
-      ? `/api/lens/contract/${encodeURIComponent(clean)}`
-      : `/api/lens/ticker/${encodeURIComponent(clean)}`;
 
     try {
-      const res = await fetch(endpoint);
-      const json = await res.json();
-
-      if (!res.ok || !json.ok) {
-        setData(null);
-        setError({
-          code: json.error?.code || `HTTP_${res.status}`,
-          message: json.error?.message || "Failed to resolve query on RWA Lens API.",
-        });
-        return;
-      }
-
       if (isContract) {
-        // Contract lookup returns { underlying, matchedRepresentation, normalizedAddress }
+        // 1. Contract reverse lookup to resolve underlying and matched token
+        const contractRes = await fetch(`/api/lens/contract/${encodeURIComponent(clean)}`);
+        const contractJson = await contractRes.json();
+
+        if (!contractRes.ok || !contractJson.ok) {
+          setData(null);
+          setError({
+            code: contractJson.error?.code || `HTTP_${contractRes.status}`,
+            message: contractJson.error?.message || "Failed to resolve contract on RWA Lens API.",
+          });
+          return;
+        }
+
+        const normalizedContract = contractJson.data.normalizedAddress;
+        const resolvedTicker = contractJson.data.underlying?.ticker;
+
+        // 2. Fetch sibling representations for complete Kin lineage display
+        let siblingReps: TokenizedRepresentation[] = [contractJson.data.matchedRepresentation];
+        let fullPayload: Record<string, unknown> = contractJson;
+
+        if (resolvedTicker) {
+          try {
+            const tickerRes = await fetch(`/api/lens/ticker/${encodeURIComponent(resolvedTicker)}`);
+            const tickerJson = await tickerRes.json();
+            if (tickerRes.ok && tickerJson.ok && Array.isArray(tickerJson.data?.representations)) {
+              siblingReps = tickerJson.data.representations;
+              fullPayload = {
+                contractLookup: contractJson,
+                tickerLineage: tickerJson,
+              };
+            }
+          } catch {
+            // Keep single matched representation if sibling fetch fails
+          }
+        }
+
         setData({
           query: clean,
           lookupType: "contract",
-          underlying: json.data.underlying,
-          representations: [json.data.matchedRepresentation],
-          matchedContractAddress: json.data.normalizedAddress,
-          rawJson: json,
+          underlying: contractJson.data.underlying,
+          representations: siblingReps,
+          matchedContractAddress: normalizedContract,
+          rawJson: fullPayload,
         });
       } else {
-        // Ticker lookup returns { underlying, representations }
+        // Ticker lookup returns underlying + all verified representations
+        const tickerRes = await fetch(`/api/lens/ticker/${encodeURIComponent(clean)}`);
+        const tickerJson = await tickerRes.json();
+
+        if (!tickerRes.ok || !tickerJson.ok) {
+          setData(null);
+          setError({
+            code: tickerJson.error?.code || `HTTP_${tickerRes.status}`,
+            message: tickerJson.error?.message || "Failed to resolve ticker on RWA Lens API.",
+          });
+          return;
+        }
+
         setData({
           query: clean,
           lookupType: "ticker",
-          underlying: json.data.underlying,
-          representations: json.data.representations,
-          rawJson: json,
+          underlying: tickerJson.data.underlying,
+          representations: tickerJson.data.representations,
+          rawJson: tickerJson,
         });
       }
     } catch (err) {
@@ -99,3 +137,6 @@ export function useStockDna(initialQuery = "NVDA") {
     search: executeSearch,
   };
 }
+
+// Backward-compatible export
+export const useStockDna = useTickerKin;

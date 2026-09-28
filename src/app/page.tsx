@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useStockDna } from "@/hooks/useStockDna";
+import { useTickerKin } from "@/hooks/useStockDna";
 import type { EvidenceRecord } from "@/types/provenance";
 import { SearchHeader } from "@/components/stockdna/SearchHeader";
 import { DnaGraph } from "@/components/stockdna/DnaGraph";
@@ -10,8 +10,8 @@ import { RawLensDrawer } from "@/components/stockdna/RawLensDrawer";
 import { LoadingSkeleton } from "@/components/stockdna/LoadingSkeleton";
 import { ErrorBanner } from "@/components/stockdna/ErrorBanner";
 
-export default function StockDnaPage() {
-  const { query, loading, data, error, search } = useStockDna("NVDA");
+export default function TickerKinPage() {
+  const { query, loading, data, error, search } = useTickerKin("NVDA");
 
   const [activeEvidence, setActiveEvidence] = useState<EvidenceRecord | null>(null);
   const [isLensDrawerOpen, setIsLensDrawerOpen] = useState(false);
@@ -22,20 +22,29 @@ export default function StockDnaPage() {
         minHeight: "100vh",
         display: "flex",
         flexDirection: "column",
-        backgroundColor: "var(--bg-primary)",
+        backgroundColor: "var(--bg-app)",
         color: "var(--text-primary)",
         position: "relative",
       }}
     >
-      {/* 1. Header & Search Bar */}
+      {/* 1. Compact Application Header & Search Bar */}
       <SearchHeader
         onSearch={search}
         loading={loading}
         currentQuery={query}
+        onOpenLensDrawer={() => setIsLensDrawerOpen(true)}
       />
 
-      {/* 2. Main Content Area */}
-      <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center" }}>
+      {/* 2. Main Exploration Area: The Kin Map */}
+      <div
+        style={{
+          flex: 1,
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "flex-start",
+          paddingTop: "0.5rem",
+        }}
+      >
         {loading && <LoadingSkeleton />}
 
         {!loading && error && (
@@ -53,55 +62,13 @@ export default function StockDnaPage() {
         )}
       </div>
 
-      {/* 3. Floating Developer Control Bar (View Lens Data) */}
-      {data && (
-        <div
-          style={{
-            position: "fixed",
-            bottom: "1.25rem",
-            right: "1.25rem",
-            zIndex: 50,
-          }}
-        >
-          <button
-            type="button"
-            onClick={() => setIsLensDrawerOpen(true)}
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: "0.5rem",
-              padding: "0.6rem 1.1rem",
-              borderRadius: "var(--radius-lg)",
-              backgroundColor: "var(--bg-card)",
-              border: "1px solid var(--accent-gold-border)",
-              color: "var(--accent-gold)",
-              fontWeight: 600,
-              fontSize: "0.85rem",
-              boxShadow: "0 4px 20px rgba(0, 0, 0, 0.4)",
-              transition: "transform 0.15s, background-color 0.15s",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = "var(--bg-surface)";
-              e.currentTarget.style.transform = "translateY(-2px)";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = "var(--bg-card)";
-              e.currentTarget.style.transform = "translateY(0)";
-            }}
-          >
-            <span>{`{ }`}</span>
-            <span>View Lens Data</span>
-          </button>
-        </div>
-      )}
-
-      {/* 4. Evidence Drawer */}
+      {/* 3. Slide-Over Evidence Drawer */}
       <EvidenceDrawer
         evidence={activeEvidence}
         onClose={() => setActiveEvidence(null)}
       />
 
-      {/* 5. Raw Lens JSON Drawer */}
+      {/* 4. Developer Raw Lens JSON Drawer */}
       <RawLensDrawer
         rawJson={data?.rawJson ?? null}
         query={data?.query ?? query}
@@ -110,22 +77,22 @@ export default function StockDnaPage() {
         onClose={() => setIsLensDrawerOpen(false)}
       />
 
-      {/* 6. Footer */}
+      {/* 5. Minimal Application Footer */}
       <footer
         style={{
           textAlign: "center",
-          padding: "1.5rem 1rem",
-          fontSize: "0.8rem",
+          padding: "1rem 1.25rem",
+          fontSize: "0.75rem",
           color: "var(--text-muted)",
           borderTop: "1px solid var(--border-subtle)",
           marginTop: "auto",
         }}
       >
-        <p style={{ marginBottom: "0.3rem" }}>
-          <strong>StockDNA</strong> • Discovery & Normalization Interface for Tokenized Stocks
+        <p style={{ marginBottom: "0.2rem" }}>
+          <strong style={{ color: "var(--text-secondary)" }}>TickerKin</strong> — Trace an equity across its verified tokenized representations
         </p>
         <p>
-          Built for <strong>BNB Hack: Tokenized Stocks Edition</strong> • Powered by <strong>RWA Lens Engine</strong>
+          BNB Hack: Tokenized Stocks Edition · Powered by <strong style={{ color: "var(--text-secondary)" }}>RWA Lens Engine</strong>
         </p>
       </footer>
     </main>

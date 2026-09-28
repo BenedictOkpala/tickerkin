@@ -6,44 +6,18 @@ interface ProvenanceBadgeProps {
 }
 
 export function ProvenanceBadge({ provenance, onInspect }: ProvenanceBadgeProps) {
-  const getBadgeStyle = (cls: string) => {
+  const getBadgeLabel = (cls: string) => {
     switch (cls) {
       case "ON_CHAIN":
-        return {
-          bg: "var(--accent-cyan-soft)",
-          color: "var(--accent-cyan)",
-          border: "var(--accent-cyan-border)",
-          icon: "⛓️",
-          label: "On-Chain Verified",
-        };
+        return "On-Chain Verified";
       case "ORACLE":
-        return {
-          bg: "var(--accent-gold-soft)",
-          color: "var(--accent-gold)",
-          border: "var(--accent-gold-border)",
-          icon: "⚡",
-          label: "Oracle Feed",
-        };
+        return "Oracle Feed";
       case "FIRST_PARTY":
-        return {
-          bg: "var(--accent-green-soft)",
-          color: "var(--accent-green)",
-          border: "rgba(16, 185, 129, 0.3)",
-          icon: "🏛️",
-          label: "First-Party Doc",
-        };
+        return "First-Party Docs";
       default:
-        return {
-          bg: "var(--bg-surface)",
-          color: "var(--text-secondary)",
-          border: "var(--border-subtle)",
-          icon: "ℹ️",
-          label: cls,
-        };
+        return cls;
     }
   };
-
-  const style = getBadgeStyle(provenance.sourceClass);
 
   return (
     <button
@@ -53,20 +27,28 @@ export function ProvenanceBadge({ provenance, onInspect }: ProvenanceBadgeProps)
         display: "inline-flex",
         alignItems: "center",
         gap: "0.35rem",
-        padding: "0.2rem 0.5rem",
-        borderRadius: "var(--radius-sm)",
-        backgroundColor: style.bg,
-        color: style.color,
-        border: `1px solid ${style.border}`,
-        fontSize: "0.75rem",
-        fontWeight: 600,
-        transition: "opacity 0.15s",
+        padding: "0.22rem 0.55rem",
+        borderRadius: "var(--radius-xs)",
+        backgroundColor: "var(--bg-surface)",
+        color: "var(--text-secondary)",
+        border: "1px solid var(--border-subtle)",
+        fontSize: "0.73rem",
+        fontWeight: 500,
+        transition: "all 0.15s",
       }}
-      title="Click to inspect verification evidence"
+      onMouseEnter={(e) => {
+        e.currentTarget.style.borderColor = "var(--border-hover)";
+        e.currentTarget.style.color = "var(--text-primary)";
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.borderColor = "var(--border-subtle)";
+        e.currentTarget.style.color = "var(--text-secondary)";
+      }}
+      title="Click to view verified evidence and audit trail"
     >
-      <span>{style.icon}</span>
-      <span>{style.label}</span>
-      <span style={{ fontSize: "0.7rem", opacity: 0.8 }}>›</span>
+      <span style={{ color: "var(--accent-primary)" }}>🛡</span>
+      <span>{getBadgeLabel(provenance.sourceClass)}</span>
+      <span style={{ color: "var(--text-muted)", fontSize: "0.7rem" }}>→</span>
     </button>
   );
 }

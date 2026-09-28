@@ -2,21 +2,21 @@
 
 > Discovery and normalization infrastructure for tokenized equities on BNB Smart Chain.
 
-The consumer-facing interface built on top of RWA Lens is called **StockDNA**.
+The consumer-facing interface built on top of RWA Lens is called **TickerKin**.
 
 Developed for **BNB Hack: Tokenized Stocks Edition**.
 
 ---
 
-## StockDNA: Visual Equity Decomposition
+## TickerKin: Visual Equity Lineage & Representation Explorer
 
-**StockDNA** is the flagship web application built directly on top of the RWA Lens public API. It transforms fragmented tokenized equity representations on BNB Smart Chain into an intuitive visual decomposition:
+**TickerKin** is the visual consumer explorer built on top of the RWA Lens normalization engine. It helps users trace a traditional equity across all its verified tokenized representations on BNB Smart Chain:
 
-- **DNA Spatial Canvas**: Visualizes the 1-to-N relationship from the traditional US equity root (e.g. `NVDA`) branching to multiple tokenized implementations (`Ondo`, `bStocks`, `xStocks`).
-- **Economic Mechanism Explainer**: Side-by-side comparative pills explaining the real accounting and yield mechanics (Ondo Auto-DRIP vs bStocks Balance Multiplier vs xStocks Redemption Rate Tracker) without hiding critical differences.
-- **Evidence & Audit Drawer**: Full cryptographic and provenance audit trail detailing on-chain deployment status, Pyth Oracle price feeds, official token registries, and confidence levels for every asset.
-- **Contract Reverse Lookup**: Paste any verified BNB Smart Chain BEP-20 address (or ticker) to immediately resolve token identity, provider attribution, and underlying asset metadata.
-- **Raw RWA Lens JSON Drawer**: Real-time developer inspector to inspect the raw normalized payload matching the RWA Lens REST API schema.
+- **The Kin Map**: Signature spatial branching map visualizing the 1-to-N lineage from the underlying equity root (`NVDA`) to each institutional token representation (`Ondo`, `bStocks`, `xStocks`), transitioning to a clean vertical lineage on mobile.
+- **Economic Mechanism Explainer**: Side-by-side comparative cards explaining the real accounting mechanics (Ondo Auto-DRIP vs bStocks Multiplier model vs xStocks Redemption-rate tracker) without hiding structural differences.
+- **Verification & Provenance Drawer**: Comprehensive audit trail detailing on-chain bytecode validation, Pyth Oracle price feeds, and first-party issuer documentation with confidence ratings.
+- **Contract Reverse Lookup**: Paste any verified BNB Smart Chain BEP-20 address (or ticker) to immediately resolve token identity, provider attribution, and sibling representations.
+- **Raw RWA Lens JSON Drawer**: Real-time developer inspector to view the exact normalized payload matching the RWA Lens REST API schema.
 
 ---
 
