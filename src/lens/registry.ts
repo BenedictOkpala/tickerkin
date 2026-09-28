@@ -143,3 +143,4 @@ export const VERIFIED_REGISTRY: readonly RegistryEquityEntry[] = [
     ],
   },
 ];
+

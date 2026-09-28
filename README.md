@@ -20,55 +20,186 @@ Multiple institutional issuers (such as Ondo Finance, bStocks, and xStocks/Backe
 
 ---
 
-## Core Architecture & Provider Adapters
+## Public HTTP API
 
-RWA Lens isolates provider-specific logic into dedicated adapters that normalize raw on-chain and issuer data into a shared, type-safe domain model:
+RWA Lens exposes a clean, lightweight REST API wrapping the core normalization engine:
 
-- **Ondo Adapter** (`src/providers/ondo`): Normalizes Ondo Global Markets BEP-20 tokens, Auto-DRIP dividend reinvestment, and Scaled UI models.
-- **bStocks Adapter** (`src/providers/bstocks`): Normalizes Binance bStocks BEP-20 tokens, on-chain multiplier scaling, and dividend withholding tax adjustments.
-- **xStocks Adapter** (`src/providers/xstocks`): Normalizes Backed Finance / xStocks tracker certificates and `.RR` continuous redemption rates.
-- **BNB / Pyth Oracle Adapter** (`src/providers/bnb`): Normalizes traditional market hours, NASDAQ schedules, and 24/7 price feeds.
+### 1. Root Discovery & Metadata
+**Endpoint:** `GET /api/lens`  
+**Description:** Returns service capabilities, supported chain, supported providers, and currently verified tickers.
 
----
-
-## Normalization & Provenance Philosophy
-
-1. **No Fake Equivalence**: We do not force distinct financial mechanisms into a misleading "1 token = 1 share" assumption. Instead, the domain model provides common normalized identifiers alongside structured, provider-specific economic models (`EconomicModel`).
-2. **Strict Provenance**: Every verified equity and representation carries an `EvidenceRecord` declaring its evidence class (`FIRST_PARTY`, `ON_CHAIN`, `ORACLE`, `THIRD_PARTY`, `INFERRED`, `UNKNOWN`) and confidence level.
-3. **No Unverified Hallucinations**: Only representations verified on-chain via direct bytecode inspection (`eth_call`) and first-party docs are admitted into the verified registry.
-
----
-
-## Quick Developer Usage
-
-```typescript
-import { lookupByTicker, lookupByContract } from "@/lens";
-
-// 1. Ticker Lookup
-const result = lookupByTicker("NVDA");
-if (result.success) {
-  console.log(`Underlying: ${result.underlying.name} (${result.underlying.ticker})`);
-  console.log(`Discovered ${result.representations.length} verified representations:`);
-  for (const rep of result.representations) {
-    console.log(`- [${rep.providerName}] ${rep.tokenSymbol} (${rep.contractAddress})`);
-    console.log(`  Economic Mechanism: ${rep.economicModel.mechanism}`);
+**Response Example:**
+```json
+{
+  "ok": true,
+  "data": {
+    "service": "RWA Lens",
+    "version": "0.1.0",
+    "chain": "BNB Smart Chain",
+    "chainId": 56,
+    "supportedProviders": [
+      {
+        "id": "ondo",
+        "name": "Ondo Finance (Ondo Global Markets)",
+        "issuer": "Ondo Global Markets / Ondo Finance",
+        "economicMechanism": "auto_drip_scaled"
+      },
+      {
+        "id": "bstocks",
+        "name": "Binance bStocks",
+        "issuer": "BTech Holdings Limited (Binance Affiliate)",
+        "economicMechanism": "multiplier"
+      },
+      {
+        "id": "xstocks",
+        "name": "xStocks (Backed Finance)",
+        "issuer": "Backed Assets (JE) Limited (acquired by Kraken)",
+        "economicMechanism": "redemption_rate"
+      }
+    ],
+    "supportedTickers": ["NVDA", "AAPL", "TSLA"],
+    "totalVerifiedContracts": 5,
+    "endpoints": {
+      "discovery": "/api/lens",
+      "tickerLookup": "/api/lens/ticker/:ticker",
+      "contractLookup": "/api/lens/contract/:address"
+    }
   }
-}
-
-// 2. Reverse Contract Lookup
-const ondoContract = "0xa9ee28c80f960b889dfbd1902055218cba016f75";
-const contractResult = lookupByContract(ondoContract);
-if (contractResult.success) {
-  console.log(`Contract ${ondoContract} maps to:`);
-  console.log(`- Token: ${contractResult.matchedRepresentation.tokenSymbol}`);
-  console.log(`- Underlying: ${contractResult.underlying.ticker}`);
-  console.log(`- Evidence: ${contractResult.matchedRepresentation.provenance.sourceClass}`);
 }
 ```
 
 ---
 
-## Current Supported Scope
+### 2. Ticker Lookup
+**Endpoint:** `GET /api/lens/ticker/:ticker` (case-insensitive)  
+**Description:** Returns underlying traditional equity data alongside all verified tokenized representations on BNB Smart Chain.
+
+**Request:** `GET /api/lens/ticker/NVDA`  
+**Response Example:**
+```json
+{
+  "ok": true,
+  "data": {
+    "query": "NVDA",
+    "underlying": {
+      "ticker": "NVDA",
+      "name": "NVIDIA Corporation",
+      "exchange": "NASDAQ",
+      "quoteCurrency": "USD",
+      "marketHours": {
+        "isOpen": false,
+        "schedule": "America/New_York;0930-1600,...",
+        "timezone": "America/New_York"
+      },
+      "provenance": {
+        "sourceClass": "ORACLE",
+        "sourceName": "Pyth Network Hermes API & BSC Pyth Contract",
+        "confidence": "HIGH"
+      }
+    },
+    "representations": [
+      {
+        "providerId": "ondo",
+        "providerName": "Ondo Finance (Ondo Global Markets)",
+        "issuer": "Ondo Global Markets / Ondo Finance",
+        "tokenSymbol": "NVDAon",
+        "tokenName": "NVIDIA (Ondo Tokenized)",
+        "chain": "BNB Smart Chain",
+        "chainId": 56,
+        "contractAddress": "0xa9ee28c80f960b889dfbd1902055218cba016f75",
+        "decimals": 18,
+        "tokenStandard": "BEP-20",
+        "status": "ACTIVE",
+        "economicModel": {
+          "mechanism": "auto_drip_scaled",
+          "description": "Total-return tracker with automated dividend reinvestment (DRIP)",
+          "scaledUiEnabled": true,
+          "dividendHandling": "automatic_dividend_reinvestment_drip",
+          "tokenPriceTracksNav": true
+        },
+        "provenance": {
+          "sourceClass": "ON_CHAIN",
+          "sourceName": "BNB Smart Chain RPC (eth_call) & Ondo Official Portal",
+          "confidence": "HIGH"
+        }
+      },
+      {
+        "providerId": "bstocks",
+        "tokenSymbol": "NVDAB",
+        "contractAddress": "0x02fca66c1d1afb4e2a7884261eb00f63598a7436",
+        "economicModel": {
+          "mechanism": "multiplier",
+          "formula": "effective_balance = raw_token_balance * multiplier"
+        }
+      },
+      {
+        "providerId": "xstocks",
+        "tokenSymbol": "NVDAx",
+        "contractAddress": "0xc845b2894dbddd03858fd2d643b4ef725fe0849d",
+        "economicModel": {
+          "mechanism": "redemption_rate",
+          "rateFeedSymbol": "Crypto.NVDAX/NVDA.RR"
+        }
+      }
+    ]
+  }
+}
+```
+
+---
+
+### 3. Contract Reverse Lookup
+**Endpoint:** `GET /api/lens/contract/:address` (case-insensitive)  
+**Description:** Resolves a BNB Smart Chain token contract address back to its underlying equity and normalized provider representation.
+
+**Request:** `GET /api/lens/contract/0xa9ee28c80f960b889dfbd1902055218cba016f75`  
+**Response Example:**
+```json
+{
+  "ok": true,
+  "data": {
+    "query": "0xa9ee28c80f960b889dfbd1902055218cba016f75",
+    "normalizedAddress": "0xa9ee28c80f960b889dfbd1902055218cba016f75",
+    "underlying": {
+      "ticker": "NVDA",
+      "name": "NVIDIA Corporation"
+    },
+    "matchedRepresentation": {
+      "providerId": "ondo",
+      "tokenSymbol": "NVDAon",
+      "contractAddress": "0xa9ee28c80f960b889dfbd1902055218cba016f75"
+    }
+  }
+}
+```
+
+---
+
+## Response Envelope & Error Format
+
+All responses strictly adhere to the standard envelope format:
+
+- **Success (200 OK):**
+  ```json
+  {
+    "ok": true,
+    "data": { ... }
+  }
+  ```
+- **Error (400 Bad Request / 404 Not Found):**
+  ```json
+  {
+    "ok": false,
+    "error": {
+      "code": "INVALID_ADDRESS" | "TICKER_NOT_FOUND" | "CONTRACT_NOT_FOUND",
+      "message": "Human readable description"
+    }
+  }
+  ```
+
+---
+
+## Current Supported Scope & Limitations
 
 | Ticker | Company Name | Verified Representations on BNB Smart Chain |
 |---|---|---|
@@ -76,9 +207,5 @@ if (contractResult.success) {
 | **`AAPL`** | Apple Inc. | **Ondo** (`AAPLon`) *(bStocks/xStocks pending first-party on-chain verification)* |
 | **`TSLA`** | Tesla, Inc. | **Ondo** (`TSLAon`) *(bStocks/xStocks pending first-party on-chain verification)* |
 
----
-
-## Known Limitations
-
-- **Curated Coverage**: Only representations verified via direct on-chain inspection and first-party issuer documentation are currently in the registry.
-- **Off-Chain Corporate Actions**: Dividend announcements and split schedules are tracked via issuer multipliers; direct historical corporate action logs require indexer integrations in future phases.
+- **Strict Data Integrity**: Unpolled dynamic multipliers and rates are returned as `undefined` (omitted from JSON) rather than fabricated as `1.0`.
+- **Curated Coverage**: Candidate contracts failing on-chain bytecode validation are strictly excluded from the registry.
