@@ -1,47 +1,51 @@
 :root {
-  /* TickerKin Color System: Refined Dark Financial Intelligence */
-  --bg-app: #0a0c10;
-  --bg-surface: #11141a;
-  --bg-card: #161a22;
-  --bg-card-hover: #1c212c;
-  --bg-card-active: #202633;
-  --bg-input: #0e1117;
-  --bg-input-focus: #131720;
+  /* TickerKin Light Color System: Editorial Financial Intelligence */
+  --bg-app: #f8f9fb;
+  --bg-surface: #ffffff;
+  --bg-card: #ffffff;
+  --bg-card-hover: #fafbfc;
+  --bg-card-active: #f1f4f9;
+  --bg-input: #f3f5f8;
+  --bg-input-focus: #ffffff;
+  --bg-muted: #f1f4f8;
 
-  /* Restrained Borders */
-  --border-subtle: #202530;
-  --border-card: #28303e;
-  --border-hover: #3d4758;
-  --border-focus: #4e75ff;
+  /* Subtle Restrained Borders */
+  --border-subtle: #e8ecf2;
+  --border-card: #d9dfe8;
+  --border-hover: #b5c0d0;
+  --border-focus: #1a56db;
 
   /* Typography Colors */
-  --text-primary: #f0f3f7;
-  --text-secondary: #8b95a5;
-  --text-muted: #5a6472;
-  --text-disabled: #414854;
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #64748b;
+  --text-disabled: #94a3b8;
 
-  /* Primary TickerKin Brand Accent: Electric Slate Cobalt */
-  --accent-primary: #4e75ff;
-  --accent-primary-hover: #6385ff;
-  --accent-primary-soft: rgba(78, 117, 255, 0.12);
-  --accent-primary-border: rgba(78, 117, 255, 0.28);
+  /* Primary TickerKin Brand Accent: Refined Cobalt / Slate Blue */
+  --accent-primary: #1a56db;
+  --accent-primary-hover: #1646b0;
+  --accent-primary-soft: rgba(26, 86, 219, 0.08);
+  --accent-primary-border: rgba(26, 86, 219, 0.22);
 
   /* BNB Ecosystem Brand Accent: Used Sparingly */
-  --accent-bnb: #f0b90b;
-  --accent-bnb-soft: rgba(240, 185, 11, 0.1);
-  --accent-bnb-border: rgba(240, 185, 11, 0.25);
+  --accent-bnb: #b48500;
+  --accent-bnb-soft: rgba(240, 185, 11, 0.12);
+  --accent-bnb-border: rgba(202, 138, 4, 0.3);
 
-  /* Semantic Status Colors */
-  --status-active: #10b981;
-  --status-active-soft: rgba(16, 185, 129, 0.1);
-  --status-active-border: rgba(16, 185, 129, 0.25);
+  /* Semantic Restrained Status Colors */
+  --status-neutral: #475569;
+  --status-neutral-soft: #f1f5f9;
+  --status-neutral-border: #cbd5e1;
 
-  --status-warning: #f59e0b;
-  --status-warning-soft: rgba(245, 158, 11, 0.1);
+  --status-error: #dc2626;
+  --status-error-soft: rgba(220, 38, 38, 0.08);
+  --status-error-border: rgba(220, 38, 38, 0.25);
 
-  --status-error: #ef4444;
-  --status-error-soft: rgba(239, 68, 68, 0.1);
-  --status-error-border: rgba(239, 68, 68, 0.3);
+  /* Elevation & Shadows */
+  --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.04);
+  --shadow-card: 0 1px 3px rgba(15, 23, 42, 0.06), 0 1px 2px rgba(15, 23, 42, 0.04);
+  --shadow-hover: 0 4px 12px rgba(15, 23, 42, 0.08);
+  --shadow-drawer: -4px 0 24px rgba(15, 23, 42, 0.12);
 
   /* Border Radii */
   --radius-xs: 4px;
@@ -100,7 +104,7 @@ input {
 @keyframes fadeInScale {
   from {
     opacity: 0;
-    transform: scale(0.985) translateY(4px);
+    transform: scale(0.99) translateY(4px);
   }
   to {
     opacity: 1;
@@ -125,16 +129,17 @@ input {
   animation: slideInRight 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-/* Kin Map Connectors */
+/* Kin Map Connectors (Curved SVG lines) */
 .kin-branch-active {
   stroke: var(--accent-primary);
   stroke-dasharray: 4, 4;
-  animation: branchPulse 2.5s linear infinite;
+  animation: branchPulse 3s linear infinite;
 }
 
 .kin-branch-static {
   stroke: var(--border-card);
   stroke-width: 1.5;
+  fill: none;
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -116,3 +116,32 @@
 - Production build (`next build`): Compiled 5 routes cleanly.
 - Visual inspection smoke test (`scripts/visual-inspect.mjs`): 9/9 assertions passed.
 
+---
+
+## Entry 8: Phase 4D TickerKin Light Visual Polish
+**Date:** 2026-09-28  
+**Subject:** Transitioning TickerKin from a dark dashboard to an editorial, light financial-data explorer with refined curved SVG branches.
+
+### 1. What We Implemented
+- **Light Editorial Palette (`src/app/globals.css`)**:
+  - Implemented crisp off-white background (`#F8F9FB`), white elevated card surfaces (`#FFFFFF`), dark navy/charcoal primary typography (`#0F172A`), muted neutral secondary typography (`#475569`, `#64748B`), and subtle borders (`#E8ECF2`, `#D9DFE8`).
+  - Consolidated interactive and branch styling around a single refined cobalt slate accent (`#1A56DB`).
+  - Strictly limited BNB Yellow (`#B48500`) to ecosystem chain badges.
+- **Curved SVG Kin Map Geometry (`src/components/stockdna/DnaGraph.tsx`)**:
+  - Replaced rigid 90-degree lines with smooth cubic bezier SVG paths (`d="M 500 0 C 500 28, ..."`), cleanly routing from the central root junction to the representation cards.
+  - Retained the responsive mobile vertical lineage rail for narrow viewports (< 880px).
+- **Scale & Vertical Proportion**:
+  - Expanded content max-width to `1320px` and refined card padding to `1.35rem`, allowing the explorer to occupy desktop screens with confident proportion.
+- **Light Theme Component States**:
+  - Updated `EvidenceDrawer`, `RawLensDrawer`, `ErrorBanner`, and `LoadingSkeleton` to crisp light theme treatments.
+- **Automated Verification Suite (`tests/visual.test.ts`)**:
+  - Added dedicated visual verification assertions covering color tokens, typography contrast, curved SVG paths, and truthful unpolled messaging.
+
+### 2. Verification & Quality Gates
+- Vitest suite: 46/46 passing tests across 4 test files (`tests/engine.test.ts`, `tests/api.test.ts`, `tests/ui.test.ts`, `tests/visual.test.ts`).
+- TypeScript (`tsc --noEmit`): Exited with 0 errors.
+- ESLint (`next lint`): Exited with 0 warnings/errors.
+- Production build (`next build`): Compiled 5 routes cleanly.
+- Visual inspection script (`scripts/visual-inspect.mjs`): 9/9 checks passed.
+
+
