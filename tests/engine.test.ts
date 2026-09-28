@@ -1,6 +1,5 @@
 import { describe, it, expect } from "vitest";
 import { lookupByTicker, lookupByContract, rwaLens } from "../src/lens/engine";
-import { VERIFIED_REGISTRY } from "../src/lens/registry";
 
 describe("RWA Lens Core Engine", () => {
   describe("1. Ticker Lookups", () => {
@@ -139,7 +138,7 @@ describe("RWA Lens Core Engine", () => {
     });
   });
 
-  describe("4. Economic & Corporate-Action Mechanism Distinction", () => {
+  describe("4. Economic & Corporate-Action Mechanism Distinction & Data Integrity", () => {
     it("should preserve distinct economic mechanisms without flattening into identical models", () => {
       const result = lookupByTicker("NVDA");
       expect(result.success).toBe(true);
@@ -159,15 +158,16 @@ describe("RWA Lens Core Engine", () => {
         // bStocks must be multiplier
         expect(bstocks?.economicModel.mechanism).toBe("multiplier");
         if (bstocks?.economicModel.mechanism === "multiplier") {
-          expect(bstocks.economicModel.currentMultiplier).toBe(1.0);
           expect(bstocks.economicModel.formula).toContain("raw_token_balance * multiplier");
-          expect(bstocks.economicModel.withholdingTaxRate).toBe(0.3);
+          // DATA INTEGRITY: currentMultiplier must be undefined if not polled live (never fake 1.0)
+          expect(bstocks.economicModel.currentMultiplier).toBeUndefined();
         }
 
         // xStocks must be redemption_rate
         expect(xstocks?.economicModel.mechanism).toBe("redemption_rate");
         if (xstocks?.economicModel.mechanism === "redemption_rate") {
-          expect(xstocks.economicModel.currentRate).toBe(1.0);
+          // DATA INTEGRITY: currentRate must be undefined if not polled live (never fake 1.0)
+          expect(xstocks.economicModel.currentRate).toBeUndefined();
           expect(xstocks.economicModel.rateFeedSymbol).toBe("Crypto.NVDAX/NVDA.RR");
         }
       }
@@ -196,7 +196,6 @@ describe("RWA Lens Core Engine", () => {
 
   describe("6. Registry Integrity & Scope Audit", () => {
     it("should NOT leak unverified bStocks AAPL/TSLA or xStocks AAPL/TSLA candidate contracts into registry", () => {
-      // For AAPL, only Ondo should be present
       const aaplResult = lookupByTicker("AAPL");
       expect(aaplResult.success).toBe(true);
       if (aaplResult.success) {
@@ -205,7 +204,6 @@ describe("RWA Lens Core Engine", () => {
         expect(aaplResult.representations[0].tokenSymbol).toBe("AAPLon");
       }
 
-      // For TSLA, only Ondo should be present
       const tslaResult = lookupByTicker("TSLA");
       expect(tslaResult.success).toBe(true);
       if (tslaResult.success) {
@@ -214,7 +212,6 @@ describe("RWA Lens Core Engine", () => {
         expect(tslaResult.representations[0].tokenSymbol).toBe("TSLAon");
       }
 
-      // Unverified candidate addresses from Phase 1.5 must return CONTRACT_NOT_FOUND
       const unverifiedBStocksAAPL = "0x1535492d5395A377aCd5386a51272C151A67a4e6";
       const unverifiedBStocksTSLA = "0x256CebE4cfA2576bA1aC26D68d7Fe2E7284fB144";
 
@@ -229,7 +226,6 @@ describe("RWA Lens Core Engine", () => {
 
     it("should return only 5 verified contract addresses in total", () => {
       const contracts = rwaLens.getSupportedContracts();
-      // NVDA (3) + AAPL (1) + TSLA (1) = 5
       expect(contracts.length).toBe(5);
     });
   });

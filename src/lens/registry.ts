@@ -17,6 +17,9 @@ export interface RegistryEquityEntry {
  * CRITICAL RULE: Only includes contract representations verified via direct
  * on-chain eth_call bytecode execution and first-party issuer documentation.
  * Unverified / candidate contracts downgraded to UNKNOWN in Phase 1.5 are excluded.
+ *
+ * DATA INTEGRITY RULE: Placeholder / default values (such as fake 'multiplier: 1.0')
+ * are excluded. Only verified structural mechanism parameters are stored.
  */
 export const VERIFIED_REGISTRY: readonly RegistryEquityEntry[] = [
   {
@@ -57,9 +60,6 @@ export const VERIFIED_REGISTRY: readonly RegistryEquityEntry[] = [
           contractAddress: "0x02fca66c1d1afb4e2a7884261eb00f63598a7436",
           decimals: 18,
           status: "ACTIVE",
-          economicParams: {
-            multiplier: 1.0,
-          },
           secondaryDex: "PancakeSwap",
           liquidityTier: "HIGH",
           sourceRef: "https://www.binance.com",
@@ -75,7 +75,6 @@ export const VERIFIED_REGISTRY: readonly RegistryEquityEntry[] = [
           decimals: 18,
           status: "ACTIVE",
           economicParams: {
-            redemptionRate: 1.0,
             rateFeedSymbol: "Crypto.NVDAX/NVDA.RR",
           },
           secondaryDex: "Multi-chain (Solana DEXes / CoW Swap / PancakeSwap)",
@@ -112,8 +111,6 @@ export const VERIFIED_REGISTRY: readonly RegistryEquityEntry[] = [
           sourceRef: "https://docs.ondo.finance",
         },
       },
-      // Note: bStocks AAPL and xStocks AAPL BSC contracts were downgraded to UNKNOWN during
-      // Phase 1.5 audit and are intentionally omitted until first-party verified.
     ],
   },
   {
@@ -143,8 +140,6 @@ export const VERIFIED_REGISTRY: readonly RegistryEquityEntry[] = [
           sourceRef: "https://docs.ondo.finance",
         },
       },
-      // Note: bStocks TSLA and xStocks TSLA BSC contracts were downgraded to UNKNOWN during
-      // Phase 1.5 audit and are intentionally omitted until first-party verified.
     ],
   },
 ];

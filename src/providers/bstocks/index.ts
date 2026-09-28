@@ -10,7 +10,7 @@ export class BStocksProviderAdapter implements ProviderAdapter {
 
   normalize(record: RawProviderAssetRecord): TokenizedRepresentation {
     const rawMultiplier = record.economicParams?.multiplier;
-    const currentMultiplier = typeof rawMultiplier === "number" ? rawMultiplier : 1.0;
+    const currentMultiplier = typeof rawMultiplier === "number" ? rawMultiplier : undefined;
 
     const economicModel: BStocksMultiplierModel = {
       mechanism: "multiplier",
@@ -18,13 +18,12 @@ export class BStocksProviderAdapter implements ProviderAdapter {
       currentMultiplier,
       formula: "effective_balance = raw_token_balance * multiplier",
       dividendHandling: "automatic_reinvestment_via_multiplier",
-      withholdingTaxRate: 0.3,
       provenance: {
         sourceClass: "FIRST_PARTY",
         sourceName: "Binance Tokenized Securities Docs",
         sourceRef: "https://www.binance.com",
         confidence: "HIGH",
-        notes: "Verified on-chain Multiplier mechanics for net dividend reinvestment & splits",
+        notes: "Verified on-chain Multiplier mechanics for net dividend reinvestment & splits (BEP-677 scaled UI amount)",
       },
     };
 

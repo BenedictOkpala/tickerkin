@@ -10,7 +10,7 @@ export class XStocksProviderAdapter implements ProviderAdapter {
 
   normalize(record: RawProviderAssetRecord): TokenizedRepresentation {
     const rawRate = record.economicParams?.redemptionRate;
-    const currentRate = typeof rawRate === "number" ? rawRate : 1.0;
+    const currentRate = typeof rawRate === "number" ? rawRate : undefined;
     const rateFeedSymbol = typeof record.economicParams?.rateFeedSymbol === "string" 
       ? record.economicParams.rateFeedSymbol 
       : undefined;
