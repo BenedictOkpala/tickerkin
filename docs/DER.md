@@ -8,36 +8,42 @@
 
 ## Entry 2: Phase 1.5 Evidence & Architecture Audit
 **Date:** 2026-09-27  
-**Subject:** Rigorous evidence classification, distinguishing first-party/on-chain facts from indexer inferences, and resolving structural nuances.
+**Summary:** Rigorous evidence classification distinguishing first-party/on-chain facts from indexer inferences. Identified the total-return / multiplier model nuances across bStocks, Ondo, and Backed/xStocks.
 
-### 1. What We Attempted
-- Audited every provider claim from Phase 1 against explicit evidence tiers: `[FIRST-PARTY]`, `[ON-CHAIN]`, `[ORACLE]`, `[THIRD-PARTY]`, `[INFERRED]`, and `[UNKNOWN]`.
-- Dissected the relationship between Backed Finance and xStocks (`bNVDA` vs `NVDAx`).
-- Investigated corporate action mechanics, dividend handling, and the "1:1 share exposure" claim.
-- Executed direct `eth_call` contract verification on BNB Smart Chain mainnet for candidate addresses across `NVDA`, `AAPL`, and `TSLA`.
-- Assessed official BNB Hackathon tooling to confirm or refute RWA API redundancy.
+---
 
-### 2. Key Audit Findings & Corrections
-- **xStocks vs. Backed Finance (`[FIRST-PARTY]` Verified)**:
-  - Backed Finance (Backed Assets JE Limited) is the legal and technical issuer of xStocks.
-  - "bTokens" (e.g. `bNVDA`) are Backed's legacy product line, currently being phased out in favor of "xStocks" (e.g. `NVDAx`). They are not two competing protocols; they are versions of the same issuer's product.
-  - **Terminology standard for RWA Lens**: Use `xStocks` as the primary provider moniker, noting Backed Finance as the underlying issuer.
-- **The "1:1" Exposure Nuance (`[FIRST-PARTY]` & `[ORACLE]` Verified)**:
-  - The initial claim that tokens provide a static "1:1 share exposure" is an oversimplification.
-  - All three providers operate **Total Return** models:
-    - **bStocks**: Uses an on-chain Multiplier (`Raw Balance × Multiplier = Effective Balance`) that scales upward with reinvested net dividends and splits.
-    - **Ondo**: Implements automatic dividend reinvestment (DRIP) reflected via token scaling on BSC or per-token price adjustments.
-    - **xStocks**: Employs continuous redemption rate feeds (`.RR` feeds on Pyth) and periodic reinvestment/airdrop distributions.
-  - **Architectural Impact**: RWA Lens must not model token quantity as equal to underlying share quantity. The schema must distinguish `rawTokenBalance`, `multiplierOrRate`, and `effectiveUnderlyingShares`.
-- **On-Chain Verification vs. Third-Party Indexer Hallucinations (`[ON-CHAIN]` Verified)**:
-  - Ondo's contracts for `NVDAon` (`0xa9ee28...`), `AAPLon` (`0x390a68...`), and `TSLAon` (`0x2494b6...`) returned confirmed BEP-20 metadata via direct RPC `eth_call`.
-  - bStocks `NVDAB` (`0x02fca6...`) and xStocks `NVDAx` (`0xc845b2...`) were similarly verified on-chain.
-  - **Candidate addresses from third-party search results for bStocks AAPL and TSLA failed on-chain verification** (returned empty bytecode). This demonstrates the absolute necessity of our evidence audit and highlights the dangerous fragmentation of third-party indexers.
-- **BNB Hackathon Infrastructure Redundancy Audit (`[FIRST-PARTY]` Verified)**:
-  - The BNB Hackathon provides temporary aggregated APIs (swap routing and market feeds via partner integrations like Binance Web3 Wallet).
-  - However, it does not provide an open, standardized, cross-provider canonical RWA normalization engine or an on-chain registry mapping tickers to all issuer variants.
-  - Building RWA Lens remains technically justified and directly aligned with the hackathon's objectives.
+## Entry 3: Phase 2 Core Engine Implementation
+**Date:** 2026-09-28  
+**Subject:** Implementation of the normalized domain model, provider adapters, verified registry, and lookup engine.
 
-### 3. Developer Friction & Fragmentation
-- Third-party indexers (CoinGecko, DexScreener) mix legacy token addresses, unverified community tokens, and unofficial wrapped variants under the same ticker names.
-- Without a unified normalization layer like RWA Lens, developers are forced to manually inspect bytecode and perform multiple RPC queries to verify provider authenticity.
+### 1. What We Implemented
+- Designed the type-safe TypeScript domain model under `src/types/`:
+  - `provenance.ts`: `EvidenceClass` (`FIRST_PARTY`, `ON_CHAIN`, `ORACLE`, `THIRD_PARTY`, `INFERRED`, `UNKNOWN`) and `EvidenceRecord`.
+  - `economic.ts`: Discriminated union for `EconomicModel` (`BStocksMultiplierModel`, `XStocksRedemptionRateModel`, `OndoAutoDripScaledModel`, `GenericEconomicModel`).
+  - `price.ts`: Disambiguates `TRADITIONAL_EQUITY_REFERENCE`, `TOKEN_NAV`, and `DEX_MARKET_PRICE`.
+  - `equity.ts`: Underlying equity descriptor with market hours from Pyth.
+  - `token.ts`: Normalized tokenized representation.
+  - `lens.ts`: Strongly typed results for `lookupByTicker` and `lookupByContract`.
+- Implemented isolated provider adapters:
+  - `OndoProviderAdapter` (`src/providers/ondo/index.ts`)
+  - `BStocksProviderAdapter` (`src/providers/bstocks/index.ts`)
+  - `XStocksProviderAdapter` (`src/providers/xstocks/index.ts`)
+  - `BnbOracleAdapter` (`src/providers/bnb/index.ts`)
+- Created the curated `VERIFIED_REGISTRY` (`src/lens/registry.ts`) strictly admitting verified assets (`NVDA` across all 3 providers, `AAPL`/`TSLA` for Ondo) while rejecting unverified candidate contracts.
+- Built the `RWALensEngine` (`src/lens/engine.ts`) supporting case-insensitive lookups, address normalization, EVM address validation, and structured error responses.
+- Added comprehensive automated unit tests (`tests/engine.test.ts`) executed via Vitest.
+
+### 2. Engineering Observations & Experience
+- **Preserving Mechanism Differences vs. Monolithic Schemas**:
+  - The temptation in multi-asset systems is to flatten all tokens into a simple numeric `sharesPerToken = 1.0`. However, doing so would hide critical differences (e.g. bStocks' 30% withholding tax on dividend reinvestment, xStocks' `.RR` rate updates, Ondo's Scaled UI).
+  - Using a discriminated union on `economicModel.mechanism` proved clean in TypeScript, allowing consumers to switch on the mechanism type safely while accessing common fields directly.
+- **Strict Provenance Attachment**:
+  - Attaching `provenance` records directly to representations and underlying assets makes debugging transparent: developers can immediately see whether a contract was verified via `ON_CHAIN` RPC call or an `ORACLE` feed.
+- **Vitest Integration**:
+  - Adding `vitest` with `@/*` path alias support via `vitest.config.mjs` executed all 16 unit tests in 12ms without touching or bloating production Next.js dependencies.
+
+### 3. Testing & Verification Results
+- 16/16 unit tests passed.
+- TypeScript typecheck passed with 0 errors (`tsc --noEmit`).
+- ESLint passed with 0 warnings/errors.
+- Next.js production build succeeded with static page generation.
