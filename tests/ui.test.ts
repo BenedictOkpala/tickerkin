@@ -90,4 +90,57 @@ describe("TickerKin Frontend UI Integration & Validation", () => {
       }
     });
   });
+
+  describe("4. Live Enrichment UI Presentation Properties", () => {
+    it("should carry liveEnrichment with distinct economic factors", () => {
+      const mockOndoRep = {
+        providerId: "ondo" as const,
+        providerName: "Ondo Finance",
+        issuer: "Ondo Global Markets",
+        tokenSymbol: "NVDAon",
+        tokenName: "NVIDIA (Ondo Tokenized)",
+        chain: "BNB Smart Chain" as const,
+        chainId: 56 as const,
+        contractAddress: "0xa9ee28c80f960b889dfbd1902055218cba016f75",
+        decimals: 18,
+        tokenStandard: "BEP-20" as const,
+        status: "ACTIVE" as const,
+        economicModel: {
+          mechanism: "auto_drip_scaled" as const,
+          description: "Total-return tracker with automated dividend reinvestment (DRIP)" as const,
+          currentScaleFactor: 1.001715,
+          scaledUiEnabled: true,
+          dividendHandling: "automatic_dividend_reinvestment_drip" as const,
+          tokenPriceTracksNav: true,
+          provenance: {
+            sourceClass: "FIRST_PARTY" as const,
+            sourceName: "Ondo Finance Documentation",
+            confidence: "HIGH" as const,
+          },
+        },
+        liveEnrichment: {
+          rawMultiplier: "1.0017152487959898",
+          multiplierValue: 1.0017152487959898,
+          lastUpdateTime: 1788998689203,
+          lastUpdateIso: "2026-09-29T12:04:49.203Z",
+          matchConfidence: "HIGH" as const,
+          matchBasis: "Verified on-chain identity match",
+          provenance: {
+            sourceClass: "THIRD_PARTY" as const,
+            sourceName: "Binance Web3 RWA Data",
+            confidence: "HIGH" as const,
+          },
+        },
+        provenance: {
+          sourceClass: "FIRST_PARTY" as const,
+          sourceName: "Ondo Finance Documentation",
+          confidence: "HIGH" as const,
+        },
+      };
+
+      expect(mockOndoRep.liveEnrichment).toBeDefined();
+      expect(mockOndoRep.liveEnrichment.provenance.sourceName).toBe("Binance Web3 RWA Data");
+      expect(mockOndoRep.economicModel.currentScaleFactor).toBe(1.001715);
+    });
+  });
 });

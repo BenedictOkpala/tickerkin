@@ -1,4 +1,4 @@
-import { lookupByTicker } from "@/lens";
+import { lookupByTickerAsync } from "@/lens";
 import { successResponse, errorResponse } from "@/lib/api-response";
 
 interface RouteParams {
@@ -18,7 +18,7 @@ export async function GET(
       return errorResponse("INVALID_TICKER", "A valid equity ticker must be provided.", 400);
     }
 
-    const result = lookupByTicker(ticker);
+    const result = await lookupByTickerAsync(ticker);
 
     if (!result.success) {
       return errorResponse(result.error, result.message, 404);

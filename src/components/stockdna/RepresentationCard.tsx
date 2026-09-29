@@ -196,16 +196,46 @@ export function RepresentationCard({
       {/* Economic Mechanism */}
       <EconomicPill model={representation.economicModel} />
 
-      {/* Card Footer: Provenance */}
+      {/* Card Footer: Provenance & Live Source */}
       <div
         style={{
           display: "flex",
           alignItems: "center",
-          justifyContent: "flex-end",
+          justifyContent: "space-between",
           marginTop: "auto",
           paddingTop: "0.25rem",
+          gap: "0.5rem",
+          flexWrap: "wrap",
         }}
       >
+        {representation.liveEnrichment ? (
+          <button
+            type="button"
+            onClick={() => onInspectEvidence(representation.liveEnrichment!.provenance)}
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "0.3rem",
+              padding: "0.2rem 0.45rem",
+              borderRadius: "var(--radius-xs)",
+              backgroundColor: "var(--status-active-soft)",
+              border: "1px solid var(--status-active-border)",
+              color: "var(--status-active)",
+              fontSize: "0.68rem",
+              fontWeight: 600,
+              cursor: "pointer",
+            }}
+            title="Inspect Binance Web3 live data provenance"
+          >
+            <span style={{ width: "5px", height: "5px", borderRadius: "50%", backgroundColor: "var(--status-active)" }} />
+            <span>Binance Web3 Live</span>
+          </button>
+        ) : (
+          <span style={{ fontSize: "0.68rem", color: "var(--text-muted)" }}>
+            Static verified
+          </span>
+        )}
+
         <ProvenanceBadge provenance={representation.provenance} onInspect={onInspectEvidence} />
       </div>
     </div>

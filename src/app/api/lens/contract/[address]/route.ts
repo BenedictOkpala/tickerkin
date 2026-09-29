@@ -1,4 +1,4 @@
-import { lookupByContract } from "@/lens";
+import { lookupByContractAsync } from "@/lens";
 import { successResponse, errorResponse } from "@/lib/api-response";
 
 interface RouteParams {
@@ -18,7 +18,7 @@ export async function GET(
       return errorResponse("INVALID_ADDRESS", "A contract address must be provided.", 400);
     }
 
-    const result = lookupByContract(address);
+    const result = await lookupByContractAsync(address);
 
     if (!result.success) {
       const statusCode = result.error === "INVALID_ADDRESS" ? 400 : 404;

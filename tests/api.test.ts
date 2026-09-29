@@ -1,9 +1,29 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import { GET as getDiscovery } from "../src/app/api/lens/route";
 import { GET as getTicker } from "../src/app/api/lens/ticker/[ticker]/route";
 import { GET as getContract } from "../src/app/api/lens/contract/[address]/route";
+import { defaultBinanceClient } from "../src/providers/binance";
 
 describe("RWA Lens Public HTTP API", () => {
+  const originalFetch = globalThis.fetch;
+
+  beforeEach(() => {
+    defaultBinanceClient.clearCache();
+    defaultBinanceClient.setFetchFn(
+      vi.fn().mockResolvedValue({
+        ok: true,
+        json: async () => ({
+          code: "000000",
+          data: [],
+        }),
+      }) as unknown as typeof fetch
+    );
+  });
+
+  afterEach(() => {
+    defaultBinanceClient.clearCache();
+    defaultBinanceClient.setFetchFn(undefined);
+  });
   describe("1. Root Discovery Endpoint (GET /api/lens)", () => {
     it("should return service metadata, supported providers, and supported tickers", async () => {
       const response = await getDiscovery();
@@ -180,6 +200,46 @@ describe("RWA Lens Public HTTP API", () => {
       expect(bstocks.economicModel.currentMultiplier).toBeUndefined();
       expect(xstocks.economicModel.currentRate).toBeUndefined();
       expect(bstocks.economicModel.withholdingTaxRate).toBeUndefined();
+    });
+
+    it("should include liveEnrichment in API response when verified live data is available", async () => {
+      defaultBinanceClient.clearCache();
+      defaultBinanceClient.setFetchFn(
+        vi.fn().mockResolvedValue({
+          ok: true,
+          json: async () => ({
+            code: "000000",
+            data: [
+              {
+                chainId: "56",
+                contractAddress: "0x02fca66c1d1afb4e2a7884261eb00f63598a7436",
+                symbol: "NVDAB",
+                ticker: "NVDA",
+                type: 3,
+                assetType: 1,
+                multiplier: "1.000778223752807865",
+                cs: "NVDABUSDT",
+                lastUpdateTime: 1789012513889,
+                d: 18,
+              },
+            ],
+          }),
+        }) as unknown as typeof fetch
+      );
+
+      const req = new Request("http://localhost/api/lens/ticker/NVDA");
+      const response = await getTicker(req, {
+        params: Promise.resolve({ ticker: "NVDA" }),
+      });
+
+      const json = await response.json();
+      expect(json.ok).toBe(true);
+
+      const bstocks = json.data.representations.find((r: { providerId: string }) => r.providerId === "bstocks");
+      expect(bstocks.liveEnrichment).toBeDefined();
+      expect(bstocks.liveEnrichment.rawMultiplier).toBe("1.000778223752807865");
+      expect(bstocks.economicModel.currentMultiplier).toBeCloseTo(1.000778, 5);
+      expect(bstocks.liveEnrichment.provenance.sourceName).toBe("Binance Web3 RWA Data");
     });
 
     it("should set proper caching headers on successful responses", async () => {

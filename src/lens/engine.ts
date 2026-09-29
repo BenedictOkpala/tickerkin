@@ -9,6 +9,8 @@ import { bstocksAdapter } from "@/providers/bstocks";
 import { xstocksAdapter } from "@/providers/xstocks";
 import { VERIFIED_REGISTRY, type RegistryEquityEntry } from "./registry";
 
+import { binanceRwaAdapter, BinanceRwaAdapter } from "@/providers/binance";
+
 /**
  * Normalizes an Ethereum / BNB Smart Chain address to standard lowercase format.
  */
@@ -30,9 +32,14 @@ export function isValidEvmAddress(address: string): boolean {
 export class RWALensEngine {
   private readonly adapters: ReadonlyMap<ProviderId, ProviderAdapter>;
   private readonly registry: readonly RegistryEquityEntry[];
+  private readonly enrichmentAdapter: BinanceRwaAdapter;
 
-  constructor(registry: readonly RegistryEquityEntry[] = VERIFIED_REGISTRY) {
+  constructor(
+    registry: readonly RegistryEquityEntry[] = VERIFIED_REGISTRY,
+    enrichmentAdapter: BinanceRwaAdapter = binanceRwaAdapter
+  ) {
     this.registry = registry;
+    this.enrichmentAdapter = enrichmentAdapter;
     this.adapters = new Map<ProviderId, ProviderAdapter>([
       ["ondo", ondoAdapter],
       ["bstocks", bstocksAdapter],
@@ -56,7 +63,7 @@ export class RWALensEngine {
 
   /**
    * Looks up an equity by traditional ticker (e.g. "NVDA", "AAPL", "TSLA").
-   * Lookup is case-insensitive.
+   * Lookup is case-insensitive and synchronous (un-enriched baseline).
    */
   public lookupByTicker(ticker: string): TickerLookupResult {
     const cleanTicker = ticker.trim().toUpperCase();
@@ -95,8 +102,33 @@ export class RWALensEngine {
   }
 
   /**
+   * Looks up an equity by traditional ticker with live dynamic enrichment (e.g. Binance Web3).
+   * Falls back gracefully to baseline verified representations if external API is unavailable.
+   */
+  public async lookupByTickerAsync(ticker: string): Promise<TickerLookupResult> {
+    const baseline = this.lookupByTicker(ticker);
+    if (!baseline.success) {
+      return baseline;
+    }
+
+    try {
+      const enrichedRepresentations = await this.enrichmentAdapter.enrichRepresentationsAsync(
+        baseline.representations,
+        baseline.underlying.ticker
+      );
+
+      return {
+        ...baseline,
+        representations: enrichedRepresentations,
+      };
+    } catch {
+      return baseline;
+    }
+  }
+
+  /**
    * Looks up an equity and its representation by BNB Smart Chain contract address.
-   * Lookup is case-insensitive.
+   * Lookup is case-insensitive and synchronous (un-enriched baseline).
    */
   public lookupByContract(contractAddress: string): ContractLookupResult {
     const rawAddress = contractAddress.trim();
@@ -136,6 +168,31 @@ export class RWALensEngine {
   }
 
   /**
+   * Looks up an equity by contract address with live dynamic enrichment (e.g. Binance Web3).
+   * Falls back gracefully to baseline verified representation if external API is unavailable.
+   */
+  public async lookupByContractAsync(contractAddress: string): Promise<ContractLookupResult> {
+    const baseline = this.lookupByContract(contractAddress);
+    if (!baseline.success) {
+      return baseline;
+    }
+
+    try {
+      const enrichedRep = await this.enrichmentAdapter.enrichSingleRepresentationAsync(
+        baseline.matchedRepresentation,
+        baseline.underlying.ticker
+      );
+
+      return {
+        ...baseline,
+        matchedRepresentation: enrichedRep,
+      };
+    } catch {
+      return baseline;
+    }
+  }
+
+  /**
    * Returns list of supported traditional tickers in the verified registry.
    */
   public getSupportedTickers(): string[] {
@@ -162,15 +219,29 @@ export class RWALensEngine {
 export const rwaLens = new RWALensEngine();
 
 /**
- * Convenience helper for ticker lookup.
+ * Convenience helper for synchronous ticker lookup.
  */
 export function lookupByTicker(ticker: string): TickerLookupResult {
   return rwaLens.lookupByTicker(ticker);
 }
 
 /**
- * Convenience helper for contract lookup.
+ * Convenience helper for async enriched ticker lookup.
+ */
+export async function lookupByTickerAsync(ticker: string): Promise<TickerLookupResult> {
+  return rwaLens.lookupByTickerAsync(ticker);
+}
+
+/**
+ * Convenience helper for synchronous contract lookup.
  */
 export function lookupByContract(contractAddress: string): ContractLookupResult {
   return rwaLens.lookupByContract(contractAddress);
+}
+
+/**
+ * Convenience helper for async enriched contract lookup.
+ */
+export async function lookupByContractAsync(contractAddress: string): Promise<ContractLookupResult> {
+  return rwaLens.lookupByContractAsync(contractAddress);
 }

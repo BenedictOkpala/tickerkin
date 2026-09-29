@@ -171,5 +171,56 @@
 ### 2. Architectural Recommendation
 - **Hypothesis Validated:** Binance Web3 RWA API serves as an external data adapter/ingestion source. RWA Lens retains its role as the authoritative normalization, verification, and provenance engine, providing domain modeling (mechanisms, legal issuers, Pyth oracles) that Binance's raw list endpoint does not expose.
 
+---
+
+## Entry 10: Phase 5B Binance RWA Live Data Adapter & Cross-Chain Identity Resolution
+**Date:** 2026-09-29  
+**Subject:** Implementing the read-only Binance RWA data client, chain-aware identity matcher, non-flattening economic model enrichment, and TickerKin UI live status integration.
+
+### 1. What We Implemented
+- **Server-Side Public Client (`src/providers/binance/client.ts`)**:
+  - Implemented `BinanceRwaClient` querying `/bapi/defi/v1/public/wallet-direct/buw/wallet/market/token/rwa/stock/detail/list/ai` with zero credentials required.
+  - Added configurable timeout (3000ms `AbortSignal.timeout`) and in-memory TTL caching (60,000ms) with concurrent fetching across all provider types (`1`, `2`, `3`).
+  - Added strict response validation (`isValidBinanceStockRecord`) and graceful fallback returning `[]` on HTTP error, malformed JSON, or network disconnection.
+- **Strict Chain-Aware Identity Matcher (`src/providers/binance/matcher.ts`)**:
+  - Enforced the Critical Integrity Rule: Never enrich a representation using ticker alone.
+  - Implemented multi-parameter resolution requiring:
+    1. Exact ticker match (`record.ticker === underlying.ticker`)
+    2. Provider type compatibility (`type 1` $\leftrightarrow$ `ondo`, `type 2` $\leftrightarrow$ `xstocks`, `type 3` $\leftrightarrow$ `bstocks`)
+    3. Chain parity (`chainId: 56` on BSC $\neq$ `CT_501` on Solana)
+    4. Contract address matching (case-insensitive EVM check for BSC/ETH, exact string check for Solana)
+    5. Finite positive numeric multiplier validation
+- **Binance RWA Adapter & Non-Flattening Model (`src/providers/binance/adapter.ts`)**:
+  - Created `BinanceRwaAdapter` as an external enrichment source, strictly separated from issuer adapters (`OndoProviderAdapter`, `BStocksProviderAdapter`, `XStocksProviderAdapter`).
+  - Mapped dynamic multipliers without flattening mechanisms:
+    - Ondo (`auto_drip_scaled`): Populates `currentScaleFactor` while preserving `scaledUiEnabled: true`.
+    - bStocks (`multiplier`): Populates `currentMultiplier` while preserving formula `effective_balance = raw_token_balance * multiplier`.
+    - xStocks (`redemption_rate`): Only populates `currentRate` when exact representation identity is verified.
+  - Attached explicit `BinanceLiveEnrichment` payload with `THIRD_PARTY` provenance and match basis documentation.
+- **RWA Lens Async Engine Integration (`src/lens/engine.ts`)**:
+  - Added `lookupByTickerAsync` and `lookupByContractAsync` alongside existing synchronous baseline methods.
+  - Updated API routes (`/api/lens/ticker/[ticker]` and `/api/lens/contract/[address]`) to serve live-enriched payloads with fallback resilience.
+- **TickerKin UI Integration (`src/components/stockdna/EconomicPill.tsx` & `RepresentationCard.tsx`)**:
+  - Rendered live factors (`Scale factor: 1.001715`, `Multiplier: 1.000778`) with active status indicators when matched.
+  - Preserved truthful fallback messaging (`Live factor not available`) when unpolled or unmatched.
+  - Added a clickable `Binance Web3 Live` badge in the card footer opening the verification evidence drawer.
+
+### 2. Engineering Observations & Cross-Chain Identity Friction
+- **The Cross-Chain Identity Problem**:
+  - The flagship equity `NVDA` exists across all 3 providers and multiple blockchains (BSC, Ethereum, Solana).
+  - In the Binance Web3 RWA API, xStocks records are currently indexed exclusively on Solana (`chainId: "CT_501"`, mint `Xsc9qvGR1efVDFGLrVsmkzv3qi45LTBjeUKSPmx9qEh`), whereas RWA Lens indexes the BSC tokenized equity ecosystem (`chainId: 56`, contract `0xc845...`).
+  - Naive ticker-based or provider-based matching would have erroneously enriched the BSC xStocks card with Solana mint data and rates.
+  - Our chain-aware address matcher correctly identified the chain/address mismatch, resulting in `NO_MATCH`, which left the BSC xStocks representation cleanly un-enriched while successfully enriching Ondo BSC (`0xa9ee...`) and bStocks BSC (`0x02fc...`).
+- **Fetch Resolution in Client Singleton**:
+  - When unit-testing Next.js API route handlers with mocked `fetch`, constructing a singleton with `options.fetchFn ?? globalThis.fetch` captured `globalThis.fetch` before Vitest's `beforeEach` mock ran.
+  - Solved by resolving `this.customFetchFn ?? globalThis.fetch` dynamically at call time and providing an explicit `setFetchFn` helper on `BinanceRwaClient`.
+
+### 3. Verification & Quality Gates
+- **Unit & Integration Tests**: 57/57 passing across 5 test suites (`tests/binance.test.ts`, `tests/engine.test.ts`, `tests/api.test.ts`, `tests/ui.test.ts`, `tests/visual.test.ts`).
+- **TypeScript (`tsc --noEmit`)**: 0 errors.
+- **ESLint (`next lint`)**: 0 warnings, 0 errors.
+- **Production Build (`next build`)**: 5 routes compiled cleanly.
+
+
 
 

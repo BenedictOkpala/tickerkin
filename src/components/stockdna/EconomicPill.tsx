@@ -49,12 +49,34 @@ export function EconomicPill({ model }: EconomicPillProps) {
 
           <div
             style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
               fontSize: "0.72rem",
-              color: "var(--text-muted)",
-              fontFamily: "var(--font-mono)",
             }}
           >
-            Model: Token price tracks NAV
+            <code style={{ fontFamily: "var(--font-mono)", color: "var(--text-muted)" }}>
+              Price tracks NAV
+            </code>
+            {model.currentScaleFactor !== undefined ? (
+              <span
+                style={{
+                  color: "var(--status-active)",
+                  fontSize: "0.7rem",
+                  fontWeight: 600,
+                  backgroundColor: "var(--status-active-soft)",
+                  padding: "0.1rem 0.35rem",
+                  borderRadius: "var(--radius-xs)",
+                  border: "1px solid var(--status-active-border)",
+                }}
+              >
+                Scale factor: {model.currentScaleFactor}
+              </span>
+            ) : (
+              <span style={{ color: "var(--text-muted)", fontSize: "0.7rem" }}>
+                Live factor not available
+              </span>
+            )}
           </div>
         </div>
       );
@@ -111,9 +133,25 @@ export function EconomicPill({ model }: EconomicPillProps) {
             <code style={{ fontFamily: "var(--font-mono)", color: "var(--text-muted)" }}>
               Raw × Multiplier = Effective
             </code>
-            <span style={{ color: "var(--text-muted)", fontSize: "0.7rem" }}>
-              Live factor not loaded
-            </span>
+            {model.currentMultiplier !== undefined ? (
+              <span
+                style={{
+                  color: "var(--status-active)",
+                  fontSize: "0.7rem",
+                  fontWeight: 600,
+                  backgroundColor: "var(--status-active-soft)",
+                  padding: "0.1rem 0.35rem",
+                  borderRadius: "var(--radius-xs)",
+                  border: "1px solid var(--status-active-border)",
+                }}
+              >
+                Multiplier: {model.currentMultiplier}
+              </span>
+            ) : (
+              <span style={{ color: "var(--text-muted)", fontSize: "0.7rem" }}>
+                Live factor not available
+              </span>
+            )}
           </div>
         </div>
       );
@@ -170,9 +208,25 @@ export function EconomicPill({ model }: EconomicPillProps) {
             <code style={{ fontFamily: "var(--font-mono)", color: "var(--accent-primary)", fontSize: "0.7rem" }}>
               {model.rateFeedSymbol ?? "Pyth .RR Oracle Feed"}
             </code>
-            <span style={{ color: "var(--text-muted)", fontSize: "0.7rem" }}>
-              Live redemption rate not loaded
-            </span>
+            {model.currentRate !== undefined ? (
+              <span
+                style={{
+                  color: "var(--status-active)",
+                  fontSize: "0.7rem",
+                  fontWeight: 600,
+                  backgroundColor: "var(--status-active-soft)",
+                  padding: "0.1rem 0.35rem",
+                  borderRadius: "var(--radius-xs)",
+                  border: "1px solid var(--status-active-border)",
+                }}
+              >
+                Rate: {model.currentRate}
+              </span>
+            ) : (
+              <span style={{ color: "var(--text-muted)", fontSize: "0.7rem" }}>
+                Live factor not available
+              </span>
+            )}
           </div>
         </div>
       );

@@ -2,6 +2,8 @@ import type { EconomicModel } from "./economic";
 import type { RepresentationPriceInfo } from "./price";
 import type { EvidenceRecord } from "./provenance";
 
+import type { BinanceLiveEnrichment } from "./binance";
+
 export type ProviderId = "ondo" | "bstocks" | "xstocks";
 
 export type TokenStatus = "ACTIVE" | "PHASING_OUT" | "UNVERIFIED" | "UNKNOWN";
@@ -30,5 +32,6 @@ export interface TokenizedRepresentation {
   readonly economicModel: EconomicModel;
   readonly priceInfo?: RepresentationPriceInfo;
   readonly marketInfo?: TokenMarketInfo;
+  readonly liveEnrichment?: BinanceLiveEnrichment;
   readonly provenance: EvidenceRecord;
 }

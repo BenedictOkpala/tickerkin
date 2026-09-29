@@ -43,6 +43,7 @@ export interface XStocksRedemptionRateModel {
 export interface OndoAutoDripScaledModel {
   readonly mechanism: "auto_drip_scaled";
   readonly description: "Total-return tracker with automated dividend reinvestment (DRIP)";
+  readonly currentScaleFactor?: number;
   readonly scaledUiEnabled: boolean;
   readonly dividendHandling: "automatic_dividend_reinvestment_drip";
   readonly tokenPriceTracksNav: boolean;
