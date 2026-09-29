@@ -34,3 +34,24 @@ export interface ContractLookupNotFound {
 }
 
 export type ContractLookupResult = ContractLookupSuccess | ContractLookupNotFound;
+
+export interface EquityCatalogItem {
+  readonly ticker: string;
+  readonly name: string;
+  readonly exchange?: string;
+  readonly quoteCurrency: string;
+  readonly representationCount: number;
+  readonly providerIds: readonly string[];
+  readonly chain: "BNB Smart Chain";
+}
+
+export interface ProviderCatalogItem {
+  readonly id: string;
+  readonly name: string;
+  readonly issuer: string;
+  readonly verifiedRepresentationCount: number;
+  readonly supportedTickers: readonly string[];
+  readonly economicMechanism: string;
+  readonly secondaryDex?: string;
+  readonly sourceRef?: string;
+}

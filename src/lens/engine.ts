@@ -211,6 +211,83 @@ export class RWALensEngine {
     }
     return contracts;
   }
+
+  /**
+   * Returns factual catalog of verified equities.
+   */
+  public getEquitiesCatalog(): import("@/types/lens").EquityCatalogItem[] {
+    return this.registry.map((entry) => ({
+      ticker: entry.equity.ticker,
+      name: entry.equity.name,
+      exchange: entry.equity.exchange,
+      quoteCurrency: entry.equity.quoteCurrency,
+      representationCount: entry.providerRecords.length,
+      providerIds: entry.providerRecords.map((p) => p.providerId),
+      chain: "BNB Smart Chain",
+    }));
+  }
+
+  /**
+   * Returns factual catalog of supported providers and their verified representations in RWA Lens.
+   */
+  public getProvidersCatalog(): import("@/types/lens").ProviderCatalogItem[] {
+    const providersMap: Record<string, {
+      id: string;
+      name: string;
+      issuer: string;
+      mechanism: string;
+      dex?: string;
+      sourceRef?: string;
+      tickers: Set<string>;
+    }> = {
+      ondo: {
+        id: "ondo",
+        name: "Ondo Finance",
+        issuer: "Ondo Global Markets",
+        mechanism: "Auto-DRIP (Scaled UI)",
+        dex: "PancakeSwap",
+        sourceRef: "https://docs.ondo.finance",
+        tickers: new Set(),
+      },
+      bstocks: {
+        id: "bstocks",
+        name: "Binance bStocks",
+        issuer: "BTech Holdings Limited",
+        mechanism: "Multiplier Model",
+        dex: "PancakeSwap",
+        sourceRef: "https://www.binance.com",
+        tickers: new Set(),
+      },
+      xstocks: {
+        id: "xstocks",
+        name: "xStocks (Backed Finance)",
+        issuer: "Backed Assets (JE) Limited",
+        mechanism: "Redemption-Rate Model",
+        dex: "Multi-chain (Solana DEXes / PancakeSwap)",
+        sourceRef: "https://docs.backed.fi",
+        tickers: new Set(),
+      },
+    };
+
+    for (const entry of this.registry) {
+      for (const { providerId } of entry.providerRecords) {
+        if (providersMap[providerId]) {
+          providersMap[providerId].tickers.add(entry.equity.ticker);
+        }
+      }
+    }
+
+    return Object.values(providersMap).map((p) => ({
+      id: p.id,
+      name: p.name,
+      issuer: p.issuer,
+      verifiedRepresentationCount: p.tickers.size,
+      supportedTickers: Array.from(p.tickers),
+      economicMechanism: p.mechanism,
+      secondaryDex: p.dex,
+      sourceRef: p.sourceRef,
+    }));
+  }
 }
 
 /**
@@ -244,4 +321,18 @@ export function lookupByContract(contractAddress: string): ContractLookupResult 
  */
 export async function lookupByContractAsync(contractAddress: string): Promise<ContractLookupResult> {
   return rwaLens.lookupByContractAsync(contractAddress);
+}
+
+/**
+ * Convenience helper for equities catalog.
+ */
+export function getEquitiesCatalog(): import("@/types/lens").EquityCatalogItem[] {
+  return rwaLens.getEquitiesCatalog();
+}
+
+/**
+ * Convenience helper for providers catalog.
+ */
+export function getProvidersCatalog(): import("@/types/lens").ProviderCatalogItem[] {
+  return rwaLens.getProvidersCatalog();
 }
