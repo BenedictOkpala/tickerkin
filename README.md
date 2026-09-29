@@ -1,26 +1,34 @@
 # RWA Lens
 
-> Discovery and normalization infrastructure for tokenized equities on BNB Smart Chain.
-
-The consumer-facing interface built on top of RWA Lens is called **TickerKin**.
+> Discovery, normalization, and intelligence infrastructure for tokenized equities on BNB Smart Chain.
 
 Developed for **BNB Hack: Tokenized Stocks Edition**.
 
 ---
 
-## TickerKin: Visual Equity Lineage & Representation Explorer
+## The Three Product Surfaces
 
-**TickerKin** is the visual consumer explorer built on top of the RWA Lens normalization engine. It helps users trace a traditional equity across all its verified tokenized representations on BNB Smart Chain:
+```
+                              ┌───────────────────────────────────┐
+                              │       RWA Lens Core Engine        │
+                              │ (Deterministic Normalization & DB)│
+                              └─────────────────┬─────────────────┘
+                                                │
+                 ┌──────────────────────────────┼──────────────────────────────┐
+                 │                              │                              │
+                 ▼                              ▼                              ▼
+        ┌──────────────────┐           ┌──────────────────┐           ┌──────────────────┐
+        │    TickerKin     │           │   RWA Lens API   │           │   RWA Lens MCP   │
+        │  Human Explorer  │           │  Developer REST  │           │ Agent Intelligence│
+        │    (Web UI)      │           │  (HTTP Endpoints)│           │ (Model Context)  │
+        └──────────────────┘           └──────────────────┘           └──────────────────┘
+```
 
-- **The Kin Map**: Signature spatial branching map visualizing the 1-to-N lineage from the underlying equity root (`NVDA`) to each institutional token representation (`Ondo`, `bStocks`, `xStocks`), transitioning to a clean vertical lineage on mobile.
-- **Economic Mechanism Explainer**: Side-by-side comparative cards explaining the real accounting mechanics (Ondo Auto-DRIP vs bStocks Multiplier model vs xStocks Redemption-rate tracker) without hiding structural differences.
-- **Verification & Provenance Drawer**: Comprehensive audit trail detailing on-chain bytecode validation, Pyth Oracle price feeds, and first-party issuer documentation with confidence ratings.
-- **Contract Reverse Lookup**: Paste any verified BNB Smart Chain BEP-20 address (or ticker) to immediately resolve token identity, provider attribution, and sibling representations.
-- **Raw RWA Lens JSON Drawer**: Real-time developer inspector to view the exact normalized payload matching the RWA Lens REST API schema.
+1. **TickerKin (Human-Facing Web Explorer)**: Interactive visual financial explorer to trace equities across institutional BEP-20 representations (`Kin Map`), compare mechanics side-by-side (`Compare Matrix`), and inspect claim-scoped verification (`Evidence Audit Log`).
+2. **RWA Lens REST API (Developer Interface)**: Public JSON REST endpoints (`/api/lens`, `/api/lens/ticker/:ticker`, `/api/lens/contract/:address`) providing programmatic normalization for financial applications.
+3. **RWA Lens MCP (Agent-Facing Interface)**: Model Context Protocol server exposing deterministic tools (`resolve_equity`, `resolve_contract`, `compare_representations`, `get_evidence`, `list_equities`) for AI agents and LLMs.
 
 ---
-
-## The Problem RWA Lens Solves
 
 Multiple institutional issuers (such as Ondo Finance, bStocks, and xStocks/Backed Finance) issue tokenized equities on BNB Smart Chain. However, the ecosystem suffers from substantial technical fragmentation:
 
@@ -221,3 +229,49 @@ All responses strictly adhere to the standard envelope format:
 
 - **Strict Data Integrity**: Unpolled dynamic multipliers and rates are returned as `undefined` (omitted from JSON) rather than fabricated as `1.0`.
 - **Curated Coverage**: Candidate contracts failing on-chain bytecode validation are strictly excluded from the registry.
+
+---
+
+## RWA Lens Model Context Protocol (MCP) Interface
+
+RWA Lens exposes an agent-facing **MCP (Model Context Protocol)** server allowing autonomous AI agents to query verified tokenized-equity intelligence over standard stdio transport.
+
+### 1. Starting the MCP Server
+
+```bash
+# Start via npm script
+npm run mcp
+
+# Or execute via npx tsx
+npx tsx src/mcp/cli.ts
+```
+
+### 2. MCP Client Configuration Example
+
+Add RWA Lens to your MCP client configuration (e.g. Claude Desktop, Cursor, or AI Agent config):
+
+```json
+{
+  "mcpServers": {
+    "rwa-lens": {
+      "command": "npx",
+      "args": ["tsx", "C:/Users/USER/.gemini/antigravity/scratch/rwa-lens/src/mcp/cli.ts"]
+    }
+  }
+}
+```
+
+### 3. Available MCP Tools
+
+| Tool | Agent Intent & Purpose | Inputs |
+| :--- | :--- | :--- |
+| **`resolve_equity`** | Discover all verified BEP-20 representations, issuing providers, and economic mechanics for a traditional equity ticker. | `ticker` (string, e.g. `"NVDA"`) |
+| **`resolve_contract`** | Reverse-lookup a BSC contract address to determine which traditional stock and provider it represents. | `contractAddress` (hex string, e.g. `"0xa9ee..."`) |
+| **`compare_representations`** | Perform a structured technical comparison of mechanics (Auto-DRIP vs Multiplier vs Redemption-Rate) across issuers. | `ticker` (string, e.g. `"NVDA"`) |
+| **`get_evidence`** | Retrieve claim-scoped verification evidence and provenance audit trails for an equity and optional provider. | `ticker` (string), optional `providerId` |
+| **`list_equities`** | List the curated set of traditional equities indexed by RWA Lens on BNB Smart Chain. | none |
+
+### 4. Safety & Non-Execution Boundary
+
+RWA Lens MCP is strictly a **read-only intelligence interface**. It does not sign transactions, control wallets, place trades, generate swap calldata, or provide investment advice.
+

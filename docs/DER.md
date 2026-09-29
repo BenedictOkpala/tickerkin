@@ -330,6 +330,47 @@
 - **ESLint (`next lint`)**: Clean (0 warnings, 0 errors).
 - **Production Build (`next build`)**: Clean compilation across all 12 routes.
 
+---
+
+## Entry 14: Phase 7A RWA Lens Model Context Protocol (MCP) Interface
+**Date:** 2026-09-29  
+**Subject:** Implementing an agent-facing MCP interface over stdio transport by reusing the deterministic RWA Lens core engine and presentation layer.
+
+### 1. Expectation vs. Implementation Approach
+- **Architectural Goal**: Expose RWA Lens tokenized equity intelligence to autonomous AI agents without duplicating domain registries, verification logic, or economic models.
+- **Approach**:
+  - Implemented a dedicated module (`src/mcp/`) leveraging the official `@modelcontextprotocol/sdk` (`McpServer` and `StdioServerTransport`).
+  - Registered 5 discrete tools:
+    1. `resolve_equity`: Discovers verified tokenized representations, providers, and economic mechanics for an equity ticker.
+    2. `resolve_contract`: Reverse-resolves a BSC contract address to its underlying stock and issuing provider.
+    3. `compare_representations`: Compares mechanics (`Auto-DRIP (Scaled UI)`, `Multiplier Model`, `Redemption-Rate Model`) with deterministic difference guides.
+    4. `get_evidence`: Delivers claim-scoped provenance audit trails (contract deployment, issuer docs, oracle feeds).
+    5. `list_equities`: Discovers all curated equities indexed by RWA Lens on BNB Smart Chain.
+  - Reused `rwaLens.lookupByTickerAsync`, `lookupByContractAsync`, `getEquitiesCatalog`, and `src/lens/presentation.ts` helpers directly.
+
+### 2. Integration Friction & Engineering Observations
+- **Test Timeout with Live Fallback**:
+  - `handleResolveEquity` utilizes `lookupByTickerAsync`, which initiates a fallback timer (3s) against Binance Web3 RWA API if external endpoints are unreachable.
+  - Sequentially invoking `AAPL` and `TSLA` in a single test under unmocked network environments exceeded Vitest's 5s timeout.
+  - Resolved by establishing explicit `beforeEach`/`afterEach` mock hooks on `defaultBinanceClient.setFetchFn`, ensuring deterministic sub-millisecond execution without requiring live external network connectivity.
+- **Discriminated Union Type Narrowing in TypeScript**:
+  - Anonymous return object types from tool handlers resulted in TypeScript merging success/failure branches (`res.underlying is possibly undefined`).
+  - Resolved by introducing explicit discriminated union types (`ResolveEquityResult`, `ResolveContractResult`, `CompareRepresentationsResult`, `GetEvidenceResult`, `ListEquitiesResult`) with strict `readonly success: true | false`.
+- **Stdio Transport Cleanliness**:
+  - Diagnostic and startup logging was routed strictly to `stderr` (`console.error`) to ensure `stdout` remains reserved for JSON-RPC 2.0 frames.
+
+### 3. Safety & Non-Execution Boundary
+- RWA Lens MCP is strictly a **read-only intelligence interface**.
+- No autonomous trading, transaction signing, wallet control, swap calldata generation, or investment ranking is exposed.
+
+### 4. Verification & Quality Gates
+- **Vitest Suite**: 96/96 tests passing across 8 test suites (`tests/mcp.test.ts`, `tests/intelligence.test.ts`, `tests/explorer.test.ts`, `tests/engine.test.ts`, `tests/binance.test.ts`, `tests/ui.test.ts`, `tests/visual.test.ts`, `tests/api.test.ts`).
+- **TypeScript (`tsc --noEmit`)**: Clean (0 errors).
+- **ESLint (`next lint`)**: Clean (0 warnings, 0 errors).
+- **Production Build (`next build`)**: Clean compilation across all 12 routes.
+- **CLI Execution (`npm run mcp`)**: Verified clean stdio startup and JSON output.
+
+
 
 
 

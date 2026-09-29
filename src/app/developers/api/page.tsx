@@ -439,6 +439,114 @@ export default function DevelopersApiPage() {
           </div>
         </div>
 
+        {/* Model Context Protocol (MCP) Agent Interface Section */}
+        <div
+          style={{
+            backgroundColor: "var(--bg-surface)",
+            border: "1px solid var(--border-subtle)",
+            borderRadius: "var(--radius-md)",
+            padding: "1.5rem",
+            display: "flex",
+            flexDirection: "column",
+            gap: "1rem",
+          }}
+        >
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "0.5rem" }}>
+            <div>
+              <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                <span
+                  style={{
+                    fontSize: "0.68rem",
+                    fontWeight: 700,
+                    color: "var(--accent-primary)",
+                    backgroundColor: "var(--accent-primary-soft)",
+                    border: "1px solid var(--accent-primary-border)",
+                    padding: "0.15rem 0.45rem",
+                    borderRadius: "var(--radius-xs)",
+                    textTransform: "uppercase",
+                  }}
+                >
+                  Agent Tooling
+                </span>
+                <span style={{ fontSize: "1.05rem", fontWeight: 700, color: "var(--text-primary)" }}>
+                  Model Context Protocol (MCP) Interface
+                </span>
+              </div>
+              <p style={{ fontSize: "0.84rem", color: "var(--text-secondary)", marginTop: "0.25rem", marginBottom: 0, maxWidth: "760px" }}>
+                Autonomous AI agents and LLMs can query RWA Lens natively using the Model Context Protocol over stdio transport.
+              </p>
+            </div>
+
+            <code
+              style={{
+                fontSize: "0.78rem",
+                backgroundColor: "var(--bg-secondary)",
+                padding: "0.35rem 0.65rem",
+                borderRadius: "var(--radius-xs)",
+                border: "1px solid var(--border-subtle)",
+                color: "var(--text-primary)",
+                fontFamily: "var(--font-mono)",
+              }}
+            >
+              npm run mcp
+            </code>
+          </div>
+
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+              gap: "0.75rem",
+              marginTop: "0.25rem",
+            }}
+          >
+            <div style={{ backgroundColor: "var(--bg-secondary)", padding: "0.75rem", borderRadius: "var(--radius-xs)", border: "1px solid var(--border-subtle)" }}>
+              <div style={{ fontSize: "0.82rem", fontWeight: 700, fontFamily: "monospace", color: "var(--accent-primary)" }}>
+                resolve_equity
+              </div>
+              <div style={{ fontSize: "0.74rem", color: "var(--text-secondary)", marginTop: "0.15rem" }}>
+                Discover token representations for a ticker
+              </div>
+            </div>
+
+            <div style={{ backgroundColor: "var(--bg-secondary)", padding: "0.75rem", borderRadius: "var(--radius-xs)", border: "1px solid var(--border-subtle)" }}>
+              <div style={{ fontSize: "0.82rem", fontWeight: 700, fontFamily: "monospace", color: "var(--accent-primary)" }}>
+                resolve_contract
+              </div>
+              <div style={{ fontSize: "0.74rem", color: "var(--text-secondary)", marginTop: "0.15rem" }}>
+                Reverse-resolve BSC contract address
+              </div>
+            </div>
+
+            <div style={{ backgroundColor: "var(--bg-secondary)", padding: "0.75rem", borderRadius: "var(--radius-xs)", border: "1px solid var(--border-subtle)" }}>
+              <div style={{ fontSize: "0.82rem", fontWeight: 700, fontFamily: "monospace", color: "var(--accent-primary)" }}>
+                compare_representations
+              </div>
+              <div style={{ fontSize: "0.74rem", color: "var(--text-secondary)", marginTop: "0.15rem" }}>
+                Compare economic models across providers
+              </div>
+            </div>
+
+            <div style={{ backgroundColor: "var(--bg-secondary)", padding: "0.75rem", borderRadius: "var(--radius-xs)", border: "1px solid var(--border-subtle)" }}>
+              <div style={{ fontSize: "0.82rem", fontWeight: 700, fontFamily: "monospace", color: "var(--accent-primary)" }}>
+                get_evidence
+              </div>
+              <div style={{ fontSize: "0.74rem", color: "var(--text-secondary)", marginTop: "0.15rem" }}>
+                Retrieve claim-scoped audit trails
+              </div>
+            </div>
+
+            <div style={{ backgroundColor: "var(--bg-secondary)", padding: "0.75rem", borderRadius: "var(--radius-xs)", border: "1px solid var(--border-subtle)" }}>
+              <div style={{ fontSize: "0.82rem", fontWeight: 700, fontFamily: "monospace", color: "var(--accent-primary)" }}>
+                list_equities
+              </div>
+              <div style={{ fontSize: "0.74rem", color: "var(--text-secondary)", marginTop: "0.15rem" }}>
+                List verified equities in RWA Lens
+              </div>
+            </div>
+          </div>
+        </div>
+
         {/* Quick Back to Explorer CTA */}
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderTop: "1px solid var(--border-subtle)", paddingTop: "1.25rem" }}>
           <div style={{ fontSize: "0.85rem", color: "var(--text-secondary)" }}>
