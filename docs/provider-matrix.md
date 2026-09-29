@@ -53,3 +53,36 @@ This matrix tracks tokenized stock providers on **BNB Smart Chain (BSC)**, with 
 | **TSLA** | Pyth | `Equity.US.TSLA/USD` | Feed ID: `16dad506d7...` | **`[ORACLE]`** | **CONFIRMED**: Valid live feed on BSC Pyth contract. |
 | **TSLA** | bStocks | `TSLAB` | `0x256CebE4cfA2576bA1aC26D68d7Fe2E7284fB144` | **`[UNKNOWN]`** | **CORRECTED / UNVERIFIED**: Returned empty bytecode on BSC RPC. |
 | **TSLA** | xStocks | `TSLAX` | `0x7a305f6bf0b9795029e0ddcf952a13b680749ebc` | **`[THIRD-PARTY]`** | **PARTIAL**: Pyth feed exists; BSC pool unverified on-chain. |
+
+---
+
+## 4. Binance Web3 RWA Data API Infrastructure (Audited)
+
+### 4.1 Endpoint Discovery
+- **Primary Public Discovery Endpoint:**  
+  `GET https://www.binance.com/bapi/defi/v1/public/wallet-direct/buw/wallet/market/token/rwa/stock/detail/list/ai?type={1|2|3}`
+  - `type=1`: Ondo Finance Tokenized Stocks (`NVDAon`, `AAPLon`, `TSLAon`, etc.) across BSC (`chainId: "56"`) and Ethereum (`chainId: "1"`).
+  - `type=2`: xStocks / Backed Finance Tokenized Stocks (`NVDAx`, `AAPLx`, `TSLAx`, etc.) on Solana (`chainId: "CT_501"`).
+  - `type=3`: Binance bStocks (`NVDAB`, `TSLAB`, `MSFTB`, `METAB`, etc.) on BSC (`chainId: "56"`).
+- **Authentication:** Public / No API Key required for discovery list endpoints.
+- **Supplemental Authenticated APIs:**
+  - `https://web3.binance.com/build/api/v1/` (Web3 Build & Swap execution, requires HMAC-SHA256 API Key).
+  - `https://api.binance.com/sapi/v1/equity/` (Centralized equity trading & tokenization API).
+
+### 4.2 Binance Schema vs RWA Lens Model Comparison
+| Field | Binance Web3 RWA API | RWA Lens Core Model | Direct Mapping | Notes |
+|---|---|---|---|---|
+| **Ticker** | `ticker` (`"NVDA"`) | `underlying.ticker` | **YES** | Exact match |
+| **Token Symbol** | `symbol` (`"NVDAB"`, `"NVDAon"`) | `representations[].tokenSymbol` | **YES** | Exact match |
+| **Contract Address** | `contractAddress` | `representations[].contractAddress` | **YES** | Exact case-insensitive match |
+| **Chain ID** | `chainId` (`"56"`, `"1"`, `"CT_501"`) | `representations[].chainId` | **YES** | Mapped directly |
+| **Decimals** | `d` (`18`, `8`) | `representations[].decimals` | **YES** | Exact match |
+| **Multiplier** | `multiplier` (`"1.000778223752807865"`) | `economicModel.currentMultiplier` | **YES** | Live dynamic value |
+| **Update Timestamp**| `lastUpdateTime` (`1789012513889`) | `provenance.timestamp` | **YES** | Millisecond epoch |
+| **Provider ID** | `type` (`1`, `2`, `3`) | `representations[].providerId` | **PARTIAL** | Mapped via type enum (1→ondo, 2→xstocks, 3→bstocks) |
+| **Asset Class** | `assetType` (`1`=Equity, `3`=ETF) | `underlying.assetType` | **PARTIAL** | Enables equity vs ETF tagging |
+| **Trading Pair** | `cs` (`"NVDABUSDT"`) | N/A | **BINANCE-SPECIFIC** | Centralized pair on Binance |
+| **Accounting Model**| N/A (implied by type) | `economicModel.mechanism` | **RWA LENS EXCLUSIVE** | RWA Lens provides exact economic formulas |
+| **Legal Issuer** | N/A | `representations[].issuer` | **RWA LENS EXCLUSIVE** | Institutional legal entity attribution |
+| **Oracle Feed** | N/A | `economicModel.rateFeedSymbol` | **RWA LENS EXCLUSIVE** | Pyth Oracle Hermes integration |
+

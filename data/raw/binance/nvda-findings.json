@@ -1,0 +1,58 @@
+{
+  "asset": "NVDA",
+  "description": "Real responses for NVDA across all three Binance Web3 RWA API provider types",
+  "timestamp": "2026-09-29T12:40:30.000Z",
+  "totalNvdaRepresentationsFound": 4,
+  "findings": [
+    {
+      "providerCategory": "Ondo",
+      "type": 1,
+      "chainId": "1",
+      "contractAddress": "0x2d1f7226bd1f780af6b9a49dcc0ae00e8df4bdee",
+      "symbol": "NVDAon",
+      "ticker": "NVDA",
+      "assetType": 1,
+      "multiplier": "1.0017152487959898",
+      "lastUpdateTime": 1788998689203,
+      "d": 18
+    },
+    {
+      "providerCategory": "Ondo",
+      "type": 1,
+      "chainId": "56",
+      "contractAddress": "0xa9ee28c80f960b889dfbd1902055218cba016f75",
+      "symbol": "NVDAon",
+      "ticker": "NVDA",
+      "assetType": 1,
+      "multiplier": "1.0017152487959898",
+      "lastUpdateTime": 1788998689203,
+      "d": 18
+    },
+    {
+      "providerCategory": "xStocks",
+      "type": 2,
+      "chainId": "CT_501",
+      "contractAddress": "Xsc9qvGR1efVDFGLrVsmkzv3qi45LTBjeUKSPmx9qEh",
+      "symbol": "NVDAx",
+      "ticker": "NVDA",
+      "assetType": 1,
+      "multiplier": "1.001701196801074",
+      "lastUpdateTime": 1789000204896,
+      "d": 8
+    },
+    {
+      "providerCategory": "bStocks",
+      "type": 3,
+      "chainId": "56",
+      "contractAddress": "0x02fca66c1d1afb4e2a7884261eb00f63598a7436",
+      "symbol": "NVDAB",
+      "ticker": "NVDA",
+      "assetType": 1,
+      "multiplier": "1.000778223752807865",
+      "cs": "NVDABUSDT",
+      "asset": "NVDAB",
+      "lastUpdateTime": 1789012513889,
+      "d": 18
+    }
+  ]
+}

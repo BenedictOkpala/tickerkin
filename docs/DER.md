@@ -144,4 +144,32 @@
 - Production build (`next build`): Compiled 5 routes cleanly.
 - Visual inspection script (`scripts/visual-inspect.mjs`): 9/9 checks passed.
 
+---
+
+## Entry 9: Phase 5A Binance Web3 RWA Data API Discovery & Audit
+**Date:** 2026-09-29  
+**Subject:** Investigating official Binance Web3 RWA endpoints, querying real live datasets, and performing schema mapping against RWA Lens.
+
+### 1. What We Investigated & Discovered
+- **Official Public Endpoint Located:**  
+  `https://www.binance.com/bapi/defi/v1/public/wallet-direct/buw/wallet/market/token/rwa/stock/detail/list/ai`
+  - Leveraged natively by Binance Web3 Wallet and the open-source `binance/binance-skills-hub` (`binance-tokenized-securities-info` skill).
+  - Publicly accessible without API keys or authentication requirements for discovery and market token detail queries.
+- **Provider Type Categorization in Binance Schema:**
+  - `type=1`: Ondo Finance (`.on` / `on` suffix tokens, 309 records across BSC and Ethereum).
+  - `type=2`: xStocks / Backed Finance (`.x` / `x` suffix tokens, 60 records on Solana).
+  - `type=3`: Binance bStocks (`.B` / `B` suffix tokens, 17 records on BNB Smart Chain).
+- **Real NVDA Test Asset Resolution:**
+  - `type=1` (Ondo on BSC): Returned `0xa9ee28c80f960b889dfbd1902055218cba016f75` (`NVDAon`, multiplier `"1.0017152487959898"`). Matches RWA Lens registry exactly.
+  - `type=3` (bStocks on BSC): Returned `0x02fca66c1d1afb4e2a7884261eb00f63598a7436` (`NVDAB`, multiplier `"1.000778223752807865"`). Matches RWA Lens registry exactly.
+  - `type=2` (xStocks on Solana): Returned `Xsc9qvGR1efVDFGLrVsmkzv3qi45LTBjeUKSPmx9qEh` (`NVDAx`, multiplier `"1.001701196801074"`).
+- **Expanded Real BSC bStocks Discovered:**
+  - Confirmed official BEP-20 contracts on BSC for: `MUB`, `CRCLB`, `NVDAB`, `SNDKB`, `TSLAB` (`0x5b1910eaad6450e50f816082aa078c41f10c292f`), `SPCXB`, `INTCB`, `EWYB`, `AMDB`, `MSTRB`, `QQQB`, `METAB`, `LITEB`, `PLTRB`, `MSFTB`, `GOOGLB`, `QCOMB`.
+- **Raw Response Archives Created:**
+  - Archived all raw responses under `data/raw/binance/` (`rwa-stock-list-type1-ondo.json`, `rwa-stock-list-type2-xstocks.json`, `rwa-stock-list-type3-bstocks.json`, `nvda-findings.json`, and `README.md`).
+
+### 2. Architectural Recommendation
+- **Hypothesis Validated:** Binance Web3 RWA API serves as an external data adapter/ingestion source. RWA Lens retains its role as the authoritative normalization, verification, and provenance engine, providing domain modeling (mechanisms, legal issuers, Pyth oracles) that Binance's raw list endpoint does not expose.
+
+
 
