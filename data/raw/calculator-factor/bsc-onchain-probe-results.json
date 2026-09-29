@@ -1,0 +1,64 @@
+{
+  "timestamp": "2026-09-29T20:26:44.750Z",
+  "rpcEndpoint": "https://bsc.publicnode.com",
+  "chainId": 56,
+  "probes": [
+    {
+      "providerId": "bstocks",
+      "tokenSymbol": "NVDAB",
+      "contractAddress": "0x02fca66c1d1afb4e2a7884261eb00f63598a7436",
+      "implementationAddress": "0xcfed6c4679297ea4889f8183bc057b4a86c64e46",
+      "proxyPattern": "EIP-1967 Beacon Proxy",
+      "beaconAddress": "0x156d6dce9a4f6139a3406f1f021f1a4880de93a3",
+      "onChainFactorAvailable": true,
+      "factorFunctionSelectors": [
+        {
+          "selector": "0xdc767007",
+          "rawHex": "0x0000000000000000000000000000000000000000000000000de37a7dfdbb85b9",
+          "rawBigInt": "1000778223752807865",
+          "decimals": 18,
+          "decimalFactor": 1.0007782237528078,
+          "semantics": "Multiplier model factor (Raw tokens to share-equivalent)"
+        },
+        {
+          "selector": "0xa60bf13d",
+          "rawHex": "0x0000000000000000000000000000000000000000000000000de37a7dfdbb85b9",
+          "rawBigInt": "1000778223752807865",
+          "decimals": 18,
+          "decimalFactor": 1.0007782237528078,
+          "semantics": "Multiplier model factor alias"
+        }
+      ],
+      "supplyConsistency": {
+        "rawTotalSupplySelector": "0x18160ddd",
+        "rawTotalSupply": "146700150040180000000000",
+        "scaledTotalSupplySelector": "0x9bea6429",
+        "scaledTotalSupply": "146814315581481745747067",
+        "mathematicalCheck": "146700.15004018 * 1.000778223752807865 = 146814.315581481745747067 (EXACT MATCH)"
+      },
+      "status": "LIVE_ACCESS_CONFIRMED"
+    },
+    {
+      "providerId": "ondo",
+      "tokenSymbol": "NVDAon",
+      "contractAddress": "0xa9ee28c80f960b889dfbd1902055218cba016f75",
+      "implementationAddress": "0x578f397ca4661d1db4d9a65065d6b284a1a850fd",
+      "proxyPattern": "EIP-1967 Beacon Proxy",
+      "beaconAddress": "0xc046b05a920e4b412815934dd8e58904dda73315",
+      "complianceAddress": "0x76be569c94c39a2e2492de2f4d1c253f348250d0",
+      "onChainFactorAvailable": false,
+      "onChainReason": "Contract holds unscaled 1:1 token balance. Dynamic scale factor is computed off-chain by Ondo issuer/oracle.",
+      "status": "UNAVAILABLE_ON_CHAIN"
+    },
+    {
+      "providerId": "xstocks",
+      "tokenSymbol": "NVDAx",
+      "contractAddress": "0xc845b2894dbddd03858fd2d643b4ef725fe0849d",
+      "implementationAddress": "0x65c40d624af3b18c109fbf87b7deff34cdc5f19b",
+      "proxyPattern": "UUPS / Transparent Proxy",
+      "onChainFactorAvailable": false,
+      "onChainReason": "Swiss DLT tracker token. Continuous redemption rate (.RR) feed is published by Pyth for Solana/EVM, but BSC contract has no internal rate store or active on-chain feed.",
+      "status": "UNAVAILABLE_ON_CHAIN"
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "timestamp": "2026-09-29T20:26:44.753Z",
+  "hermesEndpoint": "https://hermes.pyth.network/v2/price_feeds?query=NVDA",
+  "discoveredFeeds": [
+    {
+      "id": "b1073854ed24cbc755dc527418f52b7d271f6cc967bbf8d8129112b18860a593",
+      "symbol": "Equity.US.NVDA/USD",
+      "assetType": "Equity",
+      "description": "NVIDIA CORP / US DOLLAR",
+      "useCase": "Traditional equity benchmark reference price (.15 USD)"
+    },
+    {
+      "id": "b675c4e9f46d94afa9174a7df09966b77a2950970bb50a77ec8ad4fcfd8266f4",
+      "symbol": "Crypto.NVDAX/NVDA.RR",
+      "assetType": "Crypto Redemption Rate",
+      "description": "NVIDIA XSTOCK / NVDIA REDEMPTION RATE",
+      "useCase": "Continuous Backed/xStocks redemption rate tracker"
+    },
+    {
+      "id": "207ddea2a443d30b7e13a7c88a9e3f106765deb97049afc65a18cede50fffc82",
+      "symbol": "Crypto.NVDAON/USD",
+      "assetType": "Crypto",
+      "description": "NVIDIA ONDO TOKENIZED STOCK / US DOLLAR",
+      "useCase": "Ondo NVDAon secondary market price in USD"
+    },
+    {
+      "id": "4244d07890e4610f46bbde67de8f43a4bf8b569eebe904f136b469f148503b7f",
+      "symbol": "Crypto.NVDAX/USD",
+      "assetType": "Crypto",
+      "description": "NVIDIA XSTOCK / US DOLLAR",
+      "useCase": "xStocks NVDAx secondary market price in USD"
+    }
+  ]
+}

@@ -527,6 +527,29 @@
 - **ESLint**: Clean, 0 warnings / 0 errors (`npx.cmd next lint`).
 - **Production Build**: Clean compilation of all static and dynamic routes (`npm.cmd run build`).
 
+---
+
+## Entry 19: Phase 7E Live Factor Source Investigation for Token Value Calculator
+**Date:** 2026-09-29  
+**Subject:** On-chain EVM bytecode inspection on BSC, view function discovery for bStocks multiplier, Ondo off-chain scale architecture, and Pyth oracle analysis.
+
+### 1. Empirical On-Chain Findings on BNB Smart Chain (Chain 56)
+- **Binance bStocks (`NVDAB`, `0x02fca66c1d1afb4e2a7884261eb00f63598a7436`)**:
+  - **Direct On-Chain View Function Verified**: Calling `eth_call(0xdc767007)` (`multiplier()`) on `0x02fc...7436` via public BSC RPC (`https://bsc.publicnode.com`) returns `1000778223752807865` wei ($1.000778223752807865$ in 18 decimals).
+  - **Supply Consistency Proven**: `totalSupply()` ($146,700.15$) $\times$ `1.000778223752807865` = `146,814.31558` (exact match to scaled total supply function `0x9bea6429`).
+  - **Status**: **LIVE ACCESS CONFIRMED ON-CHAIN**.
+- **Ondo Finance (`NVDAon`, `0xa9ee28c80f960b889dfbd1902055218cba016f75`)**:
+  - **On-Chain Behavior**: Deployed contract is a standard permissioned BEP-20 holding 1:1 unscaled token units. The dynamic scale factor is calculated off-chain by the issuer custodian under the Bermuda SAC structure.
+  - **Status**: On-chain factor unavailable. Primary source is Binance Web3 RWA API (`type: 1`).
+- **Backed / xStocks (`NVDAx`, `0xc845b2894dbddd03858fd2d643b4ef725fe0849d`)**:
+  - **Status**: Pyth publishes continuous rate feed `Crypto.NVDAX/NVDA.RR` (ID `b675c4e...`), but BSC has no active keeper or DEX liquidity. Remains `UNAVAILABLE` on BSC (Data Gap Preserved).
+
+### 2. Deliverables & Quality Gates
+- **Comprehensive Report**: `docs/calculator-live-factor-source.md`.
+- **Raw Evidence Artifacts**: `data/raw/calculator-factor/` (BSC RPC probe results, Pyth feed discovery, factor source matrix).
+- **Quality Gates**: 111/111 tests passing (`npm test`), TypeScript clean (`tsc --noEmit`), ESLint clean (`next lint`), Next.js build clean (`next build`).
+
+
 
 
 

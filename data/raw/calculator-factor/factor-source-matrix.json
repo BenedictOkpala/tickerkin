@@ -1,0 +1,44 @@
+{
+  "timestamp": "2026-09-29T20:26:44.754Z",
+  "equity": "NVDA",
+  "providers": [
+    {
+      "providerId": "bstocks",
+      "tokenSymbol": "NVDAB",
+      "primarySource": "DIRECT_ON_CHAIN_BSC",
+      "contract": "0x02fca66c1d1afb4e2a7884261eb00f63598a7436",
+      "method": "eth_call(0xdc767007)",
+      "liveValue": 1.0007782237528078,
+      "reachability": "LIVE_ACCESS_CONFIRMED",
+      "fallbackOrder": [
+        "DIRECT_ON_CHAIN_BSC",
+        "BINANCE_RWA_API",
+        "UNAVAILABLE"
+      ]
+    },
+    {
+      "providerId": "ondo",
+      "tokenSymbol": "NVDAon",
+      "primarySource": "BINANCE_RWA_API",
+      "endpoint": "https://www.binance.com/bapi/composite/v1/public/rwa/stock/all (type: 1)",
+      "liveValue": 1.0017152487959897,
+      "reachability": "LIVE_SOURCE_EXISTS_BUT_CURRENT_ENVIRONMENT_BLOCKED",
+      "fallbackOrder": [
+        "BINANCE_RWA_API",
+        "PYTH_DERIVED_FEED",
+        "UNAVAILABLE"
+      ]
+    },
+    {
+      "providerId": "xstocks",
+      "tokenSymbol": "NVDAx",
+      "primarySource": "PYTH_REDEMPTION_RATE_FEED",
+      "feedId": "b675c4e9f46d94afa9174a7df09966b77a2950970bb50a77ec8ad4fcfd8266f4",
+      "reachability": "UNAVAILABLE_ON_BSC",
+      "fallbackOrder": [
+        "PYTH_REDEMPTION_RATE_FEED",
+        "UNAVAILABLE"
+      ]
+    }
+  ]
+}
