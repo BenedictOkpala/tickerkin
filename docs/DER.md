@@ -370,6 +370,53 @@
 - **Production Build (`next build`)**: Clean compilation across all 12 routes.
 - **CLI Execution (`npm run mcp`)**: Verified clean stdio startup and JSON output.
 
+---
+
+## Entry 15: Phase 7B Interactive Comparison Data Feasibility Study
+**Date:** 2026-09-29  
+**Subject:** Technical and economic feasibility investigation of live/normalized comparison and "What is 1 Token Worth?" calculator for hackathon interaction.
+
+### 1. Investigation Scope & Semantic Disambiguation
+- **The Core Problem in Tokenized Equity Comparison**:
+  - Naïve Web3 interfaces frequently display misleading "Premium / Discount" percentages by directly dividing secondary AMM token prices by traditional equity prices.
+  - This calculation fails in practice due to:
+    1. **Dividend Multiplier Omission**: Auto-DRIP (Ondo) and Multiplier (bStocks) tokens accrue corporate dividends on-chain, meaning $1.0$ raw token represents $> 1.0$ underlying physical shares ($1.001715$ for NVDAon, $1.000778$ for NVDAB). Direct price division generates phantom premiums.
+    2. **Market Hours Asynchrony**: Traditional equities trade Mon–Fri 09:30–16:00 ET, while crypto AMMs trade 24/7. Comparing weekend AMM sentiment against frozen Friday closing prices produces meaningless noise.
+    3. **Secondary Liquidity Asymmetry**: PancakeSwap pools on BSC vary from \$3.55M (bStocks) down to \$295 (xStocks), creating extreme slippage and unrepresentative spot rates in thin pools.
+- **Strict Semantic Definitions**:
+  - `Traditional Equity Reference Price ($P_{\text{ref}}$)`: Stated benchmark from NASDAQ/NYSE via Pyth Network feed (`Equity.US.NVDA/USD`).
+  - `Token Market Price ($P_{\text{dex}}$)`: Secondary AMM swap rate on PancakeSwap.
+  - `Accounting Conversion Factor ($F_{\text{conv}}$)`: Live multiplier / scale factor from Binance Web3 RWA API (`type: 1` Ondo, `type: 3` bStocks).
+  - `Share-Equivalent Units ($Q_{\text{share}}$)`: $Q_{\text{raw}} \times F_{\text{conv}}$.
+  - `Share-Equivalent Reference Value ($V_{\text{ref}}$)`: $Q_{\text{share}} \times P_{\text{ref}}$.
+  - `Share-Equivalent Reference Deviation ($\Delta_{\text{dev}}$)`: Percentage spread between AMM spot rate and intrinsic share-equivalent value.
+
+### 2. Empirical Findings across BSC Providers (NVDA & Beyond)
+- **NVIDIA (`NVDA`) on BSC**:
+  - **Ondo (`NVDAon`)**: Live scale factor `1.00171525` verified on BSC (`0xa9ee...`). 10 raw tokens = $10.01715$ shares = \$2,245.35 reference value. Secondary DEX price (\$224.50) trades at $-0.015\%$ deviation from intrinsic value.
+  - **bStocks (`NVDAB`)**: Live multiplier `1.00077822` verified on BSC (`0x02fc...`). 10 raw tokens = $10.00778$ shares = \$2,243.24 reference value. Secondary DEX price (\$223.93) trades at $-0.178\%$ deviation from intrinsic value.
+  - **xStocks (`NVDAx`)**: Binance Web3 RWA API indexes xStocks exclusively on Solana (`CT_501`, mint `Xsc9...`). Under strict chain-aware identity isolation, the BSC contract (`0xc845...`) must not inherit Solana live factors and cleanly falls back to static baseline ($1.000000$).
+- **Multi-Provider Overlap on BSC**:
+  - Discovered 6 multi-provider equities on BSC: `NVDA`, `MSFT`, `QQQ`, `TSLA`, `CRCL`, `MSTR`.
+  - Non-dividend stocks (`TSLA`, `CRCL`, `MSTR`) exhibit identical multipliers ($1.000000$), while dividend payers (`NVDA`, `MSFT`, `QQQ`) show clear divergence between Ondo and bStocks due to differing inception dates and corporate action accrual models.
+
+### 3. Verification & Quality Gates
+- **Comprehensive Report**: Published detailed 13-section feasibility report at `docs/live-comparison-feasibility.md`.
+- **Raw Evidence Artifacts**: Generated 4 structured JSON evidence files under `data/raw/live-comparison/`:
+  - `economic-unit-definitions.json`
+  - `nvda-comparison-matrix.json`
+  - `provider-multiplier-divergence.json`
+  - `calculator-simulation-cases.json`
+- **Unit & Integration Tests**: 96/96 tests passing (`npm test`).
+- **Type Checking**: Clean (`npx tsc --noEmit`).
+
+### 4. Recommendation & Next Steps
+- **Verdict**: **GO — COMPARE + CALCULATOR**.
+- **Rationale**:
+  - The "What is 1 Token Worth?" calculator provides immediate educational impact for hackathon judges, instantly proving why TickerKin is necessary to normalize non-trivial token mechanics.
+  - The normalized comparison card presents institutional-grade metrics without making false arbitrage claims.
+
+
 
 
 

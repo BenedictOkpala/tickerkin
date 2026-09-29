@@ -1,0 +1,78 @@
+{
+  "ticker": "NVDA",
+  "underlying": {
+    "name": "NVIDIA Corporation",
+    "exchange": "NASDAQ",
+    "referencePriceUSD": 224.15,
+    "marketStatus": "CLOSED (Weekend / After-hours)",
+    "oracleFeed": "Equity.US.NVDA/USD (Pyth ID: b1073854ed24cbc755dc527418f52b7d271f6cc967bbf8d8129112b18860a593)"
+  },
+  "representations": [
+    {
+      "providerId": "ondo",
+      "tokenSymbol": "NVDAon",
+      "chain": "BNB Smart Chain (56)",
+      "contractAddress": "0xa9ee28c80f960b889dfbd1902055218cba016f75",
+      "mechanism": "Auto-DRIP (Scaled UI Balance)",
+      "legalStructure": "Bermuda Segregated Accounts Company (Tokenized Notes)",
+      "liveMultiplier": 1.0017152487959897,
+      "liveMultiplierSource": "Binance Web3 RWA API (Type 1)",
+      "dexPriceUSD": 224.4999,
+      "dexPriceSource": "GeckoTerminal (PancakeSwap)",
+      "dexLiquidityUSD": 14007.36,
+      "dexLiquidityTier": "MODERATE",
+      "calculation": {
+        "rawUnits": 10,
+        "accountingFactor": 1.0017152487959897,
+        "shareEquivalent": 10.017152,
+        "referenceValueUSD": 2245.345,
+        "dexMarketValueUSD": 2244.999,
+        "referenceDeviationPercent": -0.0154
+      }
+    },
+    {
+      "providerId": "bstocks",
+      "tokenSymbol": "NVDAB",
+      "chain": "BNB Smart Chain (56)",
+      "contractAddress": "0x02fca66c1d1afb4e2a7884261eb00f63598a7436",
+      "mechanism": "Multiplier Model (BEP-677 Balance Factor)",
+      "legalStructure": "Labuan Financial Services Authority (Tokenized Certificates)",
+      "liveMultiplier": 1.0007782237528078,
+      "liveMultiplierSource": "Binance Web3 RWA API (Type 3)",
+      "dexPriceUSD": 223.9252,
+      "dexPriceSource": "GeckoTerminal (PancakeSwap)",
+      "dexLiquidityUSD": 3550969.05,
+      "dexLiquidityTier": "HIGH",
+      "calculation": {
+        "rawUnits": 10,
+        "accountingFactor": 1.0007782237528078,
+        "shareEquivalent": 10.007782,
+        "referenceValueUSD": 2243.244,
+        "dexMarketValueUSD": 2239.252,
+        "referenceDeviationPercent": -0.1779
+      }
+    },
+    {
+      "providerId": "xstocks",
+      "tokenSymbol": "NVDAx",
+      "chain": "BNB Smart Chain (56)",
+      "contractAddress": "0xc845b2894dbddd03858fd2d643b4ef725fe0849d",
+      "mechanism": "Redemption Rate Certificate (Swiss DLT Ledger)",
+      "legalStructure": "Swiss DLT Act / Liechtenstein Certificated Shares",
+      "liveMultiplier": null,
+      "liveMultiplierSource": "UNAVAILABLE on BSC (Binance indexes Solana mint only)",
+      "dexPriceUSD": null,
+      "dexPriceSource": "UNAVAILABLE (Reserve <  on BSC)",
+      "dexLiquidityUSD": 295.56,
+      "dexLiquidityTier": "LOW",
+      "calculation": {
+        "rawUnits": 10,
+        "accountingFactor": 1,
+        "shareEquivalent": 10,
+        "referenceValueUSD": 2241.5,
+        "dexMarketValueUSD": null,
+        "referenceDeviationPercent": null
+      }
+    }
+  ]
+}

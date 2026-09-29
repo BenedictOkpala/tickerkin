@@ -1,0 +1,273 @@
+[
+  {
+    "ticker": "MU",
+    "bStocks": {
+      "symbol": "MUB",
+      "contract": "0xcdf2f3e0fa43c47a6662a91c9e4a7c5f69762699",
+      "multiplier": 1.0001075125688057
+    },
+    "ondo": {
+      "symbol": "MUon",
+      "contract": "0x8b6acf6041a81567f012ff6a4c6d96d5818d74bf",
+      "multiplier": 1.0011212375258447
+    },
+    "xStocksSolana": null,
+    "divergenceBps": 10
+  },
+  {
+    "ticker": "CRCL",
+    "bStocks": {
+      "symbol": "CRCLB",
+      "contract": "0x80f3d493ebce97e343c53d29a137942416b4ffc0",
+      "multiplier": 1
+    },
+    "ondo": {
+      "symbol": "CRCLon",
+      "contract": "0x992879cd8ce0c312d98648875b5a8d6d042cbf34",
+      "multiplier": 1
+    },
+    "xStocksSolana": {
+      "symbol": "CRCLx",
+      "contract": "XsueG8BtpquVJX9LVLLEGuViXUungE6WmK5YZ3p3bd1",
+      "multiplier": 1
+    },
+    "divergenceBps": 0
+  },
+  {
+    "ticker": "NVDA",
+    "bStocks": {
+      "symbol": "NVDAB",
+      "contract": "0x02fca66c1d1afb4e2a7884261eb00f63598a7436",
+      "multiplier": 1.0007782237528078
+    },
+    "ondo": {
+      "symbol": "NVDAon",
+      "contract": "0xa9ee28c80f960b889dfbd1902055218cba016f75",
+      "multiplier": 1.0017152487959897
+    },
+    "xStocksSolana": {
+      "symbol": "NVDAx",
+      "contract": "Xsc9qvGR1efVDFGLrVsmkzv3qi45LTBjeUKSPmx9qEh",
+      "multiplier": 1.001701196801074
+    },
+    "divergenceBps": 9
+  },
+  {
+    "ticker": "SNDK",
+    "bStocks": {
+      "symbol": "SNDKB",
+      "contract": "0x3ee4df61bd4f867e349beae8bfe07bc31b4850fb",
+      "multiplier": 1
+    },
+    "ondo": null,
+    "xStocksSolana": null,
+    "divergenceBps": null
+  },
+  {
+    "ticker": "TSLA",
+    "bStocks": {
+      "symbol": "TSLAB",
+      "contract": "0x5b1910eaad6450e50f816082aa078c41f10c292f",
+      "multiplier": 1
+    },
+    "ondo": {
+      "symbol": "TSLAon",
+      "contract": "0x2494b603319d4d9f9715c9f4496d9e0364b59d93",
+      "multiplier": 1
+    },
+    "xStocksSolana": {
+      "symbol": "TSLAx",
+      "contract": "XsDoVfqeBukxuZHWhdvWHBhgEHjGNst4MLodqsJHzoB",
+      "multiplier": 1
+    },
+    "divergenceBps": 0
+  },
+  {
+    "ticker": "SPCX",
+    "bStocks": {
+      "symbol": "SPCXB",
+      "contract": "0xbe9d156892e55e7154bcd3cb0fea677f9d3103e1",
+      "multiplier": 1
+    },
+    "ondo": null,
+    "xStocksSolana": null,
+    "divergenceBps": null
+  },
+  {
+    "ticker": "INTC",
+    "bStocks": {
+      "symbol": "INTCB",
+      "contract": "0xe614e2fc6c787035ff51f452e8e826bfd32d5283",
+      "multiplier": 1
+    },
+    "ondo": {
+      "symbol": "INTCon",
+      "contract": "0xa528caaa2f96090e379d43f90834c75df54d6e74",
+      "multiplier": 1
+    },
+    "xStocksSolana": {
+      "symbol": "INTCx",
+      "contract": "XshPgPdXFRWB8tP1j82rebb2Q9rPgGX37RuqzohmArM",
+      "multiplier": 1
+    },
+    "divergenceBps": 0
+  },
+  {
+    "ticker": "EWY",
+    "bStocks": {
+      "symbol": "EWYB",
+      "contract": "0xbe82f76637dba2c114c41df856c2c51e522e2cb8",
+      "multiplier": 1
+    },
+    "ondo": null,
+    "xStocksSolana": null,
+    "divergenceBps": null
+  },
+  {
+    "ticker": "AMD",
+    "bStocks": {
+      "symbol": "AMDB",
+      "contract": "0x75fd4cf6f8392e41e70391d60c90c0d5211603a1",
+      "multiplier": 1
+    },
+    "ondo": {
+      "symbol": "AMDon",
+      "contract": "0x9f16e46c73b43bdb70861247d537bee4ea18f639",
+      "multiplier": 1
+    },
+    "xStocksSolana": null,
+    "divergenceBps": 0
+  },
+  {
+    "ticker": "MSTR",
+    "bStocks": {
+      "symbol": "MSTRB",
+      "contract": "0xe87afb3076aeb0f9b14e368de8145ae6a2826a14",
+      "multiplier": 1
+    },
+    "ondo": {
+      "symbol": "MSTRon",
+      "contract": "0x7313ea16493b2f55054df0131a3a14b043ec8992",
+      "multiplier": 1
+    },
+    "xStocksSolana": {
+      "symbol": "MSTRx",
+      "contract": "XsP7xzNPvEHS1m6qfanPUGjNmdnmsLKEoNAnHjdxxyZ",
+      "multiplier": 1
+    },
+    "divergenceBps": 0
+  },
+  {
+    "ticker": "QQQ",
+    "bStocks": {
+      "symbol": "QQQB",
+      "contract": "0x205812cdbed920aff76c6580abd681a46d11efc7",
+      "multiplier": 1.0007248386575731
+    },
+    "ondo": {
+      "symbol": "QQQon",
+      "contract": "0x0cde6936d305d5b34667fc46425e852efd73559a",
+      "multiplier": 1.0040824301802083
+    },
+    "xStocksSolana": {
+      "symbol": "QQQx",
+      "contract": "Xs8S1uUs1zvS2p7iwtsG3b6fkhpvmwz4GYU3gWAmWHZ",
+      "multiplier": 1.0034560758968376
+    },
+    "divergenceBps": 34
+  },
+  {
+    "ticker": "META",
+    "bStocks": {
+      "symbol": "METAB",
+      "contract": "0x7425889fe94f9d693e8daefe88bcced6acfef4c0",
+      "multiplier": 1.000548290410745
+    },
+    "ondo": null,
+    "xStocksSolana": {
+      "symbol": "METAx",
+      "contract": "Xsa62P5mvPszXL1krVUnU5ar38bBSVcWAB6fmPCo5Zu",
+      "multiplier": 1.0028515433272898
+    },
+    "divergenceBps": null
+  },
+  {
+    "ticker": "LITE",
+    "bStocks": {
+      "symbol": "LITEB",
+      "contract": "0x64748bea17b6d19e242adf20425de2440c656142",
+      "multiplier": 1
+    },
+    "ondo": null,
+    "xStocksSolana": null,
+    "divergenceBps": null
+  },
+  {
+    "ticker": "PLTR",
+    "bStocks": {
+      "symbol": "PLTRB",
+      "contract": "0x0ca5d51d0277bd006fd9607d3e560785ebad8222",
+      "multiplier": 1
+    },
+    "ondo": {
+      "symbol": "PLTRon",
+      "contract": "0x9351abd19f42101dd36025e495b98e910b255d78",
+      "multiplier": 1
+    },
+    "xStocksSolana": {
+      "symbol": "PLTRx",
+      "contract": "XsoBhf2ufR8fTyNSjqfU71DYGaE6Z3SUGAidpzriAA4",
+      "multiplier": 1
+    },
+    "divergenceBps": 0
+  },
+  {
+    "ticker": "MSFT",
+    "bStocks": {
+      "symbol": "MSFTB",
+      "contract": "0x80106cb3ead06659a5ad19df39d9b4733863b9b0",
+      "multiplier": 1.0013139648333669
+    },
+    "ondo": {
+      "symbol": "MSFTon",
+      "contract": "0x6bfe75d1ad432050ea973c3a3dcd88f02e2444c3",
+      "multiplier": 1.0057308568927839
+    },
+    "xStocksSolana": {
+      "symbol": "MSFTx",
+      "contract": "XspzcW1PRtgf6Wj92HCiZdjzKCyFekVD8P5Ueh3dRMX",
+      "multiplier": 1.0059033904787456
+    },
+    "divergenceBps": 44
+  },
+  {
+    "ticker": "GOOGL",
+    "bStocks": {
+      "symbol": "GOOGLB",
+      "contract": "0x3f53de71c126bdabae20f9cd64848d317f6c3238",
+      "multiplier": 1.0004780589781075
+    },
+    "ondo": {
+      "symbol": "GOOGLon",
+      "contract": "0x091fc7778e6932d4009b087b191d1ee3bac5729a",
+      "multiplier": 1.0024603266374352
+    },
+    "xStocksSolana": {
+      "symbol": "GOOGLx",
+      "contract": "XsCPL9dNWBMvFtTmwcCA5v3xWPSMEBCszbQdiLLq6aN",
+      "multiplier": 1.0023772500603487
+    },
+    "divergenceBps": 20
+  },
+  {
+    "ticker": "QCOM",
+    "bStocks": {
+      "symbol": "QCOMB",
+      "contract": "0x5f7a56e877b9130608bf8be962621011182fefe1",
+      "multiplier": 1.00380432322353
+    },
+    "ondo": null,
+    "xStocksSolana": null,
+    "divergenceBps": null
+  }
+]

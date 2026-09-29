@@ -1,0 +1,52 @@
+{
+  "traditional_equity_reference_price": {
+    "definition": "Benchmark quote from official NASDAQ/NYSE market sessions during regular hours (09:30-16:00 ET). Stale/frozen outside market hours.",
+    "sources": [
+      "Pyth Network (Equity.US.NVDA/USD)",
+      "NASDAQ/Finnhub/Polygon"
+    ],
+    "unit": "USD per 1.0 Underlying Share",
+    "sampleValue": 224.15
+  },
+  "token_market_price": {
+    "definition": "Secondary AMM swap rate or order-book clearing price on DEXes (e.g. PancakeSwap). Trades 24/7 with independent liquidity, slippage, and volatility.",
+    "sources": [
+      "GeckoTerminal (PancakeSwap pools)",
+      "CoinMarketCap/CoinGecko DEX indexers"
+    ],
+    "unit": "USD per 1.0 Raw Token",
+    "sampleValues": {
+      "ondo_nvdaon": 224.4999,
+      "bstocks_nvdab": 223.9252,
+      "xstocks_nvdax": null
+    }
+  },
+  "multiplier_scale_factor": {
+    "definition": "Dynamic multiplier or balance scaling factor accounting for accrued dividend distributions and corporate actions.",
+    "sources": [
+      "Binance Web3 RWA API (buw/wallet/market/token/rwa/stock/detail/list/ai)",
+      "On-chain contract state / oracle"
+    ],
+    "unit": "Dimensionless scaling ratio (Shares per Raw Token or Display Balance per Raw Token)",
+    "sampleValues": {
+      "ondo_nvdaon_bsc": "1.0017152487959898",
+      "bstocks_nvdab_bsc": "1.000778223752807865",
+      "xstocks_nvdax_solana": "1.001701196801074"
+    }
+  },
+  "share_equivalent": {
+    "definition": "Effective physical/custodial underlying share quantity represented by a given token quantity after applying accounting conversion factor.",
+    "formula": "Raw Token Balance * Accounting Conversion Factor (Multiplier or Scale Factor)",
+    "unit": "Underlying Shares"
+  },
+  "share_equivalent_reference_value": {
+    "definition": "Total monetary reference value computed as (Share Equivalent * Traditional Equity Reference Price).",
+    "formula": "Share Equivalent * Traditional Reference Price",
+    "unit": "USD"
+  },
+  "reference_deviation": {
+    "definition": "Percentage divergence between Secondary DEX Market Price and Share-Equivalent Reference Value: ((DEX Price - Reference Value per Token) / Reference Value per Token) * 100.",
+    "validity_constraint": "ONLY valid during traditional market open hours with synchronized timestamps. Misleading during off-market hours or low liquidity pools.",
+    "unit": "Percentage (%)"
+  }
+}
