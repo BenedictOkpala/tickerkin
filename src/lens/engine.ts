@@ -10,6 +10,7 @@ import { xstocksAdapter } from "@/providers/xstocks";
 import { VERIFIED_REGISTRY, type RegistryEquityEntry } from "./registry";
 
 import { binanceRwaAdapter, BinanceRwaAdapter } from "@/providers/binance";
+import { fetchBStocksMultiplierFromRpc, bscMultiplierToEnrichment } from "@/providers/bstocks/bsc-rpc";
 
 /**
  * Normalizes an Ethereum / BNB Smart Chain address to standard lowercase format.
@@ -33,13 +34,16 @@ export class RWALensEngine {
   private readonly adapters: ReadonlyMap<ProviderId, ProviderAdapter>;
   private readonly registry: readonly RegistryEquityEntry[];
   private readonly enrichmentAdapter: BinanceRwaAdapter;
+  private readonly bscRpcFetcher: (contractAddress: string) => Promise<import("@/providers/bstocks/bsc-rpc").BscMultiplierResult | null>;
 
   constructor(
     registry: readonly RegistryEquityEntry[] = VERIFIED_REGISTRY,
-    enrichmentAdapter: BinanceRwaAdapter = binanceRwaAdapter
+    enrichmentAdapter: BinanceRwaAdapter = binanceRwaAdapter,
+    bscRpcFetcher: (contractAddress: string) => Promise<import("@/providers/bstocks/bsc-rpc").BscMultiplierResult | null> = fetchBStocksMultiplierFromRpc
   ) {
     this.registry = registry;
     this.enrichmentAdapter = enrichmentAdapter;
+    this.bscRpcFetcher = bscRpcFetcher;
     this.adapters = new Map<ProviderId, ProviderAdapter>([
       ["ondo", ondoAdapter],
       ["bstocks", bstocksAdapter],
@@ -102,8 +106,11 @@ export class RWALensEngine {
   }
 
   /**
-   * Looks up an equity by traditional ticker with live dynamic enrichment (e.g. Binance Web3).
-   * Falls back gracefully to baseline verified representations if external API is unavailable.
+   * Looks up an equity by traditional ticker with live dynamic enrichment.
+   * Priority:
+   * 1. Direct on-chain BSC RPC eth_call for bStocks multiplier
+   * 2. Binance Web3 RWA API for other providers (e.g. Ondo)
+   * Falls back gracefully to baseline verified representations if external sources are unavailable.
    */
   public async lookupByTickerAsync(ticker: string): Promise<TickerLookupResult> {
     const baseline = this.lookupByTicker(ticker);
@@ -111,19 +118,42 @@ export class RWALensEngine {
       return baseline;
     }
 
+    let representations = baseline.representations;
+
+    // 1. Attempt Binance RWA Web3 enrichment (e.g. for Ondo)
     try {
-      const enrichedRepresentations = await this.enrichmentAdapter.enrichRepresentationsAsync(
-        baseline.representations,
+      representations = await this.enrichmentAdapter.enrichRepresentationsAsync(
+        representations,
         baseline.underlying.ticker
       );
-
-      return {
-        ...baseline,
-        representations: enrichedRepresentations,
-      };
     } catch {
-      return baseline;
+      // Continue with baseline if Binance fails
     }
+
+    // 2. Direct on-chain BSC RPC enrichment for bStocks (Primary verified on-chain source)
+    const enrichedWithOnChain = await Promise.all(
+      representations.map(async (rep) => {
+        if (rep.providerId === "bstocks") {
+          try {
+            const bscResult = await this.bscRpcFetcher(rep.contractAddress);
+            if (bscResult) {
+              return {
+                ...rep,
+                liveEnrichment: bscMultiplierToEnrichment(bscResult, rep.contractAddress),
+              };
+            }
+          } catch {
+            // Keep existing representation if BSC RPC fails
+          }
+        }
+        return rep;
+      })
+    );
+
+    return {
+      ...baseline,
+      representations: enrichedWithOnChain,
+    };
   }
 
   /**
@@ -168,8 +198,10 @@ export class RWALensEngine {
   }
 
   /**
-   * Looks up an equity by contract address with live dynamic enrichment (e.g. Binance Web3).
-   * Falls back gracefully to baseline verified representation if external API is unavailable.
+   * Looks up an equity by contract address with live dynamic enrichment.
+   * Priority:
+   * 1. Direct on-chain BSC RPC eth_call for bStocks multiplier
+   * 2. Binance Web3 RWA API for other providers
    */
   public async lookupByContractAsync(contractAddress: string): Promise<ContractLookupResult> {
     const baseline = this.lookupByContract(contractAddress);
@@ -177,19 +209,37 @@ export class RWALensEngine {
       return baseline;
     }
 
+    let matchedRep = baseline.matchedRepresentation;
+
+    // 1. Attempt Binance enrichment
     try {
-      const enrichedRep = await this.enrichmentAdapter.enrichSingleRepresentationAsync(
-        baseline.matchedRepresentation,
+      matchedRep = await this.enrichmentAdapter.enrichSingleRepresentationAsync(
+        matchedRep,
         baseline.underlying.ticker
       );
-
-      return {
-        ...baseline,
-        matchedRepresentation: enrichedRep,
-      };
     } catch {
-      return baseline;
+      // Continue
     }
+
+    // 2. Direct on-chain BSC RPC enrichment for bStocks
+    if (matchedRep.providerId === "bstocks") {
+      try {
+        const bscResult = await this.bscRpcFetcher(matchedRep.contractAddress);
+        if (bscResult) {
+          matchedRep = {
+            ...matchedRep,
+            liveEnrichment: bscMultiplierToEnrichment(bscResult, matchedRep.contractAddress),
+          };
+        }
+      } catch {
+        // Keep existing
+      }
+    }
+
+    return {
+      ...baseline,
+      matchedRepresentation: matchedRep,
+    };
   }
 
   /**

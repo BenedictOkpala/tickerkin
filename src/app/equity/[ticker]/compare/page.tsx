@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, use } from "react";
+import { useState, useEffect, use } from "react";
 import { notFound } from "next/navigation";
-import { lookupByTicker } from "@/lens";
+import { lookupByTicker, lookupByTickerAsync } from "@/lens";
 import {
   formatEconomicMechanism,
   formatDividendHandling,
@@ -21,13 +21,29 @@ export default function ComparePage({ params }: ComparePageProps) {
   const { ticker } = use(params);
   const result = lookupByTicker(ticker);
 
+  const [activeRepresentations, setActiveRepresentations] = useState<readonly TokenizedRepresentation[]>(
+    result.success ? result.representations : []
+  );
   const [selectedRep, setSelectedRep] = useState<TokenizedRepresentation | null>(null);
+
+  useEffect(() => {
+    let isMounted = true;
+    lookupByTickerAsync(ticker).then((asyncResult) => {
+      if (isMounted && asyncResult.success) {
+        setActiveRepresentations(asyncResult.representations);
+      }
+    });
+    return () => {
+      isMounted = false;
+    };
+  }, [ticker]);
 
   if (!result.success) {
     notFound();
   }
 
-  const { underlying, representations } = result;
+  const { underlying } = result;
+  const representations = activeRepresentations;
 
   // Distinct mechanisms present for this equity
   const uniqueMechanisms = Array.from(new Set(representations.map((r) => r.economicModel.mechanism)));
@@ -158,7 +174,7 @@ export default function ComparePage({ params }: ComparePageProps) {
                 <td key={r.contractAddress} style={{ padding: "0.85rem 1.25rem" }}>
                   {r.liveEnrichment ? (
                     <span style={{ fontSize: "0.78rem", fontWeight: 700, color: "var(--accent-primary)", fontFamily: "var(--font-mono)" }}>
-                      Factor: {r.liveEnrichment.rawMultiplier} (Binance Live)
+                      Factor: {r.liveEnrichment.rawMultiplier} ({r.liveEnrichment.matchBasis === "DIRECT_ON_CHAIN_BSC_ETH_CALL" ? "BNB Smart Chain Live" : "Binance Live"})
                     </span>
                   ) : (
                     <span style={{ fontSize: "0.76rem", color: "var(--text-muted)", fontStyle: "italic" }}>

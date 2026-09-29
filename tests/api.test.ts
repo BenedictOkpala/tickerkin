@@ -239,7 +239,9 @@ describe("RWA Lens Public HTTP API", () => {
       expect(bstocks.liveEnrichment).toBeDefined();
       expect(bstocks.liveEnrichment.rawMultiplier).toBe("1.000778223752807865");
       expect(bstocks.economicModel.currentMultiplier).toBeCloseTo(1.000778, 5);
-      expect(bstocks.liveEnrichment.provenance.sourceName).toBe("Binance Web3 RWA Data");
+      expect(["BNB Smart Chain (eth_call multiplier())", "Binance Web3 RWA Data"]).toContain(
+        bstocks.liveEnrichment.provenance.sourceName
+      );
     });
 
     it("should set proper caching headers on successful responses", async () => {

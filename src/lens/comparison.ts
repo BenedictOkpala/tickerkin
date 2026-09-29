@@ -147,7 +147,10 @@ export function normalizeRepresentationComparison(
       if (!Number.isNaN(parsed) && Number.isFinite(parsed) && parsed > 0) {
         accountingFactor = parsed;
         normalizationStatus = "AVAILABLE";
-        factorSource = "Binance Web3 RWA API (Type 3)";
+        factorSource =
+          representation.liveEnrichment.matchBasis === "DIRECT_ON_CHAIN_BSC_ETH_CALL"
+            ? "BNB Smart Chain"
+            : "Binance Web3 RWA API (Type 3)";
       }
     }
     if (normalizationStatus === "UNAVAILABLE") {

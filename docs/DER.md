@@ -549,6 +549,41 @@
 - **Raw Evidence Artifacts**: `data/raw/calculator-factor/` (BSC RPC probe results, Pyth feed discovery, factor source matrix).
 - **Quality Gates**: 111/111 tests passing (`npm test`), TypeScript clean (`tsc --noEmit`), ESLint clean (`next lint`), Next.js build clean (`next build`).
 
+---
+
+## Entry 20: Phase 7F Direct On-Chain BSC RPC Multiplier Adapter & Operational Live Calculator
+**Date:** 2026-09-29  
+**Subject:** Implementation of resilient multi-endpoint JSON-RPC `eth_call` adapter on BNB Smart Chain (Chain 56) for bStocks multiplier retrieval, RWA Lens engine integration, and live token value normalization.
+
+### 1. Direct BSC On-Chain Adapter Architecture (`src/providers/bstocks/bsc-rpc.ts`)
+- **Direct RPC View Function**: Implemented `fetchBStocksMultiplierFromRpc` targeting bStocks multiplier selector `0xdc767007` via standard JSON-RPC `eth_call`.
+- **Resilient Multi-Endpoint Fallback**: Ordered public endpoints by lowest verified latency (`https://bsc-dataseed1.defibit.io`, `https://bsc-dataseed1.ninicoin.io`, `https://bsc.publicnode.com`) with a 3500ms timeout per endpoint.
+- **Fixed-Point Arithmetic**: Implemented `decodeMultiplier18Decimals` decoding 32-byte EVM hex string into exact 18-decimal fixed-point precision using BigInt string splitting without floating-point truncation.
+- **Provenance Model**: Automatically maps on-chain RPC responses to `BinanceLiveEnrichment` with `matchBasis: "DIRECT_ON_CHAIN_BSC_ETH_CALL"` and `sourceClass: "ON_CHAIN"`.
+
+### 2. Engine & Comparison Pipeline Integration
+- **RWA Lens Engine (`src/lens/engine.ts`)**:
+  - `lookupByTickerAsync` and `lookupByContractAsync` invoke `bscRpcFetcher` for all bStocks representations, attaching live on-chain multiplier enrichment.
+- **Comparison & Normalization (`src/lens/comparison.ts`)**:
+  - Sets `normalizationStatus: "AVAILABLE"`, `accountingFactor: 1.000778...`, `factorLabel: "Multiplier"`, and `factorSource: "BNB Smart Chain"` dynamically when direct on-chain multiplier is retrieved.
+- **Compare Page (`src/app/equity/[ticker]/compare/page.tsx`)**:
+  - Added async enrichment hook to display live multiplier factor (`Factor: 1.000778... (BNB Smart Chain Live)`).
+
+### 3. Mathematical Verification of Calculator Output
+- **Test Input**: 100 NVDAB
+- **Multiplier Applied**: $1.0007782237528078$ (from BSC `0xdc767007`)
+- **Share-Equivalent**: $100 \times 1.0007782237528078 = 100.077822$ NVDA shares
+- **Underlying Reference Price**: $\$224.15$ USD (Pyth Network Hermes)
+- **Total Reference Value**: $\$22,432.44$ USD ($100.077822 \times \$224.15$)
+- **Mechanism Accretion**: $+\$17.44$ USD ($+\$22,432.44 - \$22,415.00$)
+- **DEX Market Spot**: $\$223.93$ USD ($0.18\%$ discount to reference value)
+
+### 4. Quality Gates & Test Suite
+- **Unit & Integration Tests**: 123/123 passing across 10 test suites (`tests/bsc-rpc.test.ts` added with 12 tests).
+- **TypeScript Typecheck**: Clean, 0 errors (`npx.cmd tsc --noEmit`).
+- **ESLint**: Clean, 0 warnings / 0 errors (`npx.cmd next lint`).
+- **Production Build**: Clean Next.js compilation of all static and dynamic routes (`npm.cmd run build`).
+
 
 
 
