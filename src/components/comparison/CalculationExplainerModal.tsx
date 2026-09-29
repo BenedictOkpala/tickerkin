@@ -1,116 +1,104 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
-import type { NormalizedRepresentationComparison, UnderlyingEquityReference } from "@/types/comparison";
+import React, { useEffect } from "react";
 
 interface CalculationExplainerModalProps {
   readonly isOpen: boolean;
   readonly onClose: () => void;
-  readonly representation: NormalizedRepresentationComparison | undefined;
-  readonly underlying: UnderlyingEquityReference;
-  readonly tokenAmount: number;
 }
 
-export function CalculationExplainerModal({
-  isOpen,
-  onClose,
-  representation,
-  underlying,
-  tokenAmount,
-}: CalculationExplainerModalProps) {
-  const closeButtonRef = useRef<HTMLButtonElement>(null);
-
+export function CalculationExplainerModal({ isOpen, onClose }: CalculationExplainerModalProps) {
   useEffect(() => {
-    if (isOpen) {
-      const handleKeyDown = (e: KeyboardEvent) => {
-        if (e.key === "Escape") {
-          onClose();
-        }
-      };
-      window.addEventListener("keydown", handleKeyDown);
-      closeButtonRef.current?.focus();
-      return () => window.removeEventListener("keydown", handleKeyDown);
-    }
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isOpen, onClose]);
 
-  if (!isOpen || !representation) return null;
-
-  const isAvailable = representation.normalizationStatus === "AVAILABLE" && representation.accountingFactor !== null;
-  const factor = representation.accountingFactor;
-  const refPrice = underlying.referencePriceUSD ?? 0;
-  const shareEquivalent = isAvailable && factor !== null ? tokenAmount * factor : null;
-  const totalRefValue = isAvailable && shareEquivalent !== null ? shareEquivalent * refPrice : null;
+  if (!isOpen) return null;
 
   return (
     <div
       role="dialog"
       aria-modal="true"
-      aria-labelledby="calculation-explainer-title"
+      aria-labelledby="explainer-modal-title"
       style={{
         position: "fixed",
         inset: 0,
-        backgroundColor: "rgba(15, 23, 42, 0.45)",
+        backgroundColor: "rgba(15, 23, 42, 0.5)",
         backdropFilter: "blur(4px)",
-        zIndex: 100,
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
+        zIndex: 9999,
         padding: "1rem",
       }}
-      onClick={onClose}
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
     >
       <div
         style={{
-          width: "100%",
-          maxWidth: "540px",
           backgroundColor: "var(--bg-card)",
           border: "1px solid var(--border-card)",
           borderRadius: "var(--radius-lg)",
           boxShadow: "var(--shadow-card)",
+          width: "100%",
+          maxWidth: "640px",
+          maxHeight: "90vh",
+          overflowY: "auto",
           padding: "1.75rem",
           display: "flex",
           flexDirection: "column",
           gap: "1.25rem",
-          maxHeight: "90vh",
-          overflowY: "auto",
         }}
-        onClick={(e) => e.stopPropagation()}
       >
-        {/* Header */}
+        {/* Modal Header */}
         <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: "1rem" }}>
           <div>
-            <div style={{ fontSize: "0.72rem", fontWeight: 700, color: "var(--accent-primary)", textTransform: "uppercase", letterSpacing: "0.04em" }}>
-              Calculation Methodology
+            <div
+              style={{
+                fontSize: "0.72rem",
+                fontWeight: 700,
+                color: "var(--accent-primary)",
+                letterSpacing: "0.04em",
+                textTransform: "uppercase",
+              }}
+            >
+              Normalization Methodology
             </div>
             <h3
-              id="calculation-explainer-title"
+              id="explainer-modal-title"
               style={{
-                fontSize: "1.25rem",
+                fontSize: "1.3rem",
                 fontWeight: 800,
                 color: "var(--text-primary)",
                 letterSpacing: "-0.02em",
                 marginTop: "0.15rem",
               }}
             >
-              How is {representation.tokenSymbol} calculated?
+              How is Normalized Value Calculated?
             </h3>
-            <div style={{ fontSize: "0.8rem", color: "var(--text-secondary)", marginTop: "0.1rem" }}>
-              {representation.providerName} · {representation.economicMechanism}
-            </div>
           </div>
 
           <button
-            ref={closeButtonRef}
             type="button"
             onClick={onClose}
-            aria-label="Close calculation explanation modal"
+            aria-label="Close modal"
             style={{
-              padding: "0.25rem 0.55rem",
-              borderRadius: "var(--radius-xs)",
-              backgroundColor: "var(--bg-app)",
-              color: "var(--text-secondary)",
+              background: "none",
               border: "1px solid var(--border-subtle)",
-              fontSize: "0.85rem",
+              borderRadius: "var(--radius-xs)",
+              width: "28px",
+              height: "28px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontSize: "1rem",
+              fontWeight: 700,
+              color: "var(--text-muted)",
               cursor: "pointer",
             }}
           >
@@ -118,126 +106,143 @@ export function CalculationExplainerModal({
           </button>
         </div>
 
-        {/* Content based on availability */}
-        {isAvailable ? (
-          <div style={{ display: "flex", flexDirection: "column", gap: "1.1rem" }}>
-            {/* Step 1: Share Equivalent */}
-            <div
-              style={{
-                backgroundColor: "var(--bg-app)",
-                border: "1px solid var(--border-subtle)",
-                borderRadius: "var(--radius-md)",
-                padding: "1rem 1.15rem",
-                display: "flex",
-                flexDirection: "column",
-                gap: "0.45rem",
-              }}
-            >
-              <div style={{ fontSize: "0.75rem", fontWeight: 700, color: "var(--accent-primary)", textTransform: "uppercase" }}>
-                Step 1: Compute Share-Equivalent Exposure
-              </div>
-              <div style={{ fontSize: "0.88rem", fontFamily: "var(--font-mono)", fontWeight: 700, color: "var(--text-primary)" }}>
-                {tokenAmount} {representation.tokenSymbol} × {factor?.toFixed(6)} ({representation.factorLabel}) = {shareEquivalent?.toFixed(4)} shares
-              </div>
-              <div style={{ fontSize: "0.78rem", color: "var(--text-secondary)", lineHeight: 1.45 }}>
-                {representation.providerId === "bstocks" ? (
-                  <>The Multiplier is read dynamically from the NVDAB smart contract on <strong>BNB Smart Chain</strong> via on-chain view function.</>
-                ) : representation.providerId === "ondo" ? (
-                  <>The dynamic Auto-DRIP scale factor accounts for cumulative net dividend reinvestment for {representation.tokenSymbol}.</>
-                ) : (
-                  <>The dynamic conversion factor accounts for token mechanism accounting.</>
-                )}
-              </div>
-            </div>
+        <p style={{ fontSize: "0.84rem", color: "var(--text-secondary)", lineHeight: 1.5, margin: 0 }}>
+          Tokenized equities use different economic mechanisms (multiplier, dividend reinvestment, redemption rates) rather than maintaining static 1:1 parity with underlying stock shares. TickerKin normalizes all tokens into comparable share-equivalent units.
+        </p>
 
-            {/* Step 2: Reference Value */}
-            <div
-              style={{
-                backgroundColor: "var(--bg-app)",
-                border: "1px solid var(--border-subtle)",
-                borderRadius: "var(--radius-md)",
-                padding: "1rem 1.15rem",
-                display: "flex",
-                flexDirection: "column",
-                gap: "0.45rem",
-              }}
-            >
-              <div style={{ fontSize: "0.75rem", fontWeight: 700, color: "var(--accent-primary)", textTransform: "uppercase" }}>
-                Step 2: Reference Value Valuation
-              </div>
-              <div style={{ fontSize: "0.88rem", fontFamily: "var(--font-mono)", fontWeight: 700, color: "var(--text-primary)" }}>
-                {shareEquivalent?.toFixed(4)} shares × ${refPrice.toFixed(2)} USD = ${totalRefValue?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USD
-              </div>
-              <div style={{ fontSize: "0.78rem", color: "var(--text-secondary)", lineHeight: 1.45 }}>
-                Underlying equity benchmark is <strong>{underlying.name} ({underlying.ticker})</strong> referenced via Pyth Oracle Hermes ({underlying.exchange} session schedule).
-              </div>
+        {/* Step-by-Step Breakdown */}
+        <div style={{ display: "flex", flexDirection: "column", gap: "0.85rem" }}>
+          {/* Step 1 */}
+          <div
+            style={{
+              backgroundColor: "var(--bg-app)",
+              border: "1px solid var(--border-subtle)",
+              borderRadius: "var(--radius-md)",
+              padding: "0.85rem 1rem",
+              display: "flex",
+              flexDirection: "column",
+              gap: "0.25rem",
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+              <span style={{ fontSize: "0.72rem", fontWeight: 700, color: "var(--accent-primary)", textTransform: "uppercase" }}>
+                Step 1 · Input Tokens
+              </span>
+              <span style={{ fontSize: "0.75rem", fontFamily: "var(--font-mono)", fontWeight: 600, color: "var(--text-muted)" }}>
+                Q_token
+              </span>
             </div>
-
-            {/* Data Source & Freshness Breakdown */}
-            <div
-              style={{
-                borderTop: "1px solid var(--border-subtle)",
-                paddingTop: "0.75rem",
-                display: "flex",
-                flexDirection: "column",
-                gap: "0.35rem",
-                fontSize: "0.75rem",
-                color: "var(--text-muted)",
-              }}
-            >
-              <div>
-                • <strong>Accounting Factor Source:</strong> {representation.factorSource ?? "BNB Smart Chain"} (Live Dynamic Feed)
-              </div>
-              <div>
-                • <strong>Reference Price Source:</strong> Pyth Oracle Benchmark (${refPrice.toFixed(2)} USD · Market Closed Snapshot)
-              </div>
+            <div style={{ fontSize: "0.82rem", color: "var(--text-primary)", fontWeight: 600 }}>
+              Raw Token Quantity Entered
+            </div>
+            <div style={{ fontSize: "0.78rem", color: "var(--text-secondary)", lineHeight: 1.4 }}>
+              The number of BEP-20 token units held in wallet or entered in the calculator.
             </div>
           </div>
-        ) : (
-          /* Intentionally Unavailable Explanation */
-          <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-            <div
-              style={{
-                backgroundColor: "#fffbeb",
-                border: "1px solid #fde68a",
-                borderRadius: "var(--radius-md)",
-                padding: "1rem 1.15rem",
-                display: "flex",
-                flexDirection: "column",
-                gap: "0.45rem",
-              }}
-            >
-              <div style={{ fontSize: "0.82rem", fontWeight: 800, color: "#b45309" }}>
-                Why is normalization unavailable for {representation.tokenSymbol}?
-              </div>
-              <p style={{ fontSize: "0.8rem", color: "#92400e", lineHeight: 1.5, margin: 0 }}>
-                {representation.providerId === "ondo" ? (
-                  "TickerKin has verified the token structure and Auto-DRIP mechanism, but cannot currently reach the dynamic Auto-DRIP factor from its verified runtime source. Normalization is intentionally marked unavailable rather than assuming a false 1.0 factor."
-                ) : representation.providerId === "xstocks" ? (
-                  "TickerKin does not currently have a verified BSC redemption/conversion factor and refuses to assume 1 token equals 1 share. Normalization is preserved as unavailable without borrowing Solana rate feeds."
-                ) : (
-                  representation.unavailabilityReason ?? "Dynamic factor is unreachable. TickerKin strictly refuses to assume 1.0."
-                )}
-              </p>
-            </div>
 
-            <div style={{ fontSize: "0.78rem", color: "var(--text-secondary)", lineHeight: 1.45 }}>
-              TickerKin enforces strict provenance integrity: when dynamic factors are unreachable or unverified on BNB Smart Chain, results are left blank rather than filled with fabricated assumptions.
+          {/* Step 2 */}
+          <div
+            style={{
+              backgroundColor: "var(--bg-app)",
+              border: "1px solid var(--border-subtle)",
+              borderRadius: "var(--radius-md)",
+              padding: "0.85rem 1rem",
+              display: "flex",
+              flexDirection: "column",
+              gap: "0.25rem",
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+              <span style={{ fontSize: "0.72rem", fontWeight: 700, color: "var(--accent-primary)", textTransform: "uppercase" }}>
+                Step 2 · Protocol Factor
+              </span>
+              <span style={{ fontSize: "0.75rem", fontFamily: "var(--font-mono)", fontWeight: 600, color: "var(--accent-primary)" }}>
+                F_accounting
+              </span>
+            </div>
+            <div style={{ fontSize: "0.82rem", color: "var(--text-primary)", fontWeight: 600 }}>
+              Live Accounting / Multiplier Factor
+            </div>
+            <div style={{ fontSize: "0.78rem", color: "var(--text-secondary)", lineHeight: 1.4 }}>
+              Retrieved directly from on-chain smart contracts or verified issuer feeds (e.g. BTech contract <code>multiplier()</code> on BNB Smart Chain). If unverified, the factor is not assumed.
             </div>
           </div>
-        )}
 
-        {/* Regulatory / Financial Disclaimer Footer */}
-        <div
-          style={{
-            borderTop: "1px solid var(--border-subtle)",
-            paddingTop: "0.75rem",
-            fontSize: "0.72rem",
-            color: "var(--text-muted)",
-            lineHeight: 1.4,
-          }}
-        >
-          <strong>Notice:</strong> Reference value represents normalized exposure against traditional market benchmarks. It is not an active DEX market order price and does not constitute a guaranteed issuer redemption value.
+          {/* Step 3 */}
+          <div
+            style={{
+              backgroundColor: "var(--bg-app)",
+              border: "1px solid var(--border-subtle)",
+              borderRadius: "var(--radius-md)",
+              padding: "0.85rem 1rem",
+              display: "flex",
+              flexDirection: "column",
+              gap: "0.25rem",
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+              <span style={{ fontSize: "0.72rem", fontWeight: 700, color: "var(--accent-primary)", textTransform: "uppercase" }}>
+                Step 3 · Share-Equivalent Exposure
+              </span>
+              <span style={{ fontSize: "0.75rem", fontFamily: "var(--font-mono)", fontWeight: 600, color: "var(--text-primary)" }}>
+                Shares = Q_token × F_accounting
+              </span>
+            </div>
+            <div style={{ fontSize: "0.82rem", color: "var(--text-primary)", fontWeight: 600 }}>
+              Normalized Share Quantity
+            </div>
+            <div style={{ fontSize: "0.78rem", color: "var(--text-secondary)", lineHeight: 1.4 }}>
+              Represents the actual quantity of off-chain underlying shares backed by the tokenized holding.
+            </div>
+          </div>
+
+          {/* Step 4 */}
+          <div
+            style={{
+              backgroundColor: "var(--bg-app)",
+              border: "1px solid var(--border-subtle)",
+              borderRadius: "var(--radius-md)",
+              padding: "0.85rem 1rem",
+              display: "flex",
+              flexDirection: "column",
+              gap: "0.25rem",
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+              <span style={{ fontSize: "0.72rem", fontWeight: 700, color: "var(--accent-primary)", textTransform: "uppercase" }}>
+                Step 4 · Total Reference Value
+              </span>
+              <span style={{ fontSize: "0.75rem", fontFamily: "var(--font-mono)", fontWeight: 600, color: "var(--text-primary)" }}>
+                Value_USD = Shares × P_underlying
+              </span>
+            </div>
+            <div style={{ fontSize: "0.82rem", color: "var(--text-primary)", fontWeight: 600 }}>
+              Intrinsic Reference Benchmark
+            </div>
+            <div style={{ fontSize: "0.78rem", color: "var(--text-secondary)", lineHeight: 1.4 }}>
+              Calculated using the verified Pyth Oracle snapshot for the underlying traditional equity.
+            </div>
+          </div>
+        </div>
+
+        {/* Modal Footer */}
+        <div style={{ display: "flex", justifyContent: "flex-end", paddingTop: "0.5rem", borderTop: "1px solid var(--border-subtle)" }}>
+          <button
+            type="button"
+            onClick={onClose}
+            style={{
+              backgroundColor: "var(--accent-primary)",
+              color: "#ffffff",
+              border: "none",
+              borderRadius: "var(--radius-sm)",
+              padding: "0.5rem 1.25rem",
+              fontSize: "0.82rem",
+              fontWeight: 600,
+              cursor: "pointer",
+            }}
+          >
+            Got it
+          </button>
         </div>
       </div>
     </div>

@@ -3,6 +3,9 @@ import { AppShell } from "@/components/layout/AppShell";
 import { getEquitiesCatalog, getProvidersCatalog, buildEquityComparisonAsync } from "@/lens";
 import { InteractiveComparison } from "@/components/comparison/InteractiveComparison";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export default async function OverviewPage() {
   const equities = getEquitiesCatalog();
   const providers = getProvidersCatalog();

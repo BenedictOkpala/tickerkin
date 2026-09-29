@@ -41,7 +41,6 @@ export function HowToReadComparison() {
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
-          aria-expanded={isOpen}
           style={{
             background: "none",
             border: "none",
@@ -81,14 +80,14 @@ export function HowToReadComparison() {
             <strong style={{ color: "var(--text-primary)", display: "block", marginBottom: "0.2rem" }}>
               2. Verified Normalization Only
             </strong>
-            TickerKin normalizes tokens to share-equivalent values only when verified on-chain or first-party feeds exist. Unverified dynamic factors remain truthfully unavailable without assuming 1.0.
+            TickerKin normalizes tokens to share-equivalent values only when verified on-chain or first-party feeds exist. Unverified factors remain truthfully unavailable.
           </div>
 
           <div>
             <strong style={{ color: "var(--text-primary)", display: "block", marginBottom: "0.2rem" }}>
-              3. Reference Deviation ≠ Guaranteed Arbitrage
+              3. Reference Deviation ≠ Arbitrage
             </strong>
-            Reference Deviation measures the percentage difference between secondary DEX market prices and intrinsic share-equivalent value. It reflects liquidity depth and market hours, not guaranteed instantaneous redemption.
+            Reference Deviation measures the percentage difference between secondary DEX market prices and intrinsic share-equivalent value. It reflects liquidity depth and market hours, not guaranteed profit.
           </div>
         </div>
       )}

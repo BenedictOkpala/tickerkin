@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import type { EquityComparisonMatrix, NormalizedRepresentationComparison } from "@/types/comparison";
 import type { TokenizedRepresentation } from "@/types/token";
 import { lookupByContract } from "@/lens";
@@ -12,10 +12,35 @@ interface InteractiveComparisonProps {
   readonly matrix: EquityComparisonMatrix;
 }
 
-export function InteractiveComparison({ matrix }: InteractiveComparisonProps) {
+export function InteractiveComparison({ matrix: initialMatrix }: InteractiveComparisonProps) {
+  const [activeMatrix, setActiveMatrix] = useState<EquityComparisonMatrix>(initialMatrix);
   const [selectedRepForDrawer, setSelectedRepForDrawer] = useState<TokenizedRepresentation | null>(null);
 
-  const { underlying, representations } = matrix;
+  // Client-side dynamic enrichment to ensure live BSC RPC state is always freshest
+  useEffect(() => {
+    let isMounted = true;
+    async function fetchLiveComparison() {
+      try {
+        const res = await fetch(`/api/lens/ticker/${initialMatrix.underlying.ticker}/comparison`, {
+          cache: "no-store",
+        });
+        if (res.ok) {
+          const data = await res.json();
+          if (data && data.matrix && isMounted) {
+            setActiveMatrix(data.matrix);
+          }
+        }
+      } catch (err) {
+        console.warn("Client comparison live fetch fallback:", err);
+      }
+    }
+    fetchLiveComparison();
+    return () => {
+      isMounted = false;
+    };
+  }, [initialMatrix.underlying.ticker]);
+
+  const { underlying, representations } = activeMatrix;
 
   const handleOpenDrawer = (compRep: NormalizedRepresentationComparison) => {
     const lookup = lookupByContract(compRep.contractAddress);
@@ -435,7 +460,7 @@ export function InteractiveComparison({ matrix }: InteractiveComparisonProps) {
       </div>
 
       {/* 4. Token Value Calculator Component */}
-      <TokenValueCalculator matrix={matrix} />
+      <TokenValueCalculator matrix={activeMatrix} />
 
       {/* 5. How To Read Guidance */}
       <HowToReadComparison />
