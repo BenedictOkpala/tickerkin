@@ -162,7 +162,7 @@ export default function ComparePage({ params }: ComparePageProps) {
                     </span>
                   ) : (
                     <span style={{ fontSize: "0.76rem", color: "var(--text-muted)", fontStyle: "italic" }}>
-                      Live factor not available (Static baseline)
+                      Live factor unreachable in current session (showing verified structural baseline)
                     </span>
                   )}
                 </td>

@@ -221,7 +221,7 @@ StockDNA visually explains how provider mechanics diverge without defaulting unp
 | Provider | UI Mechanism Title | Visual Explanation | Formula / Parameter Display |
 |---|---|---|---|
 | **Ondo** | **Auto-DRIP / Scaled UI** | Dividends are automatically reinvested into the underlying security. On BSC, balances update via Scaled UI. | `Token Price Tracks NAV (100% Asset Backed)` |
-| **bStocks** | **BEP-677 Multiplier** | Adjusts effective balance for dividends and stock splits through an on-chain multiplier factor. | `Effective = Raw Balance × Multiplier` *(Live Multiplier: Polled On-Chain)* |
+| **bStocks** | **Multiplier Model** | Adjusts effective balance for dividends and stock splits through an on-chain multiplier factor. | `Effective = Raw Balance × Multiplier` *(Live Multiplier: Polled On-Chain)* |
 | **xStocks** | **Redemption Rate Tracker** | Tracks total return via an evolving certificate redemption rate feed published by Pyth. | `Rate Feed: Crypto.NVDAX/NVDA.RR` |
 
 ---
@@ -291,7 +291,7 @@ When a hackathon judge loads StockDNA or searches `NVDA`, the first viewport com
 3. **Issuers Identified**: Distinct cards for `Ondo Finance`, `Binance bStocks`, and `xStocks / Backed Finance`.
 4. **Mechanism Contrast**: Immediately visible comparison:
    - Ondo: *Auto-DRIP Scaled UI*
-   - bStocks: *BEP-677 Multiplier*
+   - bStocks: *Multiplier Model*
    - xStocks: *Continuous Redemption Rate*
 5. **On-Chain Evidence**: Every contract address is verified on BSC with clickable explorer links and full JSON inspectability.
 

@@ -487,6 +487,47 @@
 - **ESLint (`next lint`)**: Clean (0 warnings, 0 errors).
 - **Production Build (`next build`)**: Clean compilation across all 13 routes (including `/api/lens/ticker/[ticker]/comparison`).
 
+---
+
+## Entry 18: Phase 7D.1 Runtime Comparison & Calculator Diagnostic & Fix
+**Date:** 2026-09-29  
+**Subject:** Diagnostic trace of homepage comparison data flow, root cause categorization, data freshness transparency, and BEP-677 audit.
+
+### 1. Diagnostic Trace & Root Cause Identification
+- **Reported Issue**: When entering $100$ `NVDAon` on the homepage calculator, the UI rendered `Normalization Status: UNAVAILABLE` with `Verified BSC scale factor unavailable.`, despite Phase 7D claiming live factors were active.
+- **Trace Findings**:
+  - `buildEquityComparisonAsync("NVDA")` calls `lookupByTickerAsync("NVDA")`, which queries `defaultBinanceClient.fetchAllStocks()`.
+  - In local and sandboxed environments where outbound requests to `https://www.binance.com/...` time out, the client returns an empty dataset ($0$ records).
+  - When $0$ live records are returned, representations have `liveEnrichment: undefined`.
+  - `normalizeRepresentationComparison` strictly enforces the Phase 7C integrity gate: it refuses to fabricate or assume $1.0$ when dynamic factors cannot be reached, correctly setting `normalizationStatus: "UNAVAILABLE"`.
+  - **Verdict**: **Category E/F (Runtime Network Timeout)**. The engine's mathematical refusal to fabricate $1.0$ is strictly correct behavior; however, documentation had overstated the presence of a live network connection in offline/sandboxed test environments.
+
+### 2. Data Freshness & Oracle Transparency Refinements
+- **Pyth Reference Price (\$224.15 USD)**:
+  - Stored oracle snapshot (`Equity.US.NVDA/USD` Feed ID `b1073854...`) with `MARKET CLOSED` context.
+  - Transparently labeled in UI as `Reference Price (Pyth Oracle Snapshot · Market Closed)` rather than an unverified live real-time stream.
+- **Secondary DEX Spot Prices (\$224.50 NVDAon, \$223.93 NVDAB)**:
+  - Verified PancakeSwap pool snapshots indexed via GeckoTerminal.
+  - Transparently marked with `dataFreshness: "CACHED"` and labeled in UI as `Secondary DEX Spot (Cached)`.
+- **Unavailability Explanations**:
+  - Refined messages when dynamic feeds are unreachable:
+    - *Ondo*: `"Live scale factor unreachable (Network timeout). Showing verified structural data."`
+    - *bStocks*: `"Live multiplier factor unreachable (Network timeout). Showing verified structural data."`
+    - *xStocks*: `"Verified BSC redemption/conversion factor unavailable. TickerKin will not assume 1 token equals 1 share."`
+- **Specification Matrix Alignment (`/equity/[ticker]/compare`)**:
+  - Aligned table cells with runtime status: `"Live factor unreachable in current session (showing verified structural baseline)"`.
+
+### 3. BEP-677 Cleanliness Audit
+- Audited the entire repository and eliminated all outdated or unsupported `BEP-677` references:
+  - Standardized all bStocks descriptions across `src/providers/bstocks/`, `src/lens/presentation.ts`, `docs/live-comparison-feasibility.md`, `data/raw/live-comparison/`, and `docs/stockdna-spec.md` to `Multiplier Model (BEP-20 Scaled Balance)`.
+
+### 4. Verification & Quality Gates
+- **Unit & Integration Tests**: 111/111 passing across 9 test suites (`npm.cmd test`).
+- **TypeScript Typecheck**: Clean, 0 errors (`npx.cmd tsc --noEmit`).
+- **ESLint**: Clean, 0 warnings / 0 errors (`npx.cmd next lint`).
+- **Production Build**: Clean compilation of all static and dynamic routes (`npm.cmd run build`).
+
+
 
 
 

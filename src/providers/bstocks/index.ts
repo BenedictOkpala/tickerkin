@@ -23,7 +23,7 @@ export class BStocksProviderAdapter implements ProviderAdapter {
         sourceName: "Binance Tokenized Securities Docs",
         sourceRef: "https://www.binance.com",
         confidence: "HIGH",
-        notes: "Verified on-chain Multiplier mechanics for net dividend reinvestment & splits (BEP-677 scaled UI amount)",
+        notes: "Verified on-chain Multiplier mechanics for net dividend reinvestment & splits (BEP-20 scaled balance)",
       },
     };
 

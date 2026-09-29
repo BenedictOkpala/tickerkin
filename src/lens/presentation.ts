@@ -106,7 +106,7 @@ export function getMechanismExplanation(mechanism: string): MechanismExplanation
         mechanismKey: "multiplier",
         title: "Multiplier Model",
         subtitle: "Dynamic Balance Scaling",
-        description: "Applies an on-chain multiplier factor (BEP-677 / Scaled UI) to raw balances to account for corporate actions, stock splits, and net dividend reinvestment.",
+        description: "Applies an on-chain multiplier factor (BEP-20 / Scaled UI) to raw balances to account for corporate actions, stock splits, and net dividend reinvestment.",
         behaviorDetail: "Effective Exposure = Raw Token Balance × Multiplier. Splits and corporate distributions increase the applied multiplier.",
       };
     case "redemption_rate":

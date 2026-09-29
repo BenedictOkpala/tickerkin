@@ -121,7 +121,7 @@ export function InteractiveComparison({ matrix }: InteractiveComparisonProps) {
         <div style={{ display: "flex", alignItems: "center", gap: "1.5rem" }}>
           <div style={{ textAlign: "right" }}>
             <div style={{ fontSize: "0.74rem", fontWeight: 600, color: "var(--text-muted)", textTransform: "uppercase" }}>
-              Reference Price (Pyth Oracle)
+              Reference Price (Pyth Oracle Snapshot)
             </div>
             <div
               style={{
@@ -307,7 +307,7 @@ export function InteractiveComparison({ matrix }: InteractiveComparisonProps) {
                       borderBottom: "1px solid var(--border-subtle)",
                     }}
                   >
-                    <span style={{ color: "var(--text-secondary)" }}>Secondary DEX Spot</span>
+                    <span style={{ color: "var(--text-secondary)" }}>Secondary DEX Spot (Cached)</span>
                     <span style={{ fontWeight: 600, fontFamily: "var(--font-mono)", color: "var(--text-primary)" }}>
                       ${rep.dexMarketPriceUSD?.toFixed(2)} USD
                     </span>
@@ -354,7 +354,7 @@ export function InteractiveComparison({ matrix }: InteractiveComparisonProps) {
                   </div>
                 </div>
               ) : (
-                /* UNAVAILABLE Normalization Card State (NVDAx) */
+                /* UNAVAILABLE Normalization Card State */
                 <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
                   <div
                     style={{
@@ -387,8 +387,12 @@ export function InteractiveComparison({ matrix }: InteractiveComparisonProps) {
                       <span>—</span>
                     </div>
                     <div style={{ display: "flex", justifyContent: "space-between" }}>
-                      <span style={{ color: "var(--text-muted)" }}>Secondary DEX Price:</span>
-                      <span>Unavailable</span>
+                      <span style={{ color: "var(--text-muted)" }}>Secondary DEX Spot:</span>
+                      <span>
+                        {rep.dexMarketPriceUSD !== null
+                          ? `$${rep.dexMarketPriceUSD.toFixed(2)} USD (Cached)`
+                          : "Unavailable"}
+                      </span>
                     </div>
                   </div>
                 </div>

@@ -85,7 +85,7 @@ export function TokenValueCalculator({ matrix }: TokenValueCalculatorProps) {
             border: "1px solid var(--border-subtle)",
           }}
         >
-          Underlying: <strong style={{ color: "var(--text-primary)" }}>${matrix.underlying.referencePriceUSD?.toFixed(2)} USD</strong> (Pyth Oracle)
+          Underlying: <strong style={{ color: "var(--text-primary)" }}>${matrix.underlying.referencePriceUSD?.toFixed(2)} USD</strong> (Pyth Oracle Snapshot · Market Closed)
         </div>
       </div>
 
@@ -331,7 +331,7 @@ export function TokenValueCalculator({ matrix }: TokenValueCalculatorProps) {
                   Factor source: <strong style={{ color: "var(--text-secondary)" }}>{calculation.source}</strong>
                 </span>
                 <span>
-                  Status: <span style={{ color: "#16a34a", fontWeight: 700 }}>● VERIFIED LIVE</span>
+                  Status: <span style={{ color: "#16a34a", fontWeight: 700 }}>● VERIFIED LIVE FACTOR</span>
                 </span>
               </div>
             </div>

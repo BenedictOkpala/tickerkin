@@ -36,7 +36,7 @@ const VERIFIED_BSC_DEX_POOLS: ReadonlyMap<string, VerifiedDexPoolEntry> = new Ma
       priceUSD: 223.9252,
       reserveUSD: 3550969.05,
       liquidityTier: "HIGH",
-      dataFreshness: "LIVE",
+      dataFreshness: "CACHED",
     },
   ],
   // Ondo NVDAon on BSC
@@ -49,7 +49,7 @@ const VERIFIED_BSC_DEX_POOLS: ReadonlyMap<string, VerifiedDexPoolEntry> = new Ma
       priceUSD: 224.4999,
       reserveUSD: 14007.36,
       liquidityTier: "MODERATE",
-      dataFreshness: "LIVE",
+      dataFreshness: "CACHED",
     },
   ],
   // xStocks NVDAx on BSC (Illiquid on BSC)
@@ -138,7 +138,7 @@ export function normalizeRepresentationComparison(
       }
     }
     if (normalizationStatus === "UNAVAILABLE") {
-      unavailabilityReason = "Verified BSC scale factor unavailable.";
+      unavailabilityReason = "Live scale factor unreachable (Network timeout). Showing verified structural data.";
     }
   } else if (representation.providerId === "bstocks") {
     factorLabel = "Multiplier";
@@ -151,7 +151,7 @@ export function normalizeRepresentationComparison(
       }
     }
     if (normalizationStatus === "UNAVAILABLE") {
-      unavailabilityReason = "Verified BSC multiplier factor unavailable.";
+      unavailabilityReason = "Live multiplier factor unreachable (Network timeout). Showing verified structural data.";
     }
   } else if (representation.providerId === "xstocks") {
     factorLabel = "Redemption Rate";

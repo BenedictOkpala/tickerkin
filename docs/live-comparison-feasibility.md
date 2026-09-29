@@ -89,7 +89,7 @@ We audited all three verified representations of NVIDIA (`NVDA`) on BSC.
 | :--- | :--- | :--- | :--- |
 | **BSC Contract** | `0xa9ee28c80f960b889dfbd1902055218cba016f75` | `0x02fca66c1d1afb4e2a7884261eb00f63598a7436` | `0xc845b2894dbddd03858fd2d643b4ef725fe0849d` |
 | **Token Decimals** | 18 | 18 | 18 |
-| **Economic Mechanism** | Auto-DRIP (Scaled UI) | Multiplier Model (BEP-677) | Redemption Rate Tracker |
+| **Economic Mechanism** | Auto-DRIP (Scaled UI) | Multiplier Model | Redemption Rate Tracker |
 | **Normalization Status** | **AVAILABLE** | **AVAILABLE** | **UNAVAILABLE** |
 | **Verified Live Factor** | `1.0017152487959898` (Scale Factor) | `1.000778223752807865` (Multiplier) | **`null`** (Solana indexed only) |
 | **Factor Source** | Binance Web3 RWA API (Type 1) | Binance Web3 RWA API (Type 3) | UNAVAILABLE on BSC |

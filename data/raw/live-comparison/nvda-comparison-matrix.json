@@ -36,7 +36,7 @@
       "tokenSymbol": "NVDAB",
       "chain": "BNB Smart Chain (56)",
       "contractAddress": "0x02fca66c1d1afb4e2a7884261eb00f63598a7436",
-      "mechanism": "Multiplier Model (BEP-677 Balance Factor)",
+      "mechanism": "Multiplier Model (BEP-20 Scaled Balance)",
       "legalStructure": "Labuan Financial Services Authority (Tokenized Certificates)",
       "normalizationStatus": "AVAILABLE",
       "liveMultiplier": 1.000778223752807865,
