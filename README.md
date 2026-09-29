@@ -34,11 +34,14 @@ Multiple institutional issuers (such as Ondo Finance, bStocks, and xStocks/Backe
 
 1. **Non-Standard Tickers & Naming**: For the same stock (e.g. NVIDIA), issuers use diverging symbols (`NVDAon`, `NVDAB`, `NVDAx`), causing symbol collisions with legacy tokens (e.g. `bNVDA` vs `NVDAB`).
 2. **Distinct Economic Accounting**: Issuers do not use identical share-accounting models. Ondo uses Scaled UI / Auto-DRIP; bStocks uses an on-chain Multiplier formula (`Raw × Multiplier = Effective Balance`); xStocks uses continuous Redemption Rate tracker certificates.
-3. **Indexer Unreliability**: Third-party indexers frequently mix unverified community honeypots with genuine institutional contracts.
-
-**RWA Lens** acts as the canonical verification, discovery, and normalization layer across these protocols without concealing their underlying economic differences.
+### 4. Interactive Normalized Comparison & Token Value Calculator
+- **Cross-Representation Normalization**: Side-by-side comparison of distinct tokenized representations against traditional equity reference benchmarks (Pyth Network Hermes).
+- **"What is my token worth?" Calculator**: Computes share-equivalent units and intrinsic reference values based on verified on-chain corporate action mechanisms (`Auto-DRIP (Scaled UI)`, `Multiplier Model`).
+- **Truthful Unavailability**: When verified dynamic factors are missing (e.g. Backed/xStocks on BSC), the system explicitly presents normalization status as `UNAVAILABLE` rather than fabricating values or assuming 1.0.
+- **Reference Deviation**: Measures the percentage difference between secondary DEX market spot rates (PancakeSwap) and intrinsic share-equivalent value without making false arbitrage claims.
 
 ---
+
 
 ## Public HTTP API
 

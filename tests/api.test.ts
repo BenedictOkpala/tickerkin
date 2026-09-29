@@ -249,4 +249,65 @@ describe("RWA Lens Public HTTP API", () => {
       expect(cacheHeader).toContain("max-age=3600");
     });
   });
+
+  describe("5. Comparison Matrix Endpoint (GET /api/lens/ticker/[ticker]/comparison)", () => {
+    it("should return 200 OK with full comparison matrix for NVDA", async () => {
+      defaultBinanceClient.clearCache();
+      defaultBinanceClient.setFetchFn(
+        vi.fn().mockResolvedValue({
+          ok: true,
+          json: async () => ({
+            code: "000000",
+            data: [
+              {
+                chainId: "56",
+                contractAddress: "0xa9ee28c80f960b889dfbd1902055218cba016f75",
+                symbol: "NVDAon",
+                ticker: "NVDA",
+                type: 1,
+                assetType: 1,
+                multiplier: "1.0017152487959898",
+                lastUpdateTime: 1788998689203,
+                d: 18,
+              },
+            ],
+          }),
+        }) as unknown as typeof fetch
+      );
+
+      const { GET: getComparison } = await import("../src/app/api/lens/ticker/[ticker]/comparison/route");
+      const req = new Request("http://localhost/api/lens/ticker/NVDA/comparison");
+      const response = await getComparison(req, {
+        params: Promise.resolve({ ticker: "NVDA" }),
+      });
+
+      expect(response.status).toBe(200);
+      const json = await response.json();
+      expect(json.ok).toBe(true);
+      expect(json.data.underlying.ticker).toBe("NVDA");
+      expect(json.data.underlying.referencePriceUSD).toBe(224.15);
+      expect(json.data.representations).toHaveLength(3);
+
+      const ondo = json.data.representations.find((r: { providerId: string }) => r.providerId === "ondo");
+      const xstocks = json.data.representations.find((r: { providerId: string }) => r.providerId === "xstocks");
+
+      expect(ondo.normalizationStatus).toBe("AVAILABLE");
+      expect(xstocks.normalizationStatus).toBe("UNAVAILABLE");
+      expect(xstocks.accountingFactor).toBeNull();
+    });
+
+    it("should return 404 for unknown ticker comparison", async () => {
+      const { GET: getComparison } = await import("../src/app/api/lens/ticker/[ticker]/comparison/route");
+      const req = new Request("http://localhost/api/lens/ticker/UNKNOWN/comparison");
+      const response = await getComparison(req, {
+        params: Promise.resolve({ ticker: "UNKNOWN" }),
+      });
+
+      expect(response.status).toBe(404);
+      const json = await response.json();
+      expect(json.ok).toBe(false);
+      expect(json.error.code).toBe("TICKER_NOT_FOUND");
+    });
+  });
 });
+

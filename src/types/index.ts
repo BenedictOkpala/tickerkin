@@ -6,4 +6,5 @@ export * from "./token";
 export * from "./lens";
 export * from "./provider";
 export * from "./binance";
+export * from "./comparison";
 

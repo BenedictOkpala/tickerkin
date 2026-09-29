@@ -1,10 +1,12 @@
 import Link from "next/link";
 import { AppShell } from "@/components/layout/AppShell";
-import { getEquitiesCatalog, getProvidersCatalog } from "@/lens";
+import { getEquitiesCatalog, getProvidersCatalog, buildEquityComparisonAsync } from "@/lens";
+import { InteractiveComparison } from "@/components/comparison/InteractiveComparison";
 
-export default function OverviewPage() {
+export default async function OverviewPage() {
   const equities = getEquitiesCatalog();
   const providers = getProvidersCatalog();
+  const nvdaComparison = await buildEquityComparisonAsync("NVDA");
 
   return (
     <AppShell activeTicker="NVDA">
@@ -55,7 +57,12 @@ export default function OverviewPage() {
           </p>
         </div>
 
-        {/* 2. Compact Resolution Model Explainer */}
+        {/* 2. Primary Interactive Showcase: Normalized Comparison & Value Calculator */}
+        {nvdaComparison && (
+          <InteractiveComparison matrix={nvdaComparison} />
+        )}
+
+        {/* 3. Compact Resolution Model Explainer */}
         <div
           style={{
             backgroundColor: "var(--bg-card)",
@@ -162,7 +169,7 @@ export default function OverviewPage() {
           </div>
         </div>
 
-        {/* 3. Explore Equities Section */}
+        {/* 4. Explore Equities Section */}
         <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
             <div>
@@ -341,7 +348,7 @@ export default function OverviewPage() {
           </div>
         </div>
 
-        {/* 4. Verified Providers Section */}
+        {/* 5. Verified Providers Section */}
         <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
             <div>

@@ -453,6 +453,41 @@
 - **TypeScript Typecheck Clean** (`npx.cmd tsc --noEmit`).
 - **Gate Verdict**: **READY FOR PHASE 7D — COMPARE + CALCULATOR**.
 
+---
+
+## Entry 17: Phase 7D Interactive Compare & Token Value Calculator Implementation
+**Date:** 2026-09-29  
+**Subject:** Implementing the primary interactive normalized comparison workspace, "What is my token worth?" calculator, and REST comparison endpoint.
+
+### 1. Domain Service & Normalization Architecture (`src/lens/comparison.ts`)
+- **Comparison Engine**:
+  - Implemented `buildEquityComparison` and `buildEquityComparisonAsync` in the core domain layer to calculate normalized metrics:
+    - *Ondo (`NVDAon`)*: Auto-DRIP Scale Factor ($S = 1.001715$), share-equivalent units ($1.001715$), reference value (\$224.53), PancakeSwap spot price (\$224.50), Reference Deviation ($-0.015\%$).
+    - *bStocks (`NVDAB`)*: Multiplier Model ($M = 1.000778$), share-equivalent units ($1.000778$), reference value (\$224.32), PancakeSwap spot price (\$223.93), Reference Deviation ($-0.178\%$).
+    - *xStocks (`NVDAx`)*: Normalization status explicitly set to `UNAVAILABLE` (`accountingFactor: null`, `shareEquivalentPerToken: null`, `referenceValuePerTokenUSD: null`, `referenceDeviationPercent: null`).
+- **Strict Integrity Rule Enforced**:
+  - Implemented a dedicated regression test asserting that missing dynamic factors never silently fall back to $1.0$.
+
+### 2. "What is my token worth?" Calculator (`TokenValueCalculator.tsx`)
+- **Interactive Capabilities**:
+  - Accepts positive numeric amounts with instant reactive recalculation.
+  - Features quick amount presets (10, 50, 100, 500) and representation selector buttons.
+  - For `AVAILABLE` normalization, renders full breakdown: Raw tokens, verified factor, effective physical shares, underlying reference price, total reference dollar value, and mechanism accretion value (+accrued dividend value).
+  - For `UNAVAILABLE` normalization (NVDAx), displays the Amber Data Gap callout: *"Verified BSC redemption/conversion factor unavailable. TickerKin will not assume 1 token equals 1 share."* Output fields render `—` rather than fabricated values.
+  - Robust input validation rejecting negative values and non-numeric inputs without crashing or producing `NaN`/`Infinity`.
+
+### 3. Surface Integration & API Endpoint
+- **Homepage Showcase (`/`)**: Embedded `InteractiveComparison` prominently below the hero header, providing hackathon judges with immediate interactive clarity on token mechanism differences.
+- **REST Endpoint (`GET /api/lens/ticker/:ticker/comparison`)**: Exposes the full normalized matrix for developers and agent pipelines.
+- **API Documentation (`/developers/api`)**: Updated live request tester and schema documentation with the new comparison endpoint.
+
+### 4. Verification & Quality Gates
+- **Vitest Suite**: All 111 tests passing across 9 test suites (`npm.cmd test`).
+- **TypeScript (`tsc --noEmit`)**: Clean (0 errors).
+- **ESLint (`next lint`)**: Clean (0 warnings, 0 errors).
+- **Production Build (`next build`)**: Clean compilation across all 13 routes (including `/api/lens/ticker/[ticker]/comparison`).
+
+
 
 
 
