@@ -1,59 +1,65 @@
 [
   {
     "caseId": "NVDA-Ondo-100",
-    "description": "Calculate 100 NVDAon (Ondo Auto-DRIP)",
+    "description": "Calculate 100 NVDAon (Ondo Auto-DRIP on BSC)",
     "inputs": {
       "ticker": "NVDA",
       "providerId": "ondo",
       "tokenAmount": 100,
       "referencePriceUSD": 224.15
     },
-    "conversionFactor": 1.0017152487959897,
+    "normalizationStatus": "AVAILABLE",
+    "conversionFactor": 1.0017152487959898,
+    "factorName": "Scale Factor",
     "formula": "tokenAmount * scaleFactor",
     "outputs": {
       "displayShares": 100.1715,
       "shareEquivalent": 100.1715,
       "referenceValueUSD": 22453.45,
-      "rawTokenBaselineValueUSD": 22415,
+      "rawTokenBaselineValueUSD": 22415.0,
       "mechanismAccretionUSD": 38.45
     }
   },
   {
     "caseId": "NVDA-bStocks-100",
-    "description": "Calculate 100 NVDAB (bStocks Multiplier)",
+    "description": "Calculate 100 NVDAB (bStocks Multiplier on BSC)",
     "inputs": {
       "ticker": "NVDA",
       "providerId": "bstocks",
       "tokenAmount": 100,
       "referencePriceUSD": 224.15
     },
-    "conversionFactor": 1.0007782237528078,
+    "normalizationStatus": "AVAILABLE",
+    "conversionFactor": 1.000778223752807865,
+    "factorName": "Multiplier",
     "formula": "tokenAmount * multiplier",
     "outputs": {
       "displayShares": 100.0778,
       "shareEquivalent": 100.0778,
       "referenceValueUSD": 22432.44,
-      "rawTokenBaselineValueUSD": 22415,
+      "rawTokenBaselineValueUSD": 22415.0,
       "mechanismAccretionUSD": 17.44
     }
   },
   {
     "caseId": "NVDA-xStocks-100",
-    "description": "Calculate 100 NVDAx (xStocks Static BSC baseline)",
+    "description": "Calculate 100 NVDAx (xStocks on BSC - Normalization Factor Unavailable)",
     "inputs": {
       "ticker": "NVDA",
       "providerId": "xstocks",
       "tokenAmount": 100,
       "referencePriceUSD": 224.15
     },
-    "conversionFactor": 1,
-    "formula": "tokenAmount * 1.0 (Static BSC Baseline)",
+    "normalizationStatus": "UNAVAILABLE",
+    "conversionFactor": null,
+    "factorName": "Redemption Rate",
+    "unavailabilityReason": "Verified BSC redemption/conversion factor unavailable. Cannot assume 1.0.",
     "outputs": {
-      "displayShares": 100,
-      "shareEquivalent": 100,
-      "referenceValueUSD": 22415,
-      "rawTokenBaselineValueUSD": 22415,
-      "mechanismAccretionUSD": 0
+      "displayShares": null,
+      "shareEquivalent": null,
+      "referenceValueUSD": null,
+      "rawTokenBaselineValueUSD": null,
+      "mechanismAccretionUSD": null
     }
   }
 ]
