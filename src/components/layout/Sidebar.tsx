@@ -34,6 +34,16 @@ export function Sidebar({ activeTicker = "NVDA", onCloseMobile }: SidebarProps) 
     textDecoration: "none",
   });
 
+  const sectionHeaderStyle = {
+    fontSize: "0.65rem",
+    fontWeight: 800,
+    color: "var(--text-muted)",
+    letterSpacing: "0.08em",
+    textTransform: "uppercase" as const,
+    padding: "0.2rem 0.5rem 0.35rem",
+    userSelect: "none" as const,
+  };
+
   return (
     <aside
       style={{
@@ -90,16 +100,7 @@ export function Sidebar({ activeTicker = "NVDA", onCloseMobile }: SidebarProps) 
       <nav style={{ display: "flex", flexDirection: "column", gap: "1.25rem", flex: 1 }}>
         {/* Section: EXPLORE */}
         <div style={{ display: "flex", flexDirection: "column", gap: "0.25rem" }}>
-          <div
-            style={{
-              fontSize: "0.68rem",
-              fontWeight: 700,
-              color: "var(--text-muted)",
-              letterSpacing: "0.05em",
-              textTransform: "uppercase",
-              padding: "0 0.5rem 0.25rem",
-            }}
-          >
+          <div style={sectionHeaderStyle}>
             Explore
           </div>
 
@@ -130,16 +131,7 @@ export function Sidebar({ activeTicker = "NVDA", onCloseMobile }: SidebarProps) 
 
         {/* Section: INTELLIGENCE */}
         <div style={{ display: "flex", flexDirection: "column", gap: "0.25rem" }}>
-          <div
-            style={{
-              fontSize: "0.68rem",
-              fontWeight: 700,
-              color: "var(--text-muted)",
-              letterSpacing: "0.05em",
-              textTransform: "uppercase",
-              padding: "0 0.5rem 0.25rem",
-            }}
-          >
+          <div style={sectionHeaderStyle}>
             Intelligence ({activeTicker})
           </div>
 
@@ -182,16 +174,7 @@ export function Sidebar({ activeTicker = "NVDA", onCloseMobile }: SidebarProps) 
 
         {/* Section: DEVELOPERS */}
         <div style={{ display: "flex", flexDirection: "column", gap: "0.25rem" }}>
-          <div
-            style={{
-              fontSize: "0.68rem",
-              fontWeight: 700,
-              color: "var(--text-muted)",
-              letterSpacing: "0.05em",
-              textTransform: "uppercase",
-              padding: "0 0.5rem 0.25rem",
-            }}
-          >
+          <div style={sectionHeaderStyle}>
             Developers
           </div>
 

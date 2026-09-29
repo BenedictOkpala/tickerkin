@@ -41,6 +41,7 @@ export function HowToReadComparison() {
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
+          aria-expanded={isOpen}
           style={{
             background: "none",
             border: "none",
@@ -73,21 +74,21 @@ export function HowToReadComparison() {
             <strong style={{ color: "var(--text-primary)", display: "block", marginBottom: "0.2rem" }}>
               1. Non-Uniform Economic Units
             </strong>
-            Different tokenized versions of the same equity use distinct accounting models (Auto-DRIP, Multiplier, Redemption Rate). 1 raw token does not inherently equal 1 physical share.
+            Different tokenized versions of the same equity use distinct accounting models (Auto-DRIP, Multiplier, Redemption Rate). 1 raw token does not inherently equal 1 share-equivalent unit.
           </div>
 
           <div>
             <strong style={{ color: "var(--text-primary)", display: "block", marginBottom: "0.2rem" }}>
               2. Verified Normalization Only
             </strong>
-            TickerKin normalizes tokens to share-equivalent values only when verified on-chain or first-party feeds exist. Unverified factors remain truthfully unavailable.
+            TickerKin normalizes tokens to share-equivalent values only when verified on-chain or first-party feeds exist. Unverified dynamic factors remain truthfully unavailable without assuming 1.0.
           </div>
 
           <div>
             <strong style={{ color: "var(--text-primary)", display: "block", marginBottom: "0.2rem" }}>
-              3. Reference Deviation ≠ Arbitrage
+              3. Reference Deviation ≠ Guaranteed Arbitrage
             </strong>
-            Reference Deviation measures the percentage difference between secondary DEX market prices and intrinsic share-equivalent value. It reflects liquidity depth and market hours, not guaranteed profit.
+            Reference Deviation measures the percentage difference between secondary DEX market prices and intrinsic share-equivalent value. It reflects liquidity depth and market hours, not guaranteed instantaneous redemption.
           </div>
         </div>
       )}

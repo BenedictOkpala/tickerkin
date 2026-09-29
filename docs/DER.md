@@ -584,6 +584,26 @@
 - **ESLint**: Clean, 0 warnings / 0 errors (`npx.cmd next lint`).
 - **Production Build**: Clean Next.js compilation of all static and dynamic routes (`npm.cmd run build`).
 
+---
+
+## Entry 21: Phase 8A TickerKin UX Cleanup, Copy Integrity, and Product Polish
+**Date:** 2026-09-29  
+**Subject:** Calculator default selection prioritization, subtle representation status indicators, "How is this calculated?" modal affordance, provider-specific copy isolation, and typography refinement.
+
+### 1. UX Refinements & Bug Fixes
+- **Preferred Default Representation**: Calculator dynamically initializes to the representation with `AVAILABLE` normalization (e.g. `NVDAB` on BSC with verified live on-chain multiplier) rather than a hardcoded unverified provider.
+- **Subtle Selector Status**: Added restrained, accessible availability subtext on representation selector pills (`Live factor` vs `Factor unavailable`) without disabling pill selection or using loud warning banners.
+- **Terminology Alignment**: Standardized on `"Share-Equivalent Exposure"` (replacing legacy `"Effective Physical Exposure"`) across calculator outputs, modal explanations, and guidance documentation.
+- **Provider-Specific Copy Isolation (Regression Fix)**: Eliminated leaked Backed / Swiss DLT copy from Ondo and bStocks views; dynamically derived legal and structural footnotes from selected provider metadata.
+- **"How is this calculated?" Explainer Modal**: Implemented lightweight, accessible dialog (`CalculationExplainerModal.tsx`) breaking down the step-by-step arithmetic ($Tokens \times Factor = Shares$; $Shares \times RefPrice = RefValue$) and explaining data gap preservation for unavailable feeds.
+- **Navigation & Hierarchy**: Distinct uppercase tracked typography for sidebar section headers (`EXPLORE`, `INTELLIGENCE`, `DEVELOPERS`) to clearly distinguish navigation headings from clickable links.
+
+### 2. Quality Gates & Test Suite
+- **Unit & Integration Tests**: 131/131 passing across 11 test suites (`tests/ux-cleanup.test.ts` added with 8 tests).
+- **TypeScript Typecheck**: Clean, 0 errors (`npx.cmd tsc --noEmit`).
+- **ESLint**: Clean, 0 warnings / 0 errors (`npx.cmd next lint`).
+- **Production Build**: Clean Next.js compilation of all static and dynamic routes (`npm.cmd run build`).
+
 
 
 

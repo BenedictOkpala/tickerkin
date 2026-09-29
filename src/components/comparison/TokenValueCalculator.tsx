@@ -4,14 +4,22 @@ import React, { useState, useMemo } from "react";
 import type { EquityComparisonMatrix } from "@/types/comparison";
 import type { ProviderId } from "@/types/token";
 import { calculateTokenValue } from "@/lens/comparison";
+import { CalculationExplainerModal } from "./CalculationExplainerModal";
 
 interface TokenValueCalculatorProps {
   readonly matrix: EquityComparisonMatrix;
 }
 
 export function TokenValueCalculator({ matrix }: TokenValueCalculatorProps) {
-  const [selectedProvider, setSelectedProvider] = useState<ProviderId>("ondo");
+  // Prefer available representation as default (e.g. NVDAB on BSC)
+  const defaultProvider = useMemo<ProviderId>(() => {
+    const available = matrix.representations.find((r) => r.normalizationStatus === "AVAILABLE");
+    return available?.providerId ?? matrix.representations[0]?.providerId ?? "bstocks";
+  }, [matrix]);
+
+  const [selectedProvider, setSelectedProvider] = useState<ProviderId>(defaultProvider);
   const [amountStr, setAmountStr] = useState<string>("100");
+  const [isExplainerOpen, setIsExplainerOpen] = useState<boolean>(false);
 
   const numAmount = useMemo(() => {
     if (amountStr.trim() === "") return Number.NaN;
@@ -30,6 +38,17 @@ export function TokenValueCalculator({ matrix }: TokenValueCalculatorProps) {
   }, [matrix, selectedProvider, numAmount]);
 
   const selectedRep = matrix.representations.find((r) => r.providerId === selectedProvider);
+
+  // Dynamic provider-isolated legal & mechanism footnote
+  const providerFootnote = useMemo(() => {
+    if (selectedProvider === "ondo") {
+      return "Identity & legal structure verified under Ondo Global Markets Bermuda SAC prospectus. Dynamic Auto-DRIP rate tracking requires verified runtime factor.";
+    }
+    if (selectedProvider === "bstocks") {
+      return "Identity & legal structure verified under BTech Holdings Limited prospectus. Dynamic Multiplier is read directly from the BNB Smart Chain BEP-20 contract.";
+    }
+    return "Identity & legal structure verified under Swiss DLT / Backed Assets (JE) Limited prospectus. Dynamic rate tracking will be activated when an on-chain BSC Pyth redemption feed is connected.";
+  }, [selectedProvider]);
 
   return (
     <div
@@ -74,18 +93,43 @@ export function TokenValueCalculator({ matrix }: TokenValueCalculatorProps) {
           </p>
         </div>
 
-        <div
-          style={{
-            fontSize: "0.74rem",
-            fontWeight: 600,
-            color: "var(--text-muted)",
-            backgroundColor: "var(--bg-app)",
-            padding: "0.3rem 0.6rem",
-            borderRadius: "var(--radius-xs)",
-            border: "1px solid var(--border-subtle)",
-          }}
-        >
-          Underlying: <strong style={{ color: "var(--text-primary)" }}>${matrix.underlying.referencePriceUSD?.toFixed(2)} USD</strong> (Pyth Oracle Snapshot · Market Closed)
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: "0.35rem" }}>
+          <div
+            style={{
+              fontSize: "0.74rem",
+              fontWeight: 600,
+              color: "var(--text-muted)",
+              backgroundColor: "var(--bg-app)",
+              padding: "0.3rem 0.6rem",
+              borderRadius: "var(--radius-xs)",
+              border: "1px solid var(--border-subtle)",
+            }}
+          >
+            Underlying: <strong style={{ color: "var(--text-primary)" }}>${matrix.underlying.referencePriceUSD?.toFixed(2)} USD</strong> (Pyth Oracle Snapshot · Market Closed)
+          </div>
+
+          <button
+            type="button"
+            onClick={() => setIsExplainerOpen(true)}
+            aria-expanded={isExplainerOpen}
+            aria-haspopup="dialog"
+            style={{
+              background: "none",
+              border: "none",
+              padding: 0,
+              fontSize: "0.75rem",
+              fontWeight: 600,
+              color: "var(--accent-primary)",
+              cursor: "pointer",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "0.25rem",
+              textDecoration: "underline",
+              textUnderlineOffset: "2px",
+            }}
+          >
+            <span>ⓘ How is this calculated?</span>
+          </button>
         </div>
       </div>
 
@@ -172,6 +216,8 @@ export function TokenValueCalculator({ matrix }: TokenValueCalculatorProps) {
           <div style={{ display: "flex", gap: "0.4rem", flexWrap: "wrap" }}>
             {matrix.representations.map((rep) => {
               const isSelected = rep.providerId === selectedProvider;
+              const isRepAvailable = rep.normalizationStatus === "AVAILABLE";
+
               return (
                 <button
                   key={rep.contractAddress}
@@ -182,7 +228,7 @@ export function TokenValueCalculator({ matrix }: TokenValueCalculatorProps) {
                     display: "flex",
                     flexDirection: "column",
                     alignItems: "center",
-                    padding: "0.5rem 0.65rem",
+                    padding: "0.45rem 0.6rem",
                     borderRadius: "var(--radius-sm)",
                     border: isSelected
                       ? "1.5px solid var(--accent-primary)"
@@ -202,8 +248,18 @@ export function TokenValueCalculator({ matrix }: TokenValueCalculatorProps) {
                   >
                     {rep.tokenSymbol}
                   </span>
-                  <span style={{ fontSize: "0.7rem", color: "var(--text-muted)", marginTop: "0.1rem" }}>
+                  <span style={{ fontSize: "0.68rem", color: "var(--text-muted)", marginTop: "0.05rem" }}>
                     {rep.providerName}
+                  </span>
+                  <span
+                    style={{
+                      fontSize: "0.64rem",
+                      fontWeight: 600,
+                      color: isRepAvailable ? "#16a34a" : "var(--text-muted)",
+                      marginTop: "0.15rem",
+                    }}
+                  >
+                    {isRepAvailable ? "Live factor" : "Factor unavailable"}
                   </span>
                 </button>
               );
@@ -263,7 +319,7 @@ export function TokenValueCalculator({ matrix }: TokenValueCalculatorProps) {
 
                 <div style={{ textAlign: "right" }}>
                   <div style={{ fontSize: "0.76rem", fontWeight: 600, color: "var(--text-muted)", textTransform: "uppercase" }}>
-                    Effective Physical Exposure
+                    Share-Equivalent Exposure
                   </div>
                   <div
                     style={{
@@ -325,6 +381,8 @@ export function TokenValueCalculator({ matrix }: TokenValueCalculatorProps) {
                   fontSize: "0.74rem",
                   color: "var(--text-muted)",
                   paddingTop: "0.5rem",
+                  flexWrap: "wrap",
+                  gap: "0.5rem",
                 }}
               >
                 <span>
@@ -407,13 +465,23 @@ export function TokenValueCalculator({ matrix }: TokenValueCalculatorProps) {
                 </div>
               </div>
 
+              {/* Dynamic Provider-Isolated Footnote */}
               <div style={{ fontSize: "0.74rem", color: "var(--text-muted)", fontStyle: "italic" }}>
-                Identity & legal structure verified under Swiss DLT / Backed Assets (JE) Limited prospectus. Dynamic rate tracking will be activated when an on-chain BSC Pyth redemption feed is connected.
+                {providerFootnote}
               </div>
             </div>
           )}
         </div>
       )}
+
+      {/* Calculation Explainer Modal */}
+      <CalculationExplainerModal
+        isOpen={isExplainerOpen}
+        onClose={() => setIsExplainerOpen(false)}
+        representation={selectedRep}
+        underlying={matrix.underlying}
+        tokenAmount={Number.isFinite(numAmount) && numAmount >= 0 ? numAmount : 100}
+      />
     </div>
   );
 }
