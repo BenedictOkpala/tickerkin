@@ -221,6 +221,45 @@
 - **ESLint (`next lint`)**: 0 warnings, 0 errors.
 - **Production Build (`next build`)**: 5 routes compiled cleanly.
 
+---
+
+## Entry 11: Phase 5C TickerKin Workspace Composition & Live Enrichment Diagnostic
+**Date:** 2026-09-29  
+**Subject:** Diagnosing live enrichment behavior in the runtime environment and refining TickerKin desktop workspace composition.
+
+### 1. Live Enrichment Diagnostic Findings
+- **Observed State in Running UI:** TickerKin displays `"Static verified"` and `"Live factor not available"` for all representations when running on localhost.
+- **Root Cause Analysis**:
+  1. In unit tests (`tests/binance.test.ts`), `BinanceRwaAdapter` and `matchRepresentationIdentity` match Ondo BSC (`0xa9ee...`) and bStocks BSC (`0x02fc...`) against verified raw fixtures with `HIGH` confidence.
+  2. In the live Node.js / Next.js server runtime, `BinanceRwaClient.fetchAllStocks()` issues outbound HTTP GET requests to `https://www.binance.com/bapi/defi/v1/public/wallet-direct/buw/wallet/market/token/rwa/stock/detail/list/ai`.
+  3. Outbound connections to `www.binance.com:443` encounter an external environment network connect timeout (`ConnectTimeoutError / UND_ERR_CONNECT_TIMEOUT`).
+  4. As required by Phase 5B resilience specifications, `BinanceRwaClient` catches the timeout, returns `[]`, and `RWALensEngine` seamlessly falls back to the static verified catalog (`liveEnrichment: undefined`).
+  5. The UI truthfully displays `"Static verified"` and `"Live factor not available"` rather than fabricating placeholder numbers or crashing.
+- **Market Status Integrity Finding**:
+  - `isOpen` in `VERIFIED_REGISTRY` originated from a static seed snapshot.
+  - Because it was not backed by a real-time exchange clock feed, claiming `"US Market Closed"` was an unverified dynamic claim.
+  - Removed dynamic open/closed text and replaced with verified static metadata (`NASDAQ · USD` / `US Session: 09:30–16:00 ET`).
+
+### 2. Desktop Workspace & Kin Map Composition
+- **Expanded Workspace**: Increased container max-width to `1400px` with natural content height, eliminating giant unused vertical gaps beneath cards.
+- **Root Node Authority**: Expanded `UnderlyingNode` to `520px` width with larger company typography (`1.55rem`), prominent ticker badge, exchange/currency metadata, and clear verified representation count.
+- **Solid Hairline Connectors**: Replaced dashed/pulsing blue lines with solid `#CBD5E1` hairline curves (`1.5px` stroke) originating from a restrained TickerKin blue top junction (`#1A56DB`).
+- **Card Hierarchy & Spacing**:
+  1. Provider & Issuer Header (removed floating "Active" text)
+  2. Token Symbol (`1.45rem`, bold) + Token Name
+  3. Economic Mechanism (prominent `#F8FAFC` card with dynamic factor or truthful unavailable message)
+  4. BEP-20 Contract address + Copy + BscScan link
+  5. Provenance footer with `Binance Web3 Live` or `Static verified` badge.
+- **Palette Integrity**: Strictly preserved the editorial palette (white/off-white, dark navy, neutral grays, cobalt blue accent `#1A56DB`, BNB yellow only for chain identity).
+
+### 3. Verification & Quality Gates
+- **Vitest Suite**: 58/58 tests passing across 5 test files (`tests/binance.test.ts`, `tests/engine.test.ts`, `tests/api.test.ts`, `tests/ui.test.ts`, `tests/visual.test.ts`).
+- **TypeScript (`tsc --noEmit`)**: Clean (0 errors).
+- **ESLint (`next lint`)**: Clean (0 warnings/errors).
+- **Production Build (`next build`)**: Clean compilation (5 routes).
+- **Live Smoke Test (`next start -p 3006`)**: Verified HTTP 200 responses on `/api/lens/ticker/NVDA` and `/`.
+
+
 
 
 

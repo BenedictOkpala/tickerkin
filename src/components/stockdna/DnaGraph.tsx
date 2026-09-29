@@ -18,9 +18,9 @@ export function DnaGraph({ data, onInspectEvidence }: DnaGraphProps) {
     <div
       style={{
         width: "100%",
-        maxWidth: "1320px",
+        maxWidth: "1400px",
         margin: "0 auto",
-        padding: "1.5rem 1.25rem 3rem",
+        padding: "1.25rem 1.5rem 2rem",
       }}
     >
       {/* 1. Underlying Root Node */}
@@ -28,20 +28,20 @@ export function DnaGraph({ data, onInspectEvidence }: DnaGraphProps) {
         <UnderlyingNode equity={underlying} representationCount={count} />
       </div>
 
-      {/* 2. Desktop Kin Map Curved SVG Connectors */}
+      {/* 2. Desktop Kin Map Solid Hairline Curved SVG Connectors */}
       <div
         className="kin-desktop-connector"
         style={{
           position: "relative",
           width: "100%",
-          height: count > 1 ? "54px" : "36px",
+          height: count > 1 ? "48px" : "32px",
           display: "none",
         }}
       >
         <svg
           width="100%"
           height="100%"
-          viewBox="0 0 1000 54"
+          viewBox="0 0 1000 48"
           preserveAspectRatio="none"
           style={{ overflow: "visible", position: "absolute", top: 0, left: 0 }}
         >
@@ -52,81 +52,75 @@ export function DnaGraph({ data, onInspectEvidence }: DnaGraphProps) {
                 x1="500"
                 y1="0"
                 x2="500"
-                y2="36"
-                stroke="var(--accent-primary)"
-                strokeWidth="2"
-                className="kin-branch-active"
+                y2="32"
+                stroke="#CBD5E1"
+                strokeWidth="1.5"
               />
               <circle cx="500" cy="0" r="3.5" fill="var(--accent-primary)" />
-              <circle cx="500" cy="36" r="3.5" fill="var(--accent-primary)" />
+              <circle cx="500" cy="32" r="3" fill="#94A3B8" />
             </g>
           )}
 
           {count === 2 && (
             /* 2-way curved branch */
             <g>
-              {/* Origin central node */}
+              {/* Origin central node in TickerKin Blue */}
               <circle cx="500" cy="0" r="3.5" fill="var(--accent-primary)" />
 
-              {/* Left smooth bezier curve */}
+              {/* Left smooth solid bezier curve */}
               <path
-                d="M 500 0 C 500 28, 280 26, 280 54"
+                d="M 500 0 C 500 24, 280 24, 280 48"
                 fill="none"
-                stroke="var(--accent-primary)"
-                strokeWidth="1.75"
-                className="kin-branch-active"
+                stroke="#CBD5E1"
+                strokeWidth="1.5"
               />
-              <circle cx="280" cy="54" r="3.5" fill="var(--accent-primary)" />
+              <circle cx="280" cy="48" r="3" fill="#94A3B8" />
 
-              {/* Right smooth bezier curve */}
+              {/* Right smooth solid bezier curve */}
               <path
-                d="M 500 0 C 500 28, 720 26, 720 54"
+                d="M 500 0 C 500 24, 720 24, 720 48"
                 fill="none"
-                stroke="var(--accent-primary)"
-                strokeWidth="1.75"
-                className="kin-branch-active"
+                stroke="#CBD5E1"
+                strokeWidth="1.5"
               />
-              <circle cx="720" cy="54" r="3.5" fill="var(--accent-primary)" />
+              <circle cx="720" cy="48" r="3" fill="#94A3B8" />
             </g>
           )}
 
           {count >= 3 && (
-            /* 3-way or multi-way smooth curved branches */
+            /* 3-way smooth solid curved branches */
             <g>
-              {/* Origin central node */}
+              {/* Origin central node in TickerKin Blue */}
               <circle cx="500" cy="0" r="3.5" fill="var(--accent-primary)" />
 
               {/* Left smooth curved branch */}
               <path
-                d="M 500 0 C 500 28, 175 26, 175 54"
+                d="M 500 0 C 500 24, 175 24, 175 48"
                 fill="none"
-                stroke="var(--accent-primary)"
-                strokeWidth="1.75"
-                className="kin-branch-active"
+                stroke="#CBD5E1"
+                strokeWidth="1.5"
               />
-              <circle cx="175" cy="54" r="3.5" fill="var(--accent-primary)" />
+              <circle cx="175" cy="48" r="3" fill="#94A3B8" />
 
               {/* Center direct branch */}
               <line
                 x1="500"
                 y1="0"
                 x2="500"
-                y2="54"
-                stroke="var(--accent-primary)"
-                strokeWidth="1.75"
-                className="kin-branch-active"
+                y2="48"
+                stroke="#CBD5E1"
+                strokeWidth="1.5"
               />
-              <circle cx="500" cy="54" r="3.5" fill="var(--accent-primary)" />
+              <circle cx="500" cy="48" r="3" fill="#94A3B8" />
 
               {/* Right smooth curved branch */}
               <path
-                d="M 500 0 C 500 28, 825 26, 825 54"
+                d="M 500 0 C 500 24, 825 24, 825 48"
                 fill="none"
-                stroke="var(--accent-primary)"
-                strokeWidth="1.75"
-                className="kin-branch-active"
+                stroke="#CBD5E1"
+                strokeWidth="1.5"
               />
-              <circle cx="825" cy="54" r="3.5" fill="var(--accent-primary)" />
+              <circle cx="825" cy="48" r="3" fill="#94A3B8" />
             </g>
           )}
         </svg>
@@ -176,16 +170,18 @@ export function DnaGraph({ data, onInspectEvidence }: DnaGraphProps) {
           .kin-representations-container {
             display: grid;
             grid-template-columns: ${count === 1
-              ? "maxw(520px, 1fr)"
+              ? "minmax(340px, 480px)"
               : count === 2
-              ? "repeat(2, 1fr)"
-              : "repeat(3, 1fr)"};
-            max-width: ${count === 1 ? "520px" : "100%"};
+              ? "repeat(2, minmax(320px, 1fr))"
+              : "repeat(3, minmax(300px, 1fr))"};
+            max-width: ${count === 1 ? "480px" : "100%"};
             margin: ${count === 1 ? "0 auto" : "0"};
-            gap: 1.5rem;
+            gap: 1.75rem;
+            align-items: stretch;
           }
           .kin-card-wrapper {
-            display: block;
+            display: flex;
+            height: 100%;
           }
           .kin-mobile-connector-node {
             display: none !important;
@@ -199,9 +195,9 @@ export function DnaGraph({ data, onInspectEvidence }: DnaGraphProps) {
           .kin-representations-container {
             display: flex;
             flex-direction: column;
-            gap: 1.15rem;
-            margin-top: 1.5rem;
-            padding-left: 0.5rem;
+            gap: 1.25rem;
+            margin-top: 1.25rem;
+            padding-left: 0.25rem;
           }
           .kin-card-wrapper {
             display: flex;

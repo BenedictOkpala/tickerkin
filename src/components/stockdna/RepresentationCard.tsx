@@ -36,25 +36,27 @@ export function RepresentationCard({
       style={{
         display: "flex",
         flexDirection: "column",
-        gap: "0.75rem",
-        padding: "1.1rem",
+        gap: "0.95rem",
+        padding: "1.35rem 1.4rem",
         backgroundColor: "var(--bg-card)",
         border: `1px solid ${isTargetMatch ? "var(--accent-bnb)" : "var(--border-card)"}`,
         borderRadius: "var(--radius-lg)",
-        boxShadow: isTargetMatch ? "0 2px 12px rgba(240, 185, 11, 0.08)" : "none",
-        transition: "border-color 0.15s, background-color 0.15s",
+        boxShadow: isTargetMatch
+          ? "0 2px 14px rgba(180, 133, 0, 0.12)"
+          : "var(--shadow-card)",
+        transition: "border-color 0.15s, box-shadow 0.15s",
         position: "relative",
       }}
       onMouseEnter={(e) => {
         if (!isTargetMatch) {
           e.currentTarget.style.borderColor = "var(--border-hover)";
-          e.currentTarget.style.backgroundColor = "var(--bg-card-hover)";
+          e.currentTarget.style.boxShadow = "var(--shadow-hover)";
         }
       }}
       onMouseLeave={(e) => {
         if (!isTargetMatch) {
           e.currentTarget.style.borderColor = "var(--border-card)";
-          e.currentTarget.style.backgroundColor = "var(--bg-card)";
+          e.currentTarget.style.boxShadow = "var(--shadow-card)";
         }
       }}
     >
@@ -64,95 +66,114 @@ export function RepresentationCard({
           style={{
             position: "absolute",
             top: "-10px",
-            right: "12px",
-            fontSize: "0.68rem",
+            right: "14px",
+            fontSize: "0.7rem",
             fontWeight: 600,
-            padding: "0.15rem 0.5rem",
+            padding: "0.15rem 0.55rem",
             borderRadius: "var(--radius-xs)",
             backgroundColor: "var(--accent-bnb)",
-            color: "#000000",
+            color: "#ffffff",
+            boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
           }}
         >
           Queried Contract Target
         </div>
       )}
 
-      {/* Header: Provider Name, Issuer & Status */}
-      <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: "0.5rem" }}>
-        <div>
-          <div
-            style={{
-              fontSize: "0.82rem",
-              fontWeight: 600,
-              color: "var(--text-secondary)",
-            }}
-          >
-            {representation.providerName}
-          </div>
-          <div style={{ fontSize: "0.74rem", color: "var(--text-muted)", marginTop: "0.1rem" }}>
-            Issuer: {representation.issuer}
-          </div>
-        </div>
-
-        <span
+      {/* 1. Hierarchy: Provider & Issuer Context Header */}
+      <div style={{ display: "flex", flexDirection: "column", gap: "0.15rem" }}>
+        <div
           style={{
-            fontSize: "0.7rem",
-            fontWeight: 500,
-            padding: "0.15rem 0.45rem",
-            borderRadius: "var(--radius-xs)",
-            backgroundColor: "var(--status-active-soft)",
-            color: "var(--status-active)",
-            border: "1px solid var(--status-active-border)",
+            fontSize: "0.86rem",
+            fontWeight: 700,
+            color: "var(--text-primary)",
+            letterSpacing: "-0.01em",
           }}
         >
-          {representation.status.toLowerCase() === "active" ? "Active" : representation.status}
-        </span>
+          {representation.providerName}
+        </div>
+        <div style={{ fontSize: "0.75rem", color: "var(--text-muted)" }}>
+          Issuer: {representation.issuer}
+        </div>
       </div>
 
-      {/* Main Token Symbol & Token Name */}
+      {/* 2. Hierarchy: Token Symbol & Representation Name */}
       <div
         style={{
           display: "flex",
           alignItems: "baseline",
           justifyContent: "space-between",
           borderBottom: "1px solid var(--border-subtle)",
-          paddingBottom: "0.5rem",
+          paddingBottom: "0.65rem",
         }}
       >
         <div>
-          <span style={{ fontSize: "1.25rem", fontWeight: 700, color: "var(--text-primary)" }}>
+          <span
+            style={{
+              fontSize: "1.45rem",
+              fontWeight: 800,
+              letterSpacing: "-0.02em",
+              color: "var(--text-primary)",
+            }}
+          >
             {representation.tokenSymbol}
           </span>
-          <span style={{ fontSize: "0.78rem", color: "var(--text-secondary)", marginLeft: "0.4rem" }}>
+          <span
+            style={{
+              fontSize: "0.82rem",
+              color: "var(--text-secondary)",
+              marginLeft: "0.5rem",
+              fontWeight: 500,
+            }}
+          >
             {representation.tokenName}
           </span>
         </div>
 
-        <span style={{ fontSize: "0.72rem", color: "var(--text-muted)", fontFamily: "var(--font-mono)" }}>
-          {representation.tokenStandard} · {representation.decimals} decimals
+        <span
+          style={{
+            fontSize: "0.72rem",
+            color: "var(--text-muted)",
+            fontFamily: "var(--font-mono)",
+            backgroundColor: "var(--bg-app)",
+            padding: "0.15rem 0.45rem",
+            borderRadius: "var(--radius-xs)",
+            border: "1px solid var(--border-subtle)",
+          }}
+        >
+          {representation.tokenStandard} · {representation.decimals}d
         </span>
       </div>
 
-      {/* BEP-20 Contract Section */}
+      {/* 3. Hierarchy: Economic Mechanism (Primary Differentiator) */}
+      <EconomicPill model={representation.economicModel} />
+
+      {/* 4. Hierarchy: BEP-20 Contract Section */}
       <div
         style={{
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
-          backgroundColor: "var(--bg-surface)",
-          padding: "0.35rem 0.6rem",
-          borderRadius: "var(--radius-xs)",
+          backgroundColor: "var(--bg-app)",
+          padding: "0.45rem 0.65rem",
+          borderRadius: "var(--radius-sm)",
           border: "1px solid var(--border-subtle)",
         }}
       >
-        <div style={{ display: "flex", alignItems: "center", gap: "0.35rem" }}>
-          <span style={{ fontSize: "0.72rem", color: "var(--text-muted)" }}>BEP-20:</span>
-          <code style={{ fontSize: "0.76rem", fontFamily: "var(--font-mono)", color: "var(--text-primary)" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "0.4rem" }}>
+          <span style={{ fontSize: "0.72rem", color: "var(--text-muted)", fontWeight: 500 }}>Contract:</span>
+          <code
+            style={{
+              fontSize: "0.78rem",
+              fontFamily: "var(--font-mono)",
+              color: "var(--text-primary)",
+            }}
+          >
             {truncatedAddress}
           </code>
         </div>
 
-        <div style={{ display: "flex", alignItems: "center", gap: "0.3rem" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "0.35rem" }}>
           <button
             type="button"
             onClick={handleCopy}
@@ -160,10 +181,11 @@ export function RepresentationCard({
               fontSize: "0.72rem",
               padding: "0.15rem 0.45rem",
               borderRadius: "var(--radius-xs)",
-              backgroundColor: copied ? "var(--status-active-soft)" : "var(--bg-card)",
-              color: copied ? "var(--status-active)" : "var(--text-secondary)",
+              backgroundColor: copied ? "var(--accent-primary-soft)" : "var(--bg-card)",
+              color: copied ? "var(--accent-primary)" : "var(--text-secondary)",
               border: "1px solid var(--border-subtle)",
               transition: "all 0.15s",
+              fontWeight: 500,
             }}
             title="Copy contract address"
           >
@@ -184,6 +206,7 @@ export function RepresentationCard({
               display: "inline-flex",
               alignItems: "center",
               gap: "0.15rem",
+              fontWeight: 500,
             }}
             title="View contract on BscScan"
           >
@@ -193,17 +216,14 @@ export function RepresentationCard({
         </div>
       </div>
 
-      {/* Economic Mechanism */}
-      <EconomicPill model={representation.economicModel} />
-
-      {/* Card Footer: Provenance & Live Source */}
+      {/* 5. Hierarchy: Provenance & Live Source Footer */}
       <div
         style={{
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
           marginTop: "auto",
-          paddingTop: "0.25rem",
+          paddingTop: "0.35rem",
           gap: "0.5rem",
           flexWrap: "wrap",
         }}
@@ -215,23 +235,30 @@ export function RepresentationCard({
             style={{
               display: "inline-flex",
               alignItems: "center",
-              gap: "0.3rem",
-              padding: "0.2rem 0.45rem",
+              gap: "0.35rem",
+              padding: "0.2rem 0.5rem",
               borderRadius: "var(--radius-xs)",
-              backgroundColor: "var(--status-active-soft)",
-              border: "1px solid var(--status-active-border)",
-              color: "var(--status-active)",
-              fontSize: "0.68rem",
+              backgroundColor: "var(--accent-primary-soft)",
+              border: "1px solid var(--accent-primary-border)",
+              color: "var(--accent-primary)",
+              fontSize: "0.72rem",
               fontWeight: 600,
               cursor: "pointer",
             }}
             title="Inspect Binance Web3 live data provenance"
           >
-            <span style={{ width: "5px", height: "5px", borderRadius: "50%", backgroundColor: "var(--status-active)" }} />
+            <span
+              style={{
+                width: "6px",
+                height: "6px",
+                borderRadius: "50%",
+                backgroundColor: "var(--accent-primary)",
+              }}
+            />
             <span>Binance Web3 Live</span>
           </button>
         ) : (
-          <span style={{ fontSize: "0.68rem", color: "var(--text-muted)" }}>
+          <span style={{ fontSize: "0.72rem", color: "var(--text-muted)" }}>
             Static verified
           </span>
         )}

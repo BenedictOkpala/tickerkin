@@ -58,7 +58,7 @@ export function SearchHeader({
     >
       <div
         style={{
-          maxWidth: "1280px",
+          maxWidth: "1400px",
           margin: "0 auto",
           display: "flex",
           flexDirection: "column",

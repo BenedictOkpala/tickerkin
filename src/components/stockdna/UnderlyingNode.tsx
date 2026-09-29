@@ -13,29 +13,32 @@ export function UnderlyingNode({ equity, representationCount }: UnderlyingNodePr
         flexDirection: "column",
         alignItems: "center",
         textAlign: "center",
-        maxWidth: "460px",
+        maxWidth: "520px",
         margin: "0 auto",
-        padding: "1rem 1.5rem",
+        padding: "1.25rem 1.75rem",
         backgroundColor: "var(--bg-card)",
         border: "1px solid var(--border-card)",
         borderRadius: "var(--radius-lg)",
+        boxShadow: "var(--shadow-card)",
         position: "relative",
         zIndex: 2,
       }}
     >
-      {/* Root Category Subtitle */}
+      {/* Root Category Header */}
       <div
         style={{
           display: "flex",
           alignItems: "center",
           gap: "0.4rem",
-          fontSize: "0.72rem",
+          fontSize: "0.75rem",
           fontWeight: 600,
           color: "var(--text-muted)",
-          marginBottom: "0.25rem",
+          letterSpacing: "0.02em",
+          textTransform: "uppercase",
+          marginBottom: "0.35rem",
         }}
       >
-        <span>Traditional Underlying Equity</span>
+        <span>Underlying Traditional Asset</span>
         {equity.exchange && (
           <>
             <span>·</span>
@@ -44,30 +47,31 @@ export function UnderlyingNode({ equity, representationCount }: UnderlyingNodePr
         )}
       </div>
 
-      {/* Main Stock Name */}
+      {/* Main Stock Company Name */}
       <h2
         style={{
-          fontSize: "1.35rem",
+          fontSize: "1.55rem",
           fontWeight: 700,
-          letterSpacing: "-0.02em",
+          letterSpacing: "-0.025em",
           color: "var(--text-primary)",
-          marginBottom: "0.25rem",
+          marginBottom: "0.4rem",
+          lineHeight: 1.25,
         }}
       >
         {equity.name}
       </h2>
 
-      {/* Ticker, Currency, and Market Hours */}
+      {/* Ticker & Quote Currency Meta Row */}
       <div
         style={{
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
           flexWrap: "wrap",
-          gap: "0.6rem",
-          fontSize: "0.8rem",
+          gap: "0.5rem",
+          fontSize: "0.82rem",
           color: "var(--text-secondary)",
-          marginBottom: "0.5rem",
+          marginBottom: "0.65rem",
         }}
       >
         <span
@@ -75,50 +79,44 @@ export function UnderlyingNode({ equity, representationCount }: UnderlyingNodePr
             fontWeight: 700,
             color: "var(--text-primary)",
             backgroundColor: "var(--bg-surface)",
-            padding: "0.1rem 0.45rem",
+            padding: "0.15rem 0.55rem",
             borderRadius: "var(--radius-xs)",
-            border: "1px solid var(--border-subtle)",
-            fontSize: "0.82rem",
+            border: "1px solid var(--border-card)",
+            fontSize: "0.88rem",
+            letterSpacing: "0.02em",
           }}
         >
           {equity.ticker}
         </span>
 
-        <span>Quote: {equity.quoteCurrency}</span>
+        <span style={{ color: "var(--text-secondary)", fontWeight: 500 }}>
+          Quote: {equity.quoteCurrency}
+        </span>
 
-        {equity.marketHours && (
+        {equity.marketHours?.timezone && (
           <>
-            <span style={{ color: "var(--border-hover)" }}>·</span>
-            <span style={{ display: "inline-flex", alignItems: "center", gap: "0.3rem" }}>
-              <span
-                style={{
-                  width: "6px",
-                  height: "6px",
-                  borderRadius: "50%",
-                  backgroundColor: equity.marketHours.isOpen ? "var(--status-active)" : "var(--text-muted)",
-                }}
-              />
-              <span style={{ fontSize: "0.75rem" }}>
-                {equity.marketHours.isOpen ? "US Market Open" : "US Market Closed"}
-              </span>
+            <span style={{ color: "var(--border-card)" }}>·</span>
+            <span style={{ fontSize: "0.76rem", color: "var(--text-muted)" }}>
+              US Session: 09:30–16:00 ET
             </span>
           </>
         )}
       </div>
 
-      {/* Kin Count Indicator */}
+      {/* Verified Kin Count Badge */}
       <div
         style={{
-          fontSize: "0.75rem",
+          fontSize: "0.78rem",
           color: "var(--accent-primary)",
           backgroundColor: "var(--accent-primary-soft)",
-          padding: "0.2rem 0.6rem",
+          padding: "0.25rem 0.75rem",
           borderRadius: "var(--radius-xs)",
           border: "1px solid var(--accent-primary-border)",
-          fontWeight: 500,
+          fontWeight: 600,
+          letterSpacing: "-0.01em",
         }}
       >
-        {representationCount} verified tokenized {representationCount === 1 ? "representation" : "representations"} on BNB Smart Chain
+        {representationCount} verified {representationCount === 1 ? "representation" : "representations"} on BNB Smart Chain
       </div>
     </div>
   );
