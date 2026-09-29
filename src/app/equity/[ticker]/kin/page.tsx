@@ -4,8 +4,10 @@ import { useState, use } from "react";
 import { useSearchParams } from "next/navigation";
 import { useTickerKin } from "@/hooks/useStockDna";
 import type { EvidenceRecord } from "@/types/provenance";
+import type { TokenizedRepresentation } from "@/types/token";
 import { DnaGraph } from "@/components/stockdna/DnaGraph";
 import { EvidenceDrawer } from "@/components/stockdna/EvidenceDrawer";
+import { RepresentationDetailDrawer } from "@/components/stockdna/RepresentationDetailDrawer";
 import { LoadingSkeleton } from "@/components/stockdna/LoadingSkeleton";
 import { ErrorBanner } from "@/components/stockdna/ErrorBanner";
 
@@ -22,6 +24,7 @@ export default function KinMapPage({ params }: KinMapPageProps) {
 
   const { data, loading, error, search } = useTickerKin(ticker);
   const [activeEvidence, setActiveEvidence] = useState<EvidenceRecord | null>(null);
+  const [selectedRep, setSelectedRep] = useState<TokenizedRepresentation | null>(null);
 
   // If matchedAddress is provided in URL, pass it to data for highlight
   const resolvedData = data
@@ -43,6 +46,7 @@ export default function KinMapPage({ params }: KinMapPageProps) {
         <DnaGraph
           data={resolvedData}
           onInspectEvidence={(ev) => setActiveEvidence(ev)}
+          onInspectRepresentation={(rep) => setSelectedRep(rep)}
         />
       )}
 
@@ -51,6 +55,15 @@ export default function KinMapPage({ params }: KinMapPageProps) {
         evidence={activeEvidence}
         onClose={() => setActiveEvidence(null)}
       />
+
+      {/* Slide-Over Representation Intelligence Drawer */}
+      {resolvedData && (
+        <RepresentationDetailDrawer
+          representation={selectedRep}
+          underlying={resolvedData.underlying}
+          onClose={() => setSelectedRep(null)}
+        />
+      )}
     </div>
   );
 }

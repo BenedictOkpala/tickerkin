@@ -2,15 +2,17 @@
 
 import type { TickerKinResolvedData } from "@/hooks/useStockDna";
 import type { EvidenceRecord } from "@/types/provenance";
+import type { TokenizedRepresentation } from "@/types/token";
 import { UnderlyingNode } from "./UnderlyingNode";
 import { RepresentationCard } from "./RepresentationCard";
 
 interface DnaGraphProps {
   readonly data: TickerKinResolvedData;
   readonly onInspectEvidence: (evidence: EvidenceRecord) => void;
+  readonly onInspectRepresentation?: (representation: TokenizedRepresentation) => void;
 }
 
-export function DnaGraph({ data, onInspectEvidence }: DnaGraphProps) {
+export function DnaGraph({ data, onInspectEvidence, onInspectRepresentation }: DnaGraphProps) {
   const { underlying, representations, matchedContractAddress } = data;
   const count = representations.length;
 
@@ -153,6 +155,7 @@ export function DnaGraph({ data, onInspectEvidence }: DnaGraphProps) {
                 <RepresentationCard
                   representation={rep}
                   onInspectEvidence={onInspectEvidence}
+                  onInspectRepresentation={onInspectRepresentation}
                   isTargetMatch={isTargetMatch}
                 />
               </div>

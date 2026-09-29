@@ -5,7 +5,7 @@ import type { XStocksRedemptionRateModel } from "@/types/economic";
 export class XStocksProviderAdapter implements ProviderAdapter {
   readonly id = "xstocks" as const;
   readonly name = "xStocks (Backed Finance)";
-  readonly issuer = "Backed Assets (JE) Limited (acquired by Kraken)";
+  readonly issuer = "Backed Assets (JE) Limited";
   readonly chain = "BNB Smart Chain" as const;
 
   normalize(record: RawProviderAssetRecord): TokenizedRepresentation {

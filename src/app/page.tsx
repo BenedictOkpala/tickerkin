@@ -51,7 +51,7 @@ export default function OverviewPage() {
               lineHeight: 1.5,
             }}
           >
-            Trace an equity across its verified tokenized representations and understand how differing provider economic models, DRIP reinvestment, and certificates operate on-chain.
+            Trace an equity across its verified tokenized representations and understand how they differ in structure, economic model, and verification.
           </p>
         </div>
 
@@ -264,36 +264,77 @@ export default function OverviewPage() {
                 </div>
 
                 <div style={{ display: "flex", alignItems: "center", gap: "0.6rem", marginTop: "auto", paddingTop: "0.5rem" }}>
-                  <Link
-                    href={`/equity/${item.ticker}/kin`}
-                    style={{
-                      flex: 1,
-                      textAlign: "center",
-                      backgroundColor: "var(--accent-primary)",
-                      color: "#ffffff",
-                      fontSize: "0.8rem",
-                      fontWeight: 600,
-                      padding: "0.45rem 0.75rem",
-                      borderRadius: "var(--radius-sm)",
-                    }}
-                  >
-                    Explore Kin Map
-                  </Link>
-                  <Link
-                    href={`/equity/${item.ticker}`}
-                    style={{
-                      textAlign: "center",
-                      backgroundColor: "var(--bg-app)",
-                      color: "var(--text-secondary)",
-                      border: "1px solid var(--border-subtle)",
-                      fontSize: "0.8rem",
-                      fontWeight: 500,
-                      padding: "0.45rem 0.75rem",
-                      borderRadius: "var(--radius-sm)",
-                    }}
-                  >
-                    Overview
-                  </Link>
+                  {item.representationCount > 1 ? (
+                    <>
+                      <Link
+                        href={`/equity/${item.ticker}/kin`}
+                        style={{
+                          flex: 1,
+                          textAlign: "center",
+                          backgroundColor: "var(--accent-primary)",
+                          color: "#ffffff",
+                          fontSize: "0.8rem",
+                          fontWeight: 600,
+                          padding: "0.45rem 0.75rem",
+                          borderRadius: "var(--radius-sm)",
+                          textDecoration: "none",
+                        }}
+                      >
+                        Explore Kin Map
+                      </Link>
+                      <Link
+                        href={`/equity/${item.ticker}`}
+                        style={{
+                          textAlign: "center",
+                          backgroundColor: "var(--bg-app)",
+                          color: "var(--text-secondary)",
+                          border: "1px solid var(--border-subtle)",
+                          fontSize: "0.8rem",
+                          fontWeight: 500,
+                          padding: "0.45rem 0.75rem",
+                          borderRadius: "var(--radius-sm)",
+                          textDecoration: "none",
+                        }}
+                      >
+                        Overview
+                      </Link>
+                    </>
+                  ) : (
+                    <>
+                      <Link
+                        href={`/equity/${item.ticker}`}
+                        style={{
+                          flex: 1,
+                          textAlign: "center",
+                          backgroundColor: "var(--accent-primary)",
+                          color: "#ffffff",
+                          fontSize: "0.8rem",
+                          fontWeight: 600,
+                          padding: "0.45rem 0.75rem",
+                          borderRadius: "var(--radius-sm)",
+                          textDecoration: "none",
+                        }}
+                      >
+                        View Equity
+                      </Link>
+                      <Link
+                        href={`/equity/${item.ticker}/evidence`}
+                        style={{
+                          textAlign: "center",
+                          backgroundColor: "var(--bg-app)",
+                          color: "var(--text-secondary)",
+                          border: "1px solid var(--border-subtle)",
+                          fontSize: "0.8rem",
+                          fontWeight: 500,
+                          padding: "0.45rem 0.75rem",
+                          borderRadius: "var(--radius-sm)",
+                          textDecoration: "none",
+                        }}
+                      >
+                        Evidence
+                      </Link>
+                    </>
+                  )}
                 </div>
               </div>
             ))}

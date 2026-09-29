@@ -132,8 +132,8 @@ describe("RWA Lens Core Engine", () => {
         const xstocks = result.representations.find((r) => r.providerId === "xstocks");
 
         expect(ondo?.issuer).toBe("Ondo Global Markets / Ondo Finance");
-        expect(bstocks?.issuer).toBe("BTech Holdings Limited (Binance Affiliate)");
-        expect(xstocks?.issuer).toBe("Backed Assets (JE) Limited (acquired by Kraken)");
+        expect(bstocks?.issuer).toBe("BTech Holdings Limited");
+        expect(xstocks?.issuer).toBe("Backed Assets (JE) Limited");
       }
     });
   });

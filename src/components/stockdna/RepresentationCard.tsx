@@ -9,12 +9,14 @@ import { ProvenanceBadge } from "./ProvenanceBadge";
 interface RepresentationCardProps {
   readonly representation: TokenizedRepresentation;
   readonly onInspectEvidence: (evidence: EvidenceRecord) => void;
+  readonly onInspectRepresentation?: (representation: TokenizedRepresentation) => void;
   readonly isTargetMatch?: boolean;
 }
 
 export function RepresentationCard({
   representation,
   onInspectEvidence,
+  onInspectRepresentation,
   isTargetMatch,
 }: RepresentationCardProps) {
   const [copied, setCopied] = useState(false);
@@ -81,20 +83,42 @@ export function RepresentationCard({
       )}
 
       {/* 1. Hierarchy: Provider & Issuer Context Header */}
-      <div style={{ display: "flex", flexDirection: "column", gap: "0.15rem" }}>
-        <div
-          style={{
-            fontSize: "0.86rem",
-            fontWeight: 700,
-            color: "var(--text-primary)",
-            letterSpacing: "-0.01em",
-          }}
-        >
-          {representation.providerName}
+      <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between" }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: "0.15rem" }}>
+          <div
+            style={{
+              fontSize: "0.86rem",
+              fontWeight: 700,
+              color: "var(--text-primary)",
+              letterSpacing: "-0.01em",
+            }}
+          >
+            {representation.providerName}
+          </div>
+          <div style={{ fontSize: "0.75rem", color: "var(--text-muted)" }}>
+            Issuer: {representation.issuer}
+          </div>
         </div>
-        <div style={{ fontSize: "0.75rem", color: "var(--text-muted)" }}>
-          Issuer: {representation.issuer}
-        </div>
+
+        {onInspectRepresentation && (
+          <button
+            type="button"
+            onClick={() => onInspectRepresentation(representation)}
+            style={{
+              fontSize: "0.7rem",
+              fontWeight: 600,
+              color: "var(--accent-primary)",
+              backgroundColor: "var(--accent-primary-soft)",
+              border: "1px solid var(--accent-primary-border)",
+              padding: "0.15rem 0.45rem",
+              borderRadius: "var(--radius-xs)",
+              cursor: "pointer",
+            }}
+            title="Inspect full representation intelligence"
+          >
+            Inspect ↗
+          </button>
+        )}
       </div>
 
       {/* 2. Hierarchy: Token Symbol & Representation Name */}

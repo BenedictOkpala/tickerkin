@@ -5,7 +5,7 @@ import type { BStocksMultiplierModel } from "@/types/economic";
 export class BStocksProviderAdapter implements ProviderAdapter {
   readonly id = "bstocks" as const;
   readonly name = "Binance bStocks";
-  readonly issuer = "BTech Holdings Limited (Binance Affiliate)";
+  readonly issuer = "BTech Holdings Limited";
   readonly chain = "BNB Smart Chain" as const;
 
   normalize(record: RawProviderAssetRecord): TokenizedRepresentation {

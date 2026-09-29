@@ -1,6 +1,11 @@
+"use client";
+
+import { useState, use } from "react";
 import Link from "next/link";
-import { notFound } from "next/navigation";
 import { lookupByTicker } from "@/lens";
+import { formatEconomicMechanism } from "@/lens/presentation";
+import type { TokenizedRepresentation } from "@/types/token";
+import { RepresentationDetailDrawer } from "@/components/stockdna/RepresentationDetailDrawer";
 
 interface EquityOverviewPageProps {
   readonly params: Promise<{
@@ -8,12 +13,18 @@ interface EquityOverviewPageProps {
   }>;
 }
 
-export default async function EquityOverviewPage({ params }: EquityOverviewPageProps) {
-  const { ticker } = await params;
+export default function EquityOverviewPage({ params }: EquityOverviewPageProps) {
+  const { ticker } = use(params);
   const result = lookupByTicker(ticker);
 
+  const [selectedRep, setSelectedRep] = useState<TokenizedRepresentation | null>(null);
+
   if (!result.success) {
-    notFound();
+    return (
+      <div style={{ padding: "2rem", textAlign: "center", color: "var(--text-secondary)" }}>
+        Equity &apos;{ticker}&apos; not found in verified registry.
+      </div>
+    );
   }
 
   const { underlying, representations } = result;
@@ -102,29 +113,50 @@ export default async function EquityOverviewPage({ params }: EquityOverviewPageP
           gap: "1.25rem",
         }}
       >
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "0.75rem" }}>
           <div>
             <h2 style={{ fontSize: "1.15rem", fontWeight: 700, color: "var(--text-primary)" }}>
               Verified Tokenized Representations
             </h2>
             <p style={{ fontSize: "0.82rem", color: "var(--text-secondary)", marginTop: "0.15rem" }}>
-              Live audit breakdown across issuers on BNB Smart Chain.
+              Verified representation breakdown across issuers on BNB Smart Chain. Click any card for detailed intelligence.
             </p>
           </div>
 
-          <Link
-            href={`/equity/${underlying.ticker}/kin`}
-            style={{
-              fontSize: "0.82rem",
-              fontWeight: 600,
-              color: "#ffffff",
-              backgroundColor: "var(--accent-primary)",
-              padding: "0.4rem 0.85rem",
-              borderRadius: "var(--radius-sm)",
-            }}
-          >
-            Open Interactive Kin Map →
-          </Link>
+          <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+            {representations.length > 1 && (
+              <Link
+                href={`/equity/${underlying.ticker}/compare`}
+                style={{
+                  fontSize: "0.82rem",
+                  fontWeight: 600,
+                  color: "var(--text-secondary)",
+                  backgroundColor: "var(--bg-app)",
+                  border: "1px solid var(--border-subtle)",
+                  padding: "0.4rem 0.85rem",
+                  borderRadius: "var(--radius-sm)",
+                  textDecoration: "none",
+                }}
+              >
+                Compare Specs
+              </Link>
+            )}
+
+            <Link
+              href={`/equity/${underlying.ticker}/kin`}
+              style={{
+                fontSize: "0.82rem",
+                fontWeight: 600,
+                color: "#ffffff",
+                backgroundColor: "var(--accent-primary)",
+                padding: "0.4rem 0.85rem",
+                borderRadius: "var(--radius-sm)",
+                textDecoration: "none",
+              }}
+            >
+              Open Kin Map →
+            </Link>
+          </div>
         </div>
 
         <div
@@ -137,22 +169,33 @@ export default async function EquityOverviewPage({ params }: EquityOverviewPageP
           {representations.map((rep) => (
             <div
               key={rep.contractAddress}
+              onClick={() => setSelectedRep(rep)}
               style={{
                 backgroundColor: "var(--bg-app)",
                 border: "1px solid var(--border-subtle)",
                 borderRadius: "var(--radius-md)",
-                padding: "1.15rem",
+                padding: "1.25rem",
                 display: "flex",
                 flexDirection: "column",
-                gap: "0.6rem",
+                gap: "0.75rem",
+                cursor: "pointer",
+                transition: "all 0.15s ease",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.borderColor = "var(--border-hover)";
+                e.currentTarget.style.boxShadow = "var(--shadow-hover)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.borderColor = "var(--border-subtle)";
+                e.currentTarget.style.boxShadow = "none";
               }}
             >
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
                 <div>
-                  <span style={{ fontSize: "1.25rem", fontWeight: 800, color: "var(--text-primary)" }}>
+                  <span style={{ fontSize: "1.3rem", fontWeight: 800, color: "var(--text-primary)" }}>
                     {rep.tokenSymbol}
                   </span>
-                  <span style={{ fontSize: "0.8rem", color: "var(--text-secondary)", marginLeft: "0.4rem" }}>
+                  <span style={{ fontSize: "0.82rem", color: "var(--text-secondary)", marginLeft: "0.4rem" }}>
                     {rep.tokenName}
                   </span>
                 </div>
@@ -160,44 +203,60 @@ export default async function EquityOverviewPage({ params }: EquityOverviewPageP
                   style={{
                     fontSize: "0.72rem",
                     fontWeight: 600,
-                    color: "var(--text-muted)",
-                    backgroundColor: "var(--bg-surface)",
-                    padding: "0.1rem 0.4rem",
+                    color: "var(--accent-primary)",
+                    backgroundColor: "var(--accent-primary-soft)",
+                    padding: "0.15rem 0.45rem",
                     borderRadius: "var(--radius-xs)",
-                    border: "1px solid var(--border-subtle)",
+                    border: "1px solid var(--accent-primary-border)",
                   }}
                 >
                   {rep.providerName}
                 </span>
               </div>
 
-              <div style={{ fontSize: "0.76rem", color: "var(--text-muted)" }}>
-                Issuer: {rep.issuer}
+              <div style={{ fontSize: "0.78rem", color: "var(--text-muted)" }}>
+                Issuer: <strong style={{ color: "var(--text-secondary)" }}>{rep.issuer}</strong>
               </div>
 
               <div
                 style={{
-                  fontSize: "0.78rem",
+                  fontSize: "0.8rem",
                   color: "var(--text-secondary)",
-                  backgroundColor: "var(--bg-surface)",
-                  padding: "0.45rem 0.65rem",
+                  backgroundColor: "var(--bg-card)",
+                  padding: "0.5rem 0.75rem",
                   borderRadius: "var(--radius-xs)",
                   border: "1px solid var(--border-subtle)",
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
                 }}
               >
-                Mechanism: <strong style={{ color: "var(--text-primary)" }}>{rep.economicModel.mechanism}</strong>
+                <span>Mechanism:</span>
+                <strong style={{ color: "var(--text-primary)" }}>
+                  {formatEconomicMechanism(rep.economicModel.mechanism)}
+                </strong>
               </div>
 
-              <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.75rem", color: "var(--text-muted)", paddingTop: "0.25rem" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: "0.75rem", color: "var(--text-muted)", paddingTop: "0.25rem", borderTop: "1px solid var(--border-subtle)" }}>
                 <span>Contract:</span>
                 <code style={{ fontFamily: "var(--font-mono)", color: "var(--text-primary)" }}>
-                  {rep.contractAddress.slice(0, 10)}...{rep.contractAddress.slice(-6)}
+                  {rep.contractAddress.slice(0, 8)}...{rep.contractAddress.slice(-6)}
                 </code>
+                <span style={{ color: "var(--accent-primary)", fontWeight: 600, fontSize: "0.74rem" }}>
+                  Inspect Details →
+                </span>
               </div>
             </div>
           ))}
         </div>
       </div>
+
+      {/* Representation Intelligence Drawer */}
+      <RepresentationDetailDrawer
+        representation={selectedRep}
+        underlying={underlying}
+        onClose={() => setSelectedRep(null)}
+      />
     </div>
   );
 }

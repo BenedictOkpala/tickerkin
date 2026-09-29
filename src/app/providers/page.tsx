@@ -45,6 +45,22 @@ export default function ProvidersPage() {
           <p style={{ fontSize: "0.88rem", color: "var(--text-secondary)", marginTop: "0.25rem", maxWidth: "800px" }}>
             Factual overview of tokenization issuers and smart contract mechanisms indexed and audited on BNB Smart Chain.
           </p>
+
+          {/* Explicit Scope Notice */}
+          <div
+            style={{
+              marginTop: "0.75rem",
+              padding: "0.6rem 0.85rem",
+              backgroundColor: "var(--bg-card)",
+              border: "1px solid var(--border-subtle)",
+              borderRadius: "var(--radius-sm)",
+              fontSize: "0.78rem",
+              color: "var(--text-secondary)",
+              maxWidth: "800px",
+            }}
+          >
+            <strong style={{ color: "var(--text-primary)" }}>Indexing Scope:</strong> TickerKin currently indexes a curated set of verified BNB Smart Chain tokenized-equity representations. Counts reflect verified assets in RWA Lens rather than total multi-chain issuance.
+          </div>
         </div>
 
         {/* Provider Cards */}

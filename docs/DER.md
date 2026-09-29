@@ -295,6 +295,42 @@
 - **ESLint (`next lint`)**: Clean (0 warnings, 0 errors).
 - **Production Build (`next build`)**: Clean compilation of 12 static/dynamic routes.
 
+---
+
+## Entry 13: Phase 6B Representation Intelligence & Compare/Evidence Integrity
+**Date:** 2026-09-29  
+**Subject:** Resolving false certainty in comparison interfaces via claim-scoped provenance, deterministic human-readable economic models, and deep representation intelligence.
+
+### 1. The False Certainty Problem in Financial Comparison UI
+- **Audited Problem**:
+  - In earlier iterations, presenting a single `ON_CHAIN · HIGH CONFIDENCE` badge across an entire representation card unintentionally implied that off-chain corporate attributes (such as issuer legal entity, dividend reinvestment policies, custody arrangements, and settlement cycles) had been verified via direct on-chain smart contract reads.
+  - In reality, smart contracts verify bytecode execution, token decimals, and ERC/BEP standards (`ON_CHAIN`), while dividend handling, issuer jurisdiction, and custody structures derive from issuer documentation (`FIRST_PARTY`), and live multipliers derive from indexers (`THIRD_PARTY` / `ORACLE`).
+- **Architectural Solution — Claim-Scoped Provenance (`src/lens/presentation.ts`)**:
+  - Segregated evidence into discrete claims with scoped source classes:
+    1. **Token Identity & Deployment**: Verified via BSC RPC `eth_call` bytecode (`ON_CHAIN · HIGH`).
+    2. **Issuer & Economic Model**: Verified via official issuer prospectus and documentation (`FIRST_PARTY · HIGH`).
+    3. **Dynamic Factor Tracking**: Verified via chain-aware Binance Web3 live adapter or explicit static baseline (`THIRD_PARTY` / `FIRST_PARTY`).
+    4. **Price Benchmark**: Verified via Pyth Network oracle (`ORACLE · HIGH`).
+  - Removed unsupported comparison dimensions (e.g. unmodeled custody structures, speculative transfer restrictions) rather than preserving placeholder fields.
+
+### 2. Human-Readable Models & Representation Intelligence
+- **Presentation Mapping**:
+  - Eliminated raw schema values (`auto_drip_scaled`, `multiplier`, `redemption_rate`) from all consumer-facing surfaces in favor of clear institutional terminology: `Auto-DRIP (Scaled UI)`, `Multiplier Model`, and `Redemption-Rate Model`.
+  - Added deterministic educational guidance in Compare (`How to Read These Differences`) detailing underlying mechanics without offering investment advice.
+- **Focused Representation Inspection (`RepresentationDetailDrawer`)**:
+  - Created a unified slide-over drawer accessible from Overview, Kin Map, and Compare.
+  - Divided into 4 structured sections: Asset Identity, Economic Model Mechanics, Claim-Scoped Provenance Audit, and Explorer Actions (BscScan, Evidence Log, Compare Kin).
+- **Issuer & Wording Cleanup**:
+  - Cleaned issuer corporate names in adapters (e.g. `BTech Holdings Limited` and `Backed Assets (JE) Limited`), removing unverified affiliate or acquisition text.
+  - Refined homepage copy and single-representation CTA behavior (AAPL/TSLA render `View Equity` instead of making multi-branch Kin Map the dominant action).
+
+### 3. Verification & Quality Gates
+- **Vitest Suite**: 82/82 tests passing across 7 test suites (`tests/intelligence.test.ts`, `tests/explorer.test.ts`, `tests/engine.test.ts`, `tests/binance.test.ts`, `tests/ui.test.ts`, `tests/visual.test.ts`, `tests/api.test.ts`).
+- **TypeScript (`tsc --noEmit`)**: Clean (0 errors).
+- **ESLint (`next lint`)**: Clean (0 warnings, 0 errors).
+- **Production Build (`next build`)**: Clean compilation across all 12 routes.
+
+
 
 
 
