@@ -269,7 +269,7 @@ export function RepresentationCard({
               fontWeight: 600,
               cursor: "pointer",
             }}
-            title="Inspect Binance Web3 live data provenance"
+            title="Inspect live data provenance"
           >
             <span
               style={{
@@ -279,11 +279,15 @@ export function RepresentationCard({
                 backgroundColor: "var(--accent-primary)",
               }}
             />
-            <span>Binance Web3 Live</span>
+            <span>
+              {representation.liveEnrichment.matchBasis === "DIRECT_ON_CHAIN_BSC_ETH_CALL"
+                ? "Live factor · BNB Chain"
+                : "Binance Web3 Live"}
+            </span>
           </button>
         ) : (
           <span style={{ fontSize: "0.72rem", color: "var(--text-muted)" }}>
-            Static verified
+            Factor unavailable
           </span>
         )}
 

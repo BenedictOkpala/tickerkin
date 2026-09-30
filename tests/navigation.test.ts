@@ -29,11 +29,11 @@ describe("Phase 8C.1: Sidebar Navigation Fix Tests", () => {
     const content = readFileSync(filePath, "utf-8");
 
     // Exact route comparison
-    expect(content).toContain('const isExploreOverview = normalizedPath === "/"');
-    expect(content).toContain('const isEquities = normalizedPath === "/equities"');
-    expect(content).toContain('const isProviders = normalizedPath === "/providers"');
-    expect(content).toContain("const isIntelligenceOverview =");
-    expect(content).toContain("normalizedPath.toUpperCase() === basePath.toUpperCase()");
+    expect(content).toContain('const isExploreOverview = cleanPath === "/"');
+    expect(content).toContain('const isEquities = cleanPath === "/equities"');
+    expect(content).toContain('const isProviders = cleanPath === "/providers"');
+    expect(content).toContain("const isIntelligenceOverview = cleanPath === cleanBase");
+    expect(content).toContain("const isKinMap = cleanPath === `${cleanBase}/kin`");
   });
 
   it("3. verifies unit logic for active route determination across all pages", () => {

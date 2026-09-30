@@ -10,26 +10,24 @@ interface SidebarProps {
 
 export function Sidebar({ activeTicker = "NVDA", onCloseMobile }: SidebarProps) {
   const pathname = usePathname();
-  const normalizedPath = pathname.replace(/\/+$/, "") || "/";
+  const normalizedPath = pathname ? pathname.replace(/\/+$/, "") || "/" : "";
   const tickerUpper = activeTicker.toUpperCase();
   const basePath = `/equity/${tickerUpper}`;
 
   // Exact route matching to prevent "/" leaking active status
-  const isExploreOverview = normalizedPath === "/";
-  const isEquities = normalizedPath === "/equities";
-  const isProviders = normalizedPath === "/providers";
+  const cleanPath = normalizedPath.toLowerCase();
+  const cleanBase = basePath.toLowerCase();
 
-  const isIntelligenceOverview =
-    normalizedPath.toUpperCase() === basePath.toUpperCase();
-  const isKinMap =
-    normalizedPath.toUpperCase() === `${basePath}/kin`.toUpperCase();
-  const isCompare =
-    normalizedPath.toUpperCase() === `${basePath}/compare`.toUpperCase();
-  const isEvidence =
-    normalizedPath.toUpperCase() === `${basePath}/evidence`.toUpperCase();
+  const isExploreOverview = cleanPath === "/";
+  const isEquities = cleanPath === "/equities";
+  const isProviders = cleanPath === "/providers";
 
-  const isApi =
-    normalizedPath === "/developers/api" || normalizedPath.startsWith("/developers");
+  const isIntelligenceOverview = cleanPath === cleanBase;
+  const isKinMap = cleanPath === `${cleanBase}/kin`;
+  const isCompare = cleanPath === `${cleanBase}/compare`;
+  const isEvidence = cleanPath === `${cleanBase}/evidence`;
+
+  const isApi = cleanPath === "/developers/api" || cleanPath.startsWith("/developers");
 
   return (
     <aside

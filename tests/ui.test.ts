@@ -143,4 +143,68 @@ describe("TickerKin Frontend UI Integration & Validation", () => {
       expect(mockOndoRep.economicModel.currentScaleFactor).toBe(1.001715);
     });
   });
+
+  describe("5. Phase 8C.3 Kin Map Live Factor & Navigation Isolation", () => {
+    it("should enrich NVDAB and NVDAx economicModel with live multiplier/rate on async lookup", async () => {
+      const { RWALensEngine } = await import("../src/lens/engine");
+      const { BinanceRwaAdapter } = await import("../src/providers/binance");
+      const { BinanceRwaClient } = await import("../src/providers/binance/client");
+
+      const mockBinanceClient = new BinanceRwaClient({
+        baseUrl: "https://mock.api",
+        timeoutMs: 1000,
+        fetchFn: async () => ({
+          ok: false,
+          json: async () => ({}),
+        } as unknown as Response),
+      });
+      const mockBinanceAdapter = new BinanceRwaAdapter({ client: mockBinanceClient });
+
+      const mockBscRpc = async (_contractAddress: string) => ({
+        rawMultiplier: "1.000778223752807865",
+        multiplierValue: 1.0007782237528078,
+        rawHex: "0x0000000000000000000000000000000000000000000000000de37a7dfdbb85b9",
+        rpcEndpoint: "https://bsc.mock.com",
+        fetchedAt: "2026-09-30T00:00:00.000Z",
+      });
+
+      const mockXstocksRpc = async (_contractAddress: string) => ({
+        rawMultiplier: "1.001701196801074000",
+        multiplierValue: 1.001701196801074,
+        rawHex: "0x0000000000000000000000000000000000000000000000000de6c68b759bb840",
+        rpcEndpoint: "https://bsc.mock.com",
+        fetchedAt: "2026-09-30T00:00:00.000Z",
+      });
+
+      const engine = new RWALensEngine(undefined, mockBinanceAdapter, mockBscRpc, mockXstocksRpc);
+      const result = await engine.lookupByTickerAsync("NVDA");
+      expect(result.success).toBe(true);
+
+      if (result.success) {
+        const nvdab = result.representations.find((r) => r.tokenSymbol === "NVDAB");
+        const nvdax = result.representations.find((r) => r.tokenSymbol === "NVDAx");
+        const nvdaon = result.representations.find((r) => r.tokenSymbol === "NVDAon");
+
+        // NVDAB has live multiplier enriched
+        expect(nvdab).toBeDefined();
+        expect(nvdab?.liveEnrichment?.matchBasis).toBe("DIRECT_ON_CHAIN_BSC_ETH_CALL");
+        if (nvdab?.economicModel.mechanism === "multiplier") {
+          expect(nvdab.economicModel.currentMultiplier).toBe(1.0007782237528078);
+        }
+
+        // NVDAx has live rate enriched
+        expect(nvdax).toBeDefined();
+        expect(nvdax?.liveEnrichment?.matchBasis).toBe("DIRECT_ON_CHAIN_BSC_ETH_CALL");
+        if (nvdax?.economicModel.mechanism === "redemption_rate") {
+          expect(nvdax.economicModel.currentRate).toBe(1.001701196801074);
+        }
+
+        // NVDAon has NO fabricated multiplier
+        expect(nvdaon).toBeDefined();
+        if (nvdaon?.economicModel.mechanism === "auto_drip_scaled") {
+          expect(nvdaon.economicModel.currentScaleFactor).toBeUndefined();
+        }
+      }
+    });
+  });
 });

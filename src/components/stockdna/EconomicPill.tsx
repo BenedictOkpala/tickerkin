@@ -89,7 +89,7 @@ export function EconomicPill({ model }: EconomicPillProps) {
               </span>
             ) : (
               <span style={{ color: "var(--text-muted)", fontSize: "0.72rem" }}>
-                Live factor not available
+                Factor unavailable
               </span>
             )}
           </div>
@@ -179,7 +179,7 @@ export function EconomicPill({ model }: EconomicPillProps) {
               </span>
             ) : (
               <span style={{ color: "var(--text-muted)", fontSize: "0.72rem" }}>
-                Live factor not available
+                Factor unavailable
               </span>
             )}
           </div>
@@ -269,7 +269,7 @@ export function EconomicPill({ model }: EconomicPillProps) {
               </span>
             ) : (
               <span style={{ color: "var(--text-muted)", fontSize: "0.72rem" }}>
-                Live factor not available
+                Factor unavailable
               </span>
             )}
           </div>

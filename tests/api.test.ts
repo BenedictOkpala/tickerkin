@@ -196,9 +196,14 @@ describe("RWA Lens Public HTTP API", () => {
       expect(bstocks.economicModel.mechanism).toBe("multiplier");
       expect(xstocks.economicModel.mechanism).toBe("redemption_rate");
 
-      // Dynamic values must NOT be fabricated as 1.0
-      expect(bstocks.economicModel.currentMultiplier).toBeUndefined();
-      expect(xstocks.economicModel.currentRate).toBeUndefined();
+      // Dynamic values must NOT be fabricated as 1.0 (Ondo has no scale factor, bstocks/xstocks have live on-chain values > 1.0)
+      expect(ondo.economicModel.currentScaleFactor).toBeUndefined();
+      if (bstocks.economicModel.currentMultiplier !== undefined) {
+        expect(bstocks.economicModel.currentMultiplier).toBeGreaterThan(1.0);
+      }
+      if (xstocks.economicModel.currentRate !== undefined) {
+        expect(xstocks.economicModel.currentRate).toBeGreaterThan(1.0);
+      }
       expect(bstocks.economicModel.withholdingTaxRate).toBeUndefined();
     });
 

@@ -4,6 +4,7 @@ import type {
 } from "@/types/lens";
 import type { TokenizedRepresentation, ProviderId } from "@/types/token";
 import type { ProviderAdapter, RawProviderAssetRecord } from "@/types/provider";
+import type { EconomicModel } from "@/types/economic";
 import { ondoAdapter } from "@/providers/ondo";
 import { bstocksAdapter } from "@/providers/bstocks";
 import { xstocksAdapter } from "@/providers/xstocks";
@@ -142,9 +143,15 @@ export class RWALensEngine {
           try {
             const bscResult = await this.bscRpcFetcher(rep.contractAddress);
             if (bscResult) {
+              const liveEnrichment = bscMultiplierToEnrichment(bscResult, rep.contractAddress);
+              const updatedModel: EconomicModel =
+                rep.economicModel.mechanism === "multiplier"
+                  ? { ...rep.economicModel, currentMultiplier: bscResult.multiplierValue }
+                  : rep.economicModel;
               return {
                 ...rep,
-                liveEnrichment: bscMultiplierToEnrichment(bscResult, rep.contractAddress),
+                economicModel: updatedModel,
+                liveEnrichment,
               };
             }
           } catch {
@@ -154,9 +161,15 @@ export class RWALensEngine {
           try {
             const xstocksResult = await this.xstocksRpcFetcher(rep.contractAddress);
             if (xstocksResult) {
+              const liveEnrichment = xstocksMultiplierToEnrichment(xstocksResult, rep.contractAddress);
+              const updatedModel: EconomicModel =
+                rep.economicModel.mechanism === "redemption_rate"
+                  ? { ...rep.economicModel, currentRate: xstocksResult.multiplierValue }
+                  : rep.economicModel;
               return {
                 ...rep,
-                liveEnrichment: xstocksMultiplierToEnrichment(xstocksResult, rep.contractAddress),
+                economicModel: updatedModel,
+                liveEnrichment,
               };
             }
           } catch {
@@ -243,9 +256,15 @@ export class RWALensEngine {
       try {
         const bscResult = await this.bscRpcFetcher(matchedRep.contractAddress);
         if (bscResult) {
+          const liveEnrichment = bscMultiplierToEnrichment(bscResult, matchedRep.contractAddress);
+          const updatedModel: EconomicModel =
+            matchedRep.economicModel.mechanism === "multiplier"
+              ? { ...matchedRep.economicModel, currentMultiplier: bscResult.multiplierValue }
+              : matchedRep.economicModel;
           matchedRep = {
             ...matchedRep,
-            liveEnrichment: bscMultiplierToEnrichment(bscResult, matchedRep.contractAddress),
+            economicModel: updatedModel,
+            liveEnrichment,
           };
         }
       } catch {
@@ -255,9 +274,15 @@ export class RWALensEngine {
       try {
         const xstocksResult = await this.xstocksRpcFetcher(matchedRep.contractAddress);
         if (xstocksResult) {
+          const liveEnrichment = xstocksMultiplierToEnrichment(xstocksResult, matchedRep.contractAddress);
+          const updatedModel: EconomicModel =
+            matchedRep.economicModel.mechanism === "redemption_rate"
+              ? { ...matchedRep.economicModel, currentRate: xstocksResult.multiplierValue }
+              : matchedRep.economicModel;
           matchedRep = {
             ...matchedRep,
-            liveEnrichment: xstocksMultiplierToEnrichment(xstocksResult, matchedRep.contractAddress),
+            economicModel: updatedModel,
+            liveEnrichment,
           };
         }
       } catch {
