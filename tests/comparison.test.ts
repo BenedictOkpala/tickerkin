@@ -339,11 +339,9 @@ describe("Phase 7D: Token Value Calculator", () => {
   });
 
   it("ensures revalidated comparison matrix maintains single-source-of-truth across card representation and calculator", () => {
-    // Simulate revalidated comparison matrix from API envelope { success: true, data: matrix }
     const revalidatedMatrix = buildEquityComparison("NVDA");
     expect(revalidatedMatrix).not.toBeNull();
 
-    // Verify representations in the matrix match calculator evaluation directly
     for (const rep of revalidatedMatrix!.representations) {
       const calcResult = calculateTokenValue(
         {

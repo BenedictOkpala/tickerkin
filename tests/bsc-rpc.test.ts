@@ -150,7 +150,7 @@ describe("NVDAB Live Normalization & Calculator Math", () => {
       );
       expect(nvdab.dataFreshness).toBe("LIVE");
     }
-  }, 15000);
+  }, 30000);
 
   it("calculates 100 NVDAB token normalization correctly", () => {
     // Construct verified matrix fixture with live factor 1.000778223752807865
