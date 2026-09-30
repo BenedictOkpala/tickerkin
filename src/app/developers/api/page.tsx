@@ -129,7 +129,7 @@ const ENDPOINTS: EndpointInfo[] = [
           tokenSymbol: "NVDAx",
           economicMechanism: "Redemption-Rate Model",
           normalizationStatus: "UNAVAILABLE",
-          unavailabilityReason: "Verified BSC redemption/conversion factor unavailable. TickerKin will not assume 1 token equals 1 share.",
+          unavailabilityReason: "Live normalization factor unavailable in this session. TickerKin preserves the verified representation data without assuming a conversion factor.",
         },
       ],
     },

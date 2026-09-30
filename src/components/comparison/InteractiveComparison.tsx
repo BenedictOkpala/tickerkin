@@ -25,10 +25,9 @@ export function InteractiveComparison({ matrix: initialMatrix }: InteractiveComp
           cache: "no-store",
         });
         if (res.ok) {
-          const resJson = await res.json();
-          const liveMatrix = resJson?.data || resJson?.matrix;
-          if (liveMatrix && isMounted) {
-            setActiveMatrix(liveMatrix);
+          const data = await res.json();
+          if (data && data.matrix && isMounted) {
+            setActiveMatrix(data.matrix);
           }
         }
       } catch (err) {
@@ -158,7 +157,9 @@ export function InteractiveComparison({ matrix: initialMatrix }: InteractiveComp
                 letterSpacing: "-0.01em",
               }}
             >
-              ${underlying.referencePriceUSD?.toFixed(2)} USD
+              {typeof underlying.referencePriceUSD === "number" && Number.isFinite(underlying.referencePriceUSD)
+                ? `$${underlying.referencePriceUSD.toFixed(2)} USD`
+                : "—"}
             </div>
           </div>
 
@@ -192,13 +193,6 @@ export function InteractiveComparison({ matrix: initialMatrix }: InteractiveComp
       >
         {representations.map((rep) => {
           const isAvailable = rep.normalizationStatus === "AVAILABLE";
-          const hasValidDexPrice =
-            typeof rep.dexMarketPriceUSD === "number" &&
-            Number.isFinite(rep.dexMarketPriceUSD) &&
-            rep.dexMarketPriceUSD > 0;
-          const hasValidDeviation =
-            typeof rep.referenceDeviationPercent === "number" &&
-            Number.isFinite(rep.referenceDeviationPercent);
 
           return (
             <div
@@ -294,7 +288,9 @@ export function InteractiveComparison({ matrix: initialMatrix }: InteractiveComp
                   >
                     <span style={{ color: "var(--text-secondary)" }}>{rep.factorLabel}</span>
                     <span style={{ fontWeight: 700, fontFamily: "var(--font-mono)", color: "var(--accent-primary)" }}>
-                      {rep.accountingFactor?.toFixed(6)}×
+                      {typeof rep.accountingFactor === "number" && Number.isFinite(rep.accountingFactor)
+                        ? `${rep.accountingFactor.toFixed(6)}×`
+                        : "—"}
                     </span>
                   </div>
 
@@ -310,7 +306,9 @@ export function InteractiveComparison({ matrix: initialMatrix }: InteractiveComp
                   >
                     <span style={{ color: "var(--text-secondary)" }}>Share-Equivalent / Token</span>
                     <span style={{ fontWeight: 700, fontFamily: "var(--font-mono)", color: "var(--text-primary)" }}>
-                      {rep.shareEquivalentPerToken?.toFixed(4)} shares
+                      {typeof rep.shareEquivalentPerToken === "number" && Number.isFinite(rep.shareEquivalentPerToken)
+                        ? `${rep.shareEquivalentPerToken.toFixed(4)} shares`
+                        : "—"}
                     </span>
                   </div>
 
@@ -326,7 +324,9 @@ export function InteractiveComparison({ matrix: initialMatrix }: InteractiveComp
                   >
                     <span style={{ color: "var(--text-secondary)" }}>Reference Value / Token</span>
                     <span style={{ fontWeight: 800, fontFamily: "var(--font-mono)", color: "var(--text-primary)" }}>
-                      ${rep.referenceValuePerTokenUSD?.toFixed(2)} USD
+                      {typeof rep.referenceValuePerTokenUSD === "number" && Number.isFinite(rep.referenceValuePerTokenUSD)
+                        ? `$${rep.referenceValuePerTokenUSD.toFixed(2)} USD`
+                        : "—"}
                     </span>
                   </div>
 
@@ -343,12 +343,14 @@ export function InteractiveComparison({ matrix: initialMatrix }: InteractiveComp
                     <span style={{ color: "var(--text-secondary)" }}>Secondary DEX Spot (Cached)</span>
                     <span
                       style={{
-                        fontWeight: hasValidDexPrice ? 600 : 500,
-                        fontFamily: hasValidDexPrice ? "var(--font-mono)" : "inherit",
-                        color: hasValidDexPrice ? "var(--text-primary)" : "var(--text-muted)",
+                        fontWeight: typeof rep.dexMarketPriceUSD === "number" && Number.isFinite(rep.dexMarketPriceUSD) && rep.dexMarketPriceUSD > 0 ? 600 : 500,
+                        fontFamily: typeof rep.dexMarketPriceUSD === "number" && Number.isFinite(rep.dexMarketPriceUSD) && rep.dexMarketPriceUSD > 0 ? "var(--font-mono)" : "inherit",
+                        color: typeof rep.dexMarketPriceUSD === "number" && Number.isFinite(rep.dexMarketPriceUSD) && rep.dexMarketPriceUSD > 0 ? "var(--text-primary)" : "var(--text-muted)",
                       }}
                     >
-                      {hasValidDexPrice ? `$${rep.dexMarketPriceUSD!.toFixed(2)} USD` : "—"}
+                      {typeof rep.dexMarketPriceUSD === "number" && Number.isFinite(rep.dexMarketPriceUSD) && rep.dexMarketPriceUSD > 0
+                        ? `$${rep.dexMarketPriceUSD.toFixed(2)} USD`
+                        : "—"}
                     </span>
                   </div>
 
@@ -377,18 +379,41 @@ export function InteractiveComparison({ matrix: initialMatrix }: InteractiveComp
 
                     <span
                       style={{
-                        fontFamily: hasValidDeviation ? "var(--font-mono)" : "inherit",
-                        fontWeight: hasValidDeviation ? 800 : 500,
+                        fontFamily:
+                          typeof rep.dexMarketPriceUSD === "number" &&
+                          Number.isFinite(rep.dexMarketPriceUSD) &&
+                          rep.dexMarketPriceUSD > 0 &&
+                          typeof rep.referenceDeviationPercent === "number" &&
+                          Number.isFinite(rep.referenceDeviationPercent)
+                            ? "var(--font-mono)"
+                            : "inherit",
+                        fontWeight:
+                          typeof rep.dexMarketPriceUSD === "number" &&
+                          Number.isFinite(rep.dexMarketPriceUSD) &&
+                          rep.dexMarketPriceUSD > 0 &&
+                          typeof rep.referenceDeviationPercent === "number" &&
+                          Number.isFinite(rep.referenceDeviationPercent)
+                            ? 800
+                            : 500,
                         fontSize: "0.88rem",
-                        color: hasValidDeviation
-                          ? rep.referenceDeviationPercent! < 0
-                            ? "#4b5563"
-                            : "#2563eb"
-                          : "var(--text-muted)",
+                        color:
+                          typeof rep.dexMarketPriceUSD === "number" &&
+                          Number.isFinite(rep.dexMarketPriceUSD) &&
+                          rep.dexMarketPriceUSD > 0 &&
+                          typeof rep.referenceDeviationPercent === "number" &&
+                          Number.isFinite(rep.referenceDeviationPercent)
+                            ? rep.referenceDeviationPercent < 0
+                              ? "#4b5563"
+                              : "#2563eb"
+                            : "var(--text-muted)",
                       }}
                     >
-                      {hasValidDeviation
-                        ? `${rep.referenceDeviationPercent! > 0 ? "+" : ""}${rep.referenceDeviationPercent!.toFixed(3)}%`
+                      {typeof rep.dexMarketPriceUSD === "number" &&
+                      Number.isFinite(rep.dexMarketPriceUSD) &&
+                      rep.dexMarketPriceUSD > 0 &&
+                      typeof rep.referenceDeviationPercent === "number" &&
+                      Number.isFinite(rep.referenceDeviationPercent)
+                        ? `${rep.referenceDeviationPercent > 0 ? "+" : ""}${rep.referenceDeviationPercent.toFixed(3)}%`
                         : "—"}
                     </span>
                   </div>
@@ -429,9 +454,11 @@ export function InteractiveComparison({ matrix: initialMatrix }: InteractiveComp
                     <div style={{ display: "flex", justifyContent: "space-between" }}>
                       <span style={{ color: "var(--text-muted)" }}>Secondary DEX Spot:</span>
                       <span>
-                        {hasValidDexPrice
-                          ? `$${rep.dexMarketPriceUSD!.toFixed(2)} USD (Cached)`
-                          : "Unavailable"}
+                        {typeof rep.dexMarketPriceUSD === "number" &&
+                        Number.isFinite(rep.dexMarketPriceUSD) &&
+                        rep.dexMarketPriceUSD > 0
+                          ? `$${rep.dexMarketPriceUSD.toFixed(2)} USD (Cached)`
+                          : "—"}
                       </span>
                     </div>
                   </div>
