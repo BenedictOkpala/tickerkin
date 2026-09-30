@@ -173,14 +173,14 @@ export function getClaimScopedEvidence(
       claimType: "DYNAMIC_FACTOR",
       title: "Live Economic Multiplier / Rate Tracking",
       claim: `Live factor (${live.rawMultiplier}) matched with ${live.matchConfidence} confidence based on ${live.matchBasis}.`,
-      evidenceDetail: `Data source: ${live.provenance.sourceName} · Match basis: ${live.matchBasis}${
+      evidenceDetail: `Data source: ${live.provenance?.sourceName ?? "Direct On-Chain RPC"} · Match basis: ${live.matchBasis}${
         live.lastUpdateIso ? ` · Last updated: ${live.lastUpdateIso}` : ""
       }`,
-      sourceName: "Binance Web3 RWA Data Service",
-      sourceRef: "https://www.binance.com",
-      sourceLabel: "Binance Web3 RWA ↗",
-      sourceClass: live.provenance.sourceClass,
-      confidence: live.provenance.confidence,
+      sourceName: live.provenance?.sourceName ?? "Direct On-Chain BSC RPC",
+      sourceRef: "https://bscscan.com",
+      sourceLabel: "BNB Smart Chain ↗",
+      sourceClass: live.provenance?.sourceClass ?? "ON_CHAIN",
+      confidence: live.provenance?.confidence ?? "HIGH",
     });
   } else {
     claims.push({

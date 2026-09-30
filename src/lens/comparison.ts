@@ -138,7 +138,8 @@ export function normalizeRepresentationComparison(
       }
     }
     if (normalizationStatus === "UNAVAILABLE") {
-      unavailabilityReason = "Live scale factor unreachable (Network timeout). Showing verified structural data.";
+      unavailabilityReason =
+        "Live normalization factor unavailable in this session. TickerKin preserves the verified representation data without assuming a conversion factor.";
     }
   } else if (representation.providerId === "bstocks") {
     factorLabel = "Multiplier";
@@ -154,7 +155,8 @@ export function normalizeRepresentationComparison(
       }
     }
     if (normalizationStatus === "UNAVAILABLE") {
-      unavailabilityReason = "Live multiplier factor unreachable (Network timeout). Showing verified structural data.";
+      unavailabilityReason =
+        "Live normalization factor unavailable in this session. TickerKin preserves the verified representation data without assuming a conversion factor.";
     }
   } else if (representation.providerId === "xstocks") {
     factorLabel = "Multiplier";
@@ -171,7 +173,7 @@ export function normalizeRepresentationComparison(
     }
     if (normalizationStatus === "UNAVAILABLE") {
       unavailabilityReason =
-        "Verified BSC multiplier/conversion factor unavailable. TickerKin will not assume 1 token equals 1 share.";
+        "Live normalization factor unavailable in this session. TickerKin preserves the verified representation data without assuming a conversion factor.";
     }
   }
 
@@ -445,7 +447,7 @@ export function calculateTokenValue(
       freshness: "UNAVAILABLE",
       unavailabilityReason:
         rep.unavailabilityReason ??
-        "Verified BSC redemption/conversion factor unavailable. TickerKin will not assume 1 token equals 1 share.",
+        "Live normalization factor unavailable in this session. TickerKin preserves the verified representation data without assuming a conversion factor.",
       isValid: true,
       provenance: rep.provenance,
     };

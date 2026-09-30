@@ -227,7 +227,7 @@ describe("Phase 8C: RWA Lens Engine & Comparison Normalization for NVDAx", () =>
     expect(normalized.accountingFactor).toBeNull();
     expect(normalized.shareEquivalentPerToken).toBeNull();
     expect(normalized.referenceValuePerTokenUSD).toBeNull();
-    expect(normalized.unavailabilityReason).toContain("Verified BSC multiplier/conversion factor unavailable.");
+    expect(normalized.unavailabilityReason).toContain("Live normalization factor unavailable in this session");
   });
 
   it("calculates 100 NVDAx accurately in calculator when live on-chain multiplier is available", () => {

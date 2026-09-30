@@ -25,9 +25,10 @@ export function InteractiveComparison({ matrix: initialMatrix }: InteractiveComp
           cache: "no-store",
         });
         if (res.ok) {
-          const data = await res.json();
-          if (data && data.matrix && isMounted) {
-            setActiveMatrix(data.matrix);
+          const resJson = await res.json();
+          const liveMatrix = resJson?.data || resJson?.matrix;
+          if (liveMatrix && isMounted) {
+            setActiveMatrix(liveMatrix);
           }
         }
       } catch (err) {
@@ -191,6 +192,13 @@ export function InteractiveComparison({ matrix: initialMatrix }: InteractiveComp
       >
         {representations.map((rep) => {
           const isAvailable = rep.normalizationStatus === "AVAILABLE";
+          const hasValidDexPrice =
+            typeof rep.dexMarketPriceUSD === "number" &&
+            Number.isFinite(rep.dexMarketPriceUSD) &&
+            rep.dexMarketPriceUSD > 0;
+          const hasValidDeviation =
+            typeof rep.referenceDeviationPercent === "number" &&
+            Number.isFinite(rep.referenceDeviationPercent);
 
           return (
             <div
@@ -333,8 +341,14 @@ export function InteractiveComparison({ matrix: initialMatrix }: InteractiveComp
                     }}
                   >
                     <span style={{ color: "var(--text-secondary)" }}>Secondary DEX Spot (Cached)</span>
-                    <span style={{ fontWeight: 600, fontFamily: "var(--font-mono)", color: "var(--text-primary)" }}>
-                      ${rep.dexMarketPriceUSD?.toFixed(2)} USD
+                    <span
+                      style={{
+                        fontWeight: hasValidDexPrice ? 600 : 500,
+                        fontFamily: hasValidDexPrice ? "var(--font-mono)" : "inherit",
+                        color: hasValidDexPrice ? "var(--text-primary)" : "var(--text-muted)",
+                      }}
+                    >
+                      {hasValidDexPrice ? `$${rep.dexMarketPriceUSD!.toFixed(2)} USD` : "—"}
                     </span>
                   </div>
 
@@ -363,17 +377,18 @@ export function InteractiveComparison({ matrix: initialMatrix }: InteractiveComp
 
                     <span
                       style={{
-                        fontFamily: "var(--font-mono)",
-                        fontWeight: 800,
+                        fontFamily: hasValidDeviation ? "var(--font-mono)" : "inherit",
+                        fontWeight: hasValidDeviation ? 800 : 500,
                         fontSize: "0.88rem",
-                        color:
-                          rep.referenceDeviationPercent !== null && rep.referenceDeviationPercent < 0
+                        color: hasValidDeviation
+                          ? rep.referenceDeviationPercent! < 0
                             ? "#4b5563"
-                            : "#2563eb",
+                            : "#2563eb"
+                          : "var(--text-muted)",
                       }}
                     >
-                      {rep.referenceDeviationPercent !== null
-                        ? `${rep.referenceDeviationPercent > 0 ? "+" : ""}${rep.referenceDeviationPercent.toFixed(3)}%`
+                      {hasValidDeviation
+                        ? `${rep.referenceDeviationPercent! > 0 ? "+" : ""}${rep.referenceDeviationPercent!.toFixed(3)}%`
                         : "—"}
                     </span>
                   </div>
@@ -414,8 +429,8 @@ export function InteractiveComparison({ matrix: initialMatrix }: InteractiveComp
                     <div style={{ display: "flex", justifyContent: "space-between" }}>
                       <span style={{ color: "var(--text-muted)" }}>Secondary DEX Spot:</span>
                       <span>
-                        {rep.dexMarketPriceUSD !== null
-                          ? `$${rep.dexMarketPriceUSD.toFixed(2)} USD (Cached)`
+                        {hasValidDexPrice
+                          ? `$${rep.dexMarketPriceUSD!.toFixed(2)} USD (Cached)`
                           : "Unavailable"}
                       </span>
                     </div>

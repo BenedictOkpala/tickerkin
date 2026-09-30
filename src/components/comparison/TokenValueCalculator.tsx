@@ -259,9 +259,10 @@ export function TokenValueCalculator({ matrix }: TokenValueCalculatorProps) {
                       fontWeight: 600,
                       color: isAvailable ? "#16a34a" : "var(--text-muted)",
                       marginTop: "0.15rem",
+                      textAlign: "center",
                     }}
                   >
-                    {isAvailable ? "Live factor · BNB Chain" : "Factor unavailable"}
+                    {isAvailable ? "Available · Live BNB Chain factor" : "Normalization unavailable"}
                   </span>
                 </button>
               );
