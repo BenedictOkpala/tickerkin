@@ -26,9 +26,8 @@ export function InteractiveComparison({ matrix: initialMatrix }: InteractiveComp
         });
         if (res.ok) {
           const json = await res.json();
-          const liveMatrix: EquityComparisonMatrix | null =
-            json?.data || json?.matrix || (json?.representations ? json : null);
-          if (liveMatrix && liveMatrix.representations && isMounted) {
+          const liveMatrix = json?.data || json?.matrix || (json?.representations ? json : null);
+          if (liveMatrix && isMounted) {
             setActiveMatrix(liveMatrix);
           }
         }
