@@ -35,7 +35,7 @@ const ENDPOINTS: EndpointInfo[] = [
     method: "GET",
     path: "/api/lens/ticker/{ticker}",
     summary: "Resolve Tokenized Representations by Underlying Ticker",
-    description: "Resolves all verified RWA representations across supported tokenization providers for a given equity ticker (e.g., NVDA, AAPL, TSLA), including normalized factor dynamics, legal wrappers, and canonical evidence.",
+    description: "Resolves all verified RWA representations across supported tokenization providers for a given equity ticker (e.g., NVDA, AAPL, TSLA), including normalized factor dynamics, economic mechanisms, and claim-scoped provenance evidence.",
     params: [
       {
         name: "ticker",
@@ -138,7 +138,7 @@ const ENDPOINTS: EndpointInfo[] = [
     method: "GET",
     path: "/api/lens/contract/{address}",
     summary: "Resolve Equity Lineage by Contract Address",
-    description: "Performs reverse resolution of an on-chain token address on BNB Smart Chain to discover its underlying equity lineage, issuer identity, and legal parameters.",
+    description: "Performs reverse resolution of an on-chain token address on BNB Smart Chain to discover its underlying equity lineage, issuer identity, and verified economic model parameters.",
     params: [
       {
         name: "address",
@@ -186,7 +186,17 @@ export default function DevelopersApiPage() {
 
   return (
     <AppShell activeTicker="NVDA">
-      <div style={{ maxWidth: "1200px", margin: "0 auto", display: "flex", flexDirection: "column", gap: "2rem" }}>
+      <div
+        style={{
+          width: "100%",
+          maxWidth: "1400px",
+          margin: "0 auto",
+          padding: "2rem 2rem 3rem",
+          display: "flex",
+          flexDirection: "column",
+          gap: "2rem",
+        }}
+      >
         {/* Page Header */}
         <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
           <div style={{ display: "flex", alignItems: "center", gap: "0.6rem" }}>
@@ -227,7 +237,7 @@ export default function DevelopersApiPage() {
               margin: 0,
             }}
           >
-            RWA Lens provides deterministic normalization and identity resolution for tokenized real-world assets on BNB Smart Chain. Developers can consume canonical factor dynamics, legal parameters, and multi-provider lineage programmatically.
+            RWA Lens provides deterministic normalization and identity resolution for tokenized real-world assets on BNB Smart Chain. Developers can consume factor dynamics, economic mechanisms, and multi-provider lineage programmatically.
           </p>
         </div>
 
@@ -272,10 +282,10 @@ export default function DevelopersApiPage() {
               Data Provenance
             </div>
             <div style={{ fontSize: "0.92rem", fontWeight: 600, color: "var(--text-primary)" }}>
-              Cryptographic & Regulatory Evidence
+              Verification & Provenance Evidence
             </div>
             <div style={{ fontSize: "0.8rem", color: "var(--text-secondary)", marginTop: "0.2rem" }}>
-              Verified against Binance Web3 RWA & audited prospectuses.
+              Claim-scoped evidence from verified on-chain data, provider/issuer documentation, and explicitly identified sources.
             </div>
           </div>
         </div>
@@ -588,7 +598,7 @@ export default function DevelopersApiPage() {
                 get_evidence
               </div>
               <div style={{ fontSize: "0.74rem", color: "var(--text-secondary)", marginTop: "0.15rem" }}>
-                Retrieve claim-scoped audit trails
+                Retrieve claim-scoped provenance evidence
               </div>
             </div>
 

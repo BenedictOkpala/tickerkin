@@ -113,5 +113,31 @@ describe("Phase 8C.1: Sidebar Navigation Fix Tests", () => {
     expect(content).toContain(".sidebar-nav-link.active:hover");
     expect(content).toContain(".sidebar-nav-link:focus-visible");
     expect(content).toContain("outline: 2px solid var(--accent-primary)");
+    expect(content).toContain("--bg-secondary: #f1f4f8;");
+    expect(content).toContain(".desktop-sidebar-container");
+  });
+
+  it("5. verifies no <style jsx> blocks exist in layout and app shell components", () => {
+    const appShellPath = resolve(process.cwd(), "src/components/layout/AppShell.tsx");
+    const appShellContent = readFileSync(appShellPath, "utf-8");
+    expect(appShellContent).not.toContain("<style jsx");
+
+    const layoutPath = resolve(process.cwd(), "src/app/layout.tsx");
+    const layoutContent = readFileSync(layoutPath, "utf-8");
+    expect(layoutContent).not.toContain("<style jsx");
+  });
+
+  it("6. verifies truthful API documentation copy without regulatory/cryptographic overclaims", () => {
+    const apiPagePath = resolve(process.cwd(), "src/app/developers/api/page.tsx");
+    const apiPageContent = readFileSync(apiPagePath, "utf-8");
+
+    // Must contain truthful provenance copy
+    expect(apiPageContent).toContain("Verification & Provenance Evidence");
+    expect(apiPageContent).toContain("Claim-scoped evidence from verified on-chain data");
+
+    // Must NOT contain overclaiming copy
+    expect(apiPageContent).not.toContain("Cryptographic & Regulatory Evidence");
+    expect(apiPageContent).not.toContain("Retrieve claim-scoped audit trails");
   });
 });
+

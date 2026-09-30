@@ -91,20 +91,6 @@ export function AppShell({ children, activeTicker = "NVDA", currentQuery = "" }:
           </div>
         </footer>
       </div>
-
-      <style jsx global>{`
-        .desktop-sidebar-container {
-          display: block;
-          flex-shrink: 0;
-          width: 240px;
-        }
-
-        @media (max-width: 880px) {
-          .desktop-sidebar-container {
-            display: none !important;
-          }
-        }
-      `}</style>
     </div>
   );
 }

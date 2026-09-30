@@ -8,6 +8,7 @@
   --bg-input: #f3f5f8;
   --bg-input-focus: #ffffff;
   --bg-muted: #f1f4f8;
+  --bg-secondary: #f1f4f8;
 
   /* Subtle Restrained Borders */
   --border-subtle: #e8ecf2;
@@ -177,4 +178,18 @@ input {
   outline: 2px solid var(--accent-primary);
   outline-offset: 1px;
 }
+
+/* Persistent Desktop Sidebar Container */
+.desktop-sidebar-container {
+  display: block;
+  flex-shrink: 0;
+  width: 240px;
+}
+
+@media (max-width: 880px) {
+  .desktop-sidebar-container {
+    display: none !important;
+  }
+}
+
 
