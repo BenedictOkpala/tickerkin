@@ -60,18 +60,7 @@ export function TokenValueCalculator({ matrix }: TokenValueCalculatorProps) {
   }, [selectedProvider]);
 
   return (
-    <div
-      style={{
-        backgroundColor: "var(--bg-card)",
-        border: "1px solid var(--border-card)",
-        borderRadius: "var(--radius-lg)",
-        padding: "1.75rem",
-        boxShadow: "var(--shadow-card)",
-        display: "flex",
-        flexDirection: "column",
-        gap: "1.25rem",
-      }}
-    >
+    <div className="tk-calculator-card">
       {/* Header */}
       <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", flexWrap: "wrap", gap: "0.5rem" }}>
         <div>
@@ -98,7 +87,10 @@ export function TokenValueCalculator({ matrix }: TokenValueCalculatorProps) {
                 fontWeight: 600,
                 textDecoration: "underline",
                 cursor: "pointer",
-                padding: 0,
+                padding: "0.25rem 0",
+                minHeight: "36px",
+                display: "inline-flex",
+                alignItems: "center",
               }}
             >
               How is this calculated?
@@ -136,17 +128,7 @@ export function TokenValueCalculator({ matrix }: TokenValueCalculatorProps) {
       </div>
 
       {/* Controls: Amount Input + Representation Selection */}
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
-          gap: "1.25rem",
-          backgroundColor: "var(--bg-app)",
-          padding: "1.25rem",
-          borderRadius: "var(--radius-md)",
-          border: "1px solid var(--border-subtle)",
-        }}
-      >
+      <div className="tk-calculator-controls">
         {/* 1. Token Amount Input */}
         <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem" }}>
           <label
@@ -180,23 +162,14 @@ export function TokenValueCalculator({ matrix }: TokenValueCalculatorProps) {
           </div>
 
           {/* Quick Presets */}
-          <div style={{ display: "flex", alignItems: "center", gap: "0.35rem", marginTop: "0.2rem" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "0.35rem", marginTop: "0.2rem", flexWrap: "wrap" }}>
             <span style={{ fontSize: "0.72rem", color: "var(--text-muted)" }}>Presets:</span>
             {[10, 50, 100, 500].map((preset) => (
               <button
                 key={preset}
                 type="button"
+                className="tk-calc-preset-btn"
                 onClick={() => setAmountStr(preset.toString())}
-                style={{
-                  fontSize: "0.72rem",
-                  fontWeight: 600,
-                  color: "var(--text-secondary)",
-                  backgroundColor: "var(--bg-card)",
-                  border: "1px solid var(--border-subtle)",
-                  borderRadius: "var(--radius-xs)",
-                  padding: "0.15rem 0.4rem",
-                  cursor: "pointer",
-                }}
               >
                 {preset}
               </button>
@@ -215,14 +188,16 @@ export function TokenValueCalculator({ matrix }: TokenValueCalculatorProps) {
           <label style={{ fontSize: "0.78rem", fontWeight: 700, color: "var(--text-primary)" }}>
             Tokenized Representation
           </label>
-          <div style={{ display: "flex", gap: "0.4rem", flexWrap: "wrap" }}>
+
+          {/* Desktop/Tablet: 3-column selector (>=640px) */}
+          <div className="tk-token-picker-desktop">
             {matrix.representations.map((rep) => {
               const isSelected = rep.providerId === selectedProvider;
               const isAvailable = rep.normalizationStatus === "AVAILABLE";
 
               return (
                 <button
-                  key={rep.contractAddress}
+                  key={`desktop-${rep.contractAddress}`}
                   type="button"
                   onClick={() => setUserSelectedProvider(rep.providerId)}
                   style={{
@@ -269,8 +244,56 @@ export function TokenValueCalculator({ matrix }: TokenValueCalculatorProps) {
             })}
           </div>
 
+          {/* Mobile: Vertically stacked full-width rows (<640px) */}
+          <div className="tk-token-picker-mobile">
+            {matrix.representations.map((rep) => {
+              const isSelected = rep.providerId === selectedProvider;
+              const isAvailable = rep.normalizationStatus === "AVAILABLE";
+
+              return (
+                <button
+                  key={`mobile-${rep.contractAddress}`}
+                  type="button"
+                  onClick={() => setUserSelectedProvider(rep.providerId)}
+                  className={`tk-token-picker-row ${isSelected ? "selected" : "unselected"}`}
+                >
+                  <span
+                    style={{
+                      fontSize: "0.95rem",
+                      fontWeight: 800,
+                      color: isSelected ? "var(--accent-primary)" : "var(--text-primary)",
+                      letterSpacing: "-0.01em",
+                    }}
+                  >
+                    {rep.tokenSymbol}
+                  </span>
+                  <span
+                    style={{
+                      fontSize: "0.74rem",
+                      color: "var(--text-secondary)",
+                      marginTop: "0.12rem",
+                      fontWeight: 500,
+                    }}
+                  >
+                    {rep.providerName} · {rep.economicMechanism}
+                  </span>
+                  <span
+                    style={{
+                      fontSize: "0.7rem",
+                      fontWeight: 600,
+                      color: isAvailable ? "#16a34a" : "var(--text-muted)",
+                      marginTop: "0.18rem",
+                    }}
+                  >
+                    {isAvailable ? "Available · Live BNB Chain factor" : "Normalization unavailable"}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+
           {selectedRep && (
-            <div style={{ fontSize: "0.74rem", color: "var(--text-muted)", marginTop: "0.2rem" }}>
+            <div className="tk-calc-desktop-mechanism-note" style={{ fontSize: "0.74rem", color: "var(--text-muted)", marginTop: "0.2rem" }}>
               Mechanism: <strong style={{ color: "var(--text-primary)" }}>{selectedRep.economicMechanism}</strong>
             </div>
           )}
@@ -279,29 +302,11 @@ export function TokenValueCalculator({ matrix }: TokenValueCalculatorProps) {
 
       {/* Output Results Section */}
       {calculation.isValid && (
-        <div
-          style={{
-            backgroundColor: "var(--bg-card)",
-            border: "1px solid var(--border-card)",
-            borderRadius: "var(--radius-md)",
-            padding: "1.25rem",
-            boxShadow: "var(--shadow-card)",
-          }}
-        >
+        <div className="tk-calc-result-card">
           {calculation.normalizationStatus === "AVAILABLE" ? (
             <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
               {/* Top Banner: Primary Calculated Reference Value */}
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "baseline",
-                  justifyContent: "space-between",
-                  flexWrap: "wrap",
-                  gap: "0.5rem",
-                  paddingBottom: "1rem",
-                  borderBottom: "1px solid var(--border-subtle)",
-                }}
-              >
+              <div className="tk-calc-result-header">
                 <div>
                   <div style={{ fontSize: "0.76rem", fontWeight: 600, color: "var(--text-muted)", textTransform: "uppercase" }}>
                     Total Normalized Reference Value
@@ -320,7 +325,7 @@ export function TokenValueCalculator({ matrix }: TokenValueCalculatorProps) {
                   </div>
                 </div>
 
-                <div style={{ textAlign: "right" }}>
+                <div className="tk-calc-result-header-secondary">
                   <div style={{ fontSize: "0.76rem", fontWeight: 600, color: "var(--text-muted)", textTransform: "uppercase" }}>
                     Share-Equivalent Exposure
                   </div>
@@ -339,35 +344,29 @@ export function TokenValueCalculator({ matrix }: TokenValueCalculatorProps) {
               </div>
 
               {/* Step-by-Step Breakdown Grid */}
-              <div
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
-                  gap: "0.85rem",
-                }}
-              >
-                <div style={{ padding: "0.6rem 0.8rem", backgroundColor: "var(--bg-app)", borderRadius: "var(--radius-xs)", border: "1px solid var(--border-subtle)" }}>
+              <div className="tk-calc-metrics-grid">
+                <div className="tk-calc-metric-tile">
                   <div style={{ fontSize: "0.72rem", color: "var(--text-muted)" }}>Raw Tokens Entered</div>
                   <div style={{ fontSize: "0.95rem", fontWeight: 700, color: "var(--text-primary)", fontFamily: "var(--font-mono)", marginTop: "0.15rem" }}>
                     {calculation.rawTokenAmount} {calculation.tokenSymbol}
                   </div>
                 </div>
 
-                <div style={{ padding: "0.6rem 0.8rem", backgroundColor: "var(--bg-app)", borderRadius: "var(--radius-xs)", border: "1px solid var(--border-subtle)" }}>
+                <div className="tk-calc-metric-tile">
                   <div style={{ fontSize: "0.72rem", color: "var(--text-muted)" }}>Verified {calculation.factorLabel}</div>
                   <div style={{ fontSize: "0.95rem", fontWeight: 700, color: "var(--accent-primary)", fontFamily: "var(--font-mono)", marginTop: "0.15rem" }}>
                     {calculation.accountingFactor?.toFixed(6)}×
                   </div>
                 </div>
 
-                <div style={{ padding: "0.6rem 0.8rem", backgroundColor: "var(--bg-app)", borderRadius: "var(--radius-xs)", border: "1px solid var(--border-subtle)" }}>
+                <div className="tk-calc-metric-tile">
                   <div style={{ fontSize: "0.72rem", color: "var(--text-muted)" }}>Underlying Stock Price</div>
                   <div style={{ fontSize: "0.95rem", fontWeight: 700, color: "var(--text-primary)", fontFamily: "var(--font-mono)", marginTop: "0.15rem" }}>
                     ${calculation.underlyingReferencePriceUSD?.toFixed(2)} USD
                   </div>
                 </div>
 
-                <div style={{ padding: "0.6rem 0.8rem", backgroundColor: "var(--bg-app)", borderRadius: "var(--radius-xs)", border: "1px solid var(--border-subtle)" }}>
+                <div className="tk-calc-metric-tile">
                   <div style={{ fontSize: "0.72rem", color: "var(--text-muted)" }}>Mechanism Value Accretion</div>
                   <div style={{ fontSize: "0.95rem", fontWeight: 700, color: "#16a34a", fontFamily: "var(--font-mono)", marginTop: "0.15rem" }}>
                     +${calculation.mechanismAccretionUSD?.toFixed(2)} USD
@@ -384,6 +383,8 @@ export function TokenValueCalculator({ matrix }: TokenValueCalculatorProps) {
                   fontSize: "0.74rem",
                   color: "var(--text-muted)",
                   paddingTop: "0.5rem",
+                  flexWrap: "wrap",
+                  gap: "0.35rem",
                 }}
               >
                 <span>
@@ -395,7 +396,7 @@ export function TokenValueCalculator({ matrix }: TokenValueCalculatorProps) {
               </div>
             </div>
           ) : (
-            /* UNAVAILABLE Normalization State (e.g. NVDAx on BSC) */
+            /* UNAVAILABLE Normalization State (e.g. NVDAon on BSC) */
             <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
               <div
                 style={{
@@ -429,36 +430,29 @@ export function TokenValueCalculator({ matrix }: TokenValueCalculatorProps) {
               </div>
 
               {/* Explicit Blank / Null Indicators */}
-              <div
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
-                  gap: "0.85rem",
-                  opacity: 0.75,
-                }}
-              >
-                <div style={{ padding: "0.6rem 0.8rem", backgroundColor: "var(--bg-app)", borderRadius: "var(--radius-xs)", border: "1px solid var(--border-subtle)" }}>
+              <div className="tk-calc-metrics-grid" style={{ opacity: 0.75 }}>
+                <div className="tk-calc-metric-tile">
                   <div style={{ fontSize: "0.72rem", color: "var(--text-muted)" }}>Raw Tokens Entered</div>
                   <div style={{ fontSize: "0.95rem", fontWeight: 700, color: "var(--text-primary)", fontFamily: "var(--font-mono)", marginTop: "0.15rem" }}>
                     {calculation.rawTokenAmount} {calculation.tokenSymbol}
                   </div>
                 </div>
 
-                <div style={{ padding: "0.6rem 0.8rem", backgroundColor: "var(--bg-app)", borderRadius: "var(--radius-xs)", border: "1px solid var(--border-subtle)" }}>
+                <div className="tk-calc-metric-tile">
                   <div style={{ fontSize: "0.72rem", color: "var(--text-muted)" }}>Accounting Factor</div>
                   <div style={{ fontSize: "0.95rem", fontWeight: 700, color: "var(--text-muted)", fontStyle: "italic", marginTop: "0.15rem" }}>
                     Unavailable (Not Assumed)
                   </div>
                 </div>
 
-                <div style={{ padding: "0.6rem 0.8rem", backgroundColor: "var(--bg-app)", borderRadius: "var(--radius-xs)", border: "1px solid var(--border-subtle)" }}>
+                <div className="tk-calc-metric-tile">
                   <div style={{ fontSize: "0.72rem", color: "var(--text-muted)" }}>Share-Equivalent</div>
                   <div style={{ fontSize: "0.95rem", fontWeight: 700, color: "var(--text-muted)", fontStyle: "italic", marginTop: "0.15rem" }}>
                     —
                   </div>
                 </div>
 
-                <div style={{ padding: "0.6rem 0.8rem", backgroundColor: "var(--bg-app)", borderRadius: "var(--radius-xs)", border: "1px solid var(--border-subtle)" }}>
+                <div className="tk-calc-metric-tile">
                   <div style={{ fontSize: "0.72rem", color: "var(--text-muted)" }}>Total Reference Value</div>
                   <div style={{ fontSize: "0.95rem", fontWeight: 700, color: "var(--text-muted)", fontStyle: "italic", marginTop: "0.15rem" }}>
                     —

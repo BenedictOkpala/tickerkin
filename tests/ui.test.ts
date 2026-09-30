@@ -207,4 +207,39 @@ describe("TickerKin Frontend UI Integration & Validation", () => {
       }
     });
   });
+
+  describe("5. Mobile Calculator Responsiveness & Touch Target Integrity", () => {
+    it("verifies TokenValueCalculator source provides responsive classes and mobile stacked rows", async () => {
+      const { readFileSync } = await import("node:fs");
+      const { resolve } = await import("node:path");
+
+      const calcPath = resolve(process.cwd(), "src/components/comparison/TokenValueCalculator.tsx");
+      const calcContent = readFileSync(calcPath, "utf-8");
+
+      expect(calcContent).toContain("tk-calculator-card");
+      expect(calcContent).toContain("tk-calculator-controls");
+      expect(calcContent).toContain("tk-token-picker-desktop");
+      expect(calcContent).toContain("tk-token-picker-mobile");
+      expect(calcContent).toContain("tk-token-picker-row");
+      expect(calcContent).toContain("tk-calc-metrics-grid");
+      expect(calcContent).toContain("tk-calc-metric-tile");
+      expect(calcContent).toContain("tk-calc-preset-btn");
+      expect(calcContent).toContain("economicMechanism");
+    });
+
+    it("verifies globals.css contains mobile @media rules (<640px) for token picker and 2-column metrics", async () => {
+      const { readFileSync } = await import("node:fs");
+      const { resolve } = await import("node:path");
+
+      const cssPath = resolve(process.cwd(), "src/app/globals.css");
+      const cssContent = readFileSync(cssPath, "utf-8");
+
+      expect(cssContent).toContain("@media (max-width: 639px)");
+      expect(cssContent).toContain(".tk-token-picker-desktop");
+      expect(cssContent).toContain(".tk-token-picker-mobile");
+      expect(cssContent).toContain("grid-template-columns: repeat(2, 1fr) !important;");
+      expect(cssContent).toContain(".tk-calc-preset-btn");
+    });
+  });
 });
+
