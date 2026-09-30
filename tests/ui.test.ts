@@ -243,7 +243,7 @@ describe("TickerKin Frontend UI Integration & Validation", () => {
   });
 
   describe("6. Final Polish: Mobile Search, US Market Session, and Softened Unavailable States", () => {
-    it("verifies TopBar contains mobile search classes and responsive styles", async () => {
+    it("verifies TopBar contains mobile search classes and responsive styles in globals.css", async () => {
       const { readFileSync } = await import("node:fs");
       const { resolve } = await import("node:path");
 
@@ -253,7 +253,12 @@ describe("TickerKin Frontend UI Integration & Validation", () => {
       expect(topBarContent).toContain("topbar-header");
       expect(topBarContent).toContain("topbar-search-btn-icon");
       expect(topBarContent).toContain("topbar-chain-compact");
-      expect(topBarContent).toContain("@media (max-width: 640px)");
+
+      const cssPath = resolve(process.cwd(), "src/app/globals.css");
+      const cssContent = readFileSync(cssPath, "utf-8");
+      expect(cssContent).toContain("@media (max-width: 640px)");
+      expect(cssContent).toContain(".topbar-header");
+      expect(cssContent).toContain(".topbar-search-btn-icon");
     });
 
     it("verifies InteractiveComparison uses 'US Market Session' label", async () => {
