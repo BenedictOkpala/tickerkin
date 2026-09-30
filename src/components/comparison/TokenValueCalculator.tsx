@@ -400,31 +400,31 @@ export function TokenValueCalculator({ matrix }: TokenValueCalculatorProps) {
             <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
               <div
                 style={{
-                  backgroundColor: "#fffbeb",
-                  border: "1px solid #fde68a",
+                  backgroundColor: "var(--bg-app)",
+                  border: "1px solid var(--border-subtle)",
                   borderRadius: "var(--radius-sm)",
-                  padding: "1rem 1.15rem",
+                  padding: "0.95rem 1.15rem",
                 }}
               >
-                <div style={{ display: "flex", alignItems: "center", gap: "0.4rem", marginBottom: "0.35rem" }}>
-                  <span style={{ fontSize: "0.85rem", fontWeight: 800, color: "#b45309" }}>
-                    ⚠️ Normalization Unavailable on BSC
+                <div style={{ display: "flex", alignItems: "center", gap: "0.45rem", marginBottom: "0.35rem", flexWrap: "wrap" }}>
+                  <span style={{ fontSize: "0.85rem", fontWeight: 700, color: "var(--text-primary)" }}>
+                    Normalization Unavailable on BSC
                   </span>
                   <span
                     style={{
                       fontSize: "0.68rem",
                       fontWeight: 700,
-                      color: "#b45309",
-                      backgroundColor: "#fef3c7",
-                      padding: "0.1rem 0.35rem",
+                      color: "var(--text-muted)",
+                      backgroundColor: "var(--bg-card)",
+                      padding: "0.1rem 0.4rem",
                       borderRadius: "var(--radius-xs)",
-                      border: "1px solid #fde68a",
+                      border: "1px solid var(--border-subtle)",
                     }}
                   >
                     DATA GAP PRESERVED
                   </span>
                 </div>
-                <div style={{ fontSize: "0.82rem", color: "#92400e", lineHeight: 1.45 }}>
+                <div style={{ fontSize: "0.82rem", color: "var(--text-secondary)", lineHeight: 1.45 }}>
                   {calculation.unavailabilityReason}
                 </div>
               </div>

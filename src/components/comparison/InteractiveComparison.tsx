@@ -176,7 +176,7 @@ export function InteractiveComparison({ matrix: initialMatrix }: InteractiveComp
           >
             <div>MARKET CLOSED</div>
             <div style={{ fontSize: "0.68rem", fontWeight: 500, opacity: 0.85, marginTop: "0.1rem" }}>
-              NASDAQ (NYSE Session)
+              US Market Session
             </div>
           </div>
         </div>
@@ -386,16 +386,16 @@ export function InteractiveComparison({ matrix: initialMatrix }: InteractiveComp
                 <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
                   <div
                     style={{
-                      backgroundColor: "#fffbeb",
-                      border: "1px solid #fde68a",
+                      backgroundColor: "var(--bg-app)",
+                      border: "1px solid var(--border-subtle)",
                       borderRadius: "var(--radius-sm)",
                       padding: "0.85rem 1rem",
                       fontSize: "0.78rem",
-                      color: "#92400e",
+                      color: "var(--text-secondary)",
                       lineHeight: 1.45,
                     }}
                   >
-                    <div style={{ fontWeight: 700, marginBottom: "0.25rem", color: "#b45309" }}>
+                    <div style={{ fontWeight: 700, marginBottom: "0.25rem", color: "var(--text-primary)" }}>
                       Normalization Status: UNAVAILABLE
                     </div>
                     {rep.unavailabilityReason}

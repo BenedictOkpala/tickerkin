@@ -30,7 +30,7 @@ export function isValidEvmAddress(address: string): boolean {
 
 export function useTickerKin(initialQuery = "NVDA") {
   const [query, setQuery] = useState(initialQuery);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState<boolean>(Boolean(initialQuery));
   const [data, setData] = useState<TickerKinResolvedData | null>(null);
   const [error, setError] = useState<TickerKinError | null>(null);
 

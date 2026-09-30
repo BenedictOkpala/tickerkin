@@ -50,6 +50,28 @@ export default function KinMapPage({ params }: KinMapPageProps) {
         />
       )}
 
+      {!loading && !error && !resolvedData && (
+        <div
+          style={{
+            padding: "3rem 1.5rem",
+            textAlign: "center",
+            backgroundColor: "var(--bg-card)",
+            borderRadius: "var(--radius-lg)",
+            border: "1px solid var(--border-card)",
+            maxWidth: "600px",
+            margin: "2rem auto",
+            boxShadow: "var(--shadow-card)",
+          }}
+        >
+          <div style={{ fontSize: "1.1rem", fontWeight: 700, color: "var(--text-primary)" }}>
+            No Tokenized Representations Found
+          </div>
+          <p style={{ fontSize: "0.85rem", color: "var(--text-secondary)", marginTop: "0.5rem", lineHeight: 1.5 }}>
+            No verified tokenized representation lineage could be resolved for &ldquo;{ticker}&rdquo; on BNB Smart Chain.
+          </p>
+        </div>
+      )}
+
       {/* Slide-Over Evidence Drawer */}
       <EvidenceDrawer
         evidence={activeEvidence}

@@ -241,5 +241,44 @@ describe("TickerKin Frontend UI Integration & Validation", () => {
       expect(cssContent).toContain(".tk-calc-preset-btn");
     });
   });
+
+  describe("6. Final Polish: Mobile Search, US Market Session, and Softened Unavailable States", () => {
+    it("verifies TopBar contains mobile search classes and responsive styles", async () => {
+      const { readFileSync } = await import("node:fs");
+      const { resolve } = await import("node:path");
+
+      const topBarPath = resolve(process.cwd(), "src/components/layout/TopBar.tsx");
+      const topBarContent = readFileSync(topBarPath, "utf-8");
+
+      expect(topBarContent).toContain("topbar-header");
+      expect(topBarContent).toContain("topbar-search-btn-icon");
+      expect(topBarContent).toContain("topbar-chain-compact");
+      expect(topBarContent).toContain("@media (max-width: 640px)");
+    });
+
+    it("verifies InteractiveComparison uses 'US Market Session' label", async () => {
+      const { readFileSync } = await import("node:fs");
+      const { resolve } = await import("node:path");
+
+      const compPath = resolve(process.cwd(), "src/components/comparison/InteractiveComparison.tsx");
+      const compContent = readFileSync(compPath, "utf-8");
+
+      expect(compContent).toContain("US Market Session");
+      expect(compContent).not.toContain("NASDAQ (NYSE Session)");
+    });
+
+    it("verifies LoadingSkeleton and useTickerKin loading initialization", async () => {
+      const { readFileSync } = await import("node:fs");
+      const { resolve } = await import("node:path");
+
+      const skelPath = resolve(process.cwd(), "src/components/stockdna/LoadingSkeleton.tsx");
+      const skelContent = readFileSync(skelPath, "utf-8");
+      expect(skelContent).toContain("animate-pulse");
+
+      const hookPath = resolve(process.cwd(), "src/hooks/useStockDna.ts");
+      const hookContent = readFileSync(hookPath, "utf-8");
+      expect(hookContent).toContain("useState<boolean>(Boolean(initialQuery))");
+    });
+  });
 });
 

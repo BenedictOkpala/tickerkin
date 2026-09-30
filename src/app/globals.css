@@ -100,6 +100,19 @@ input {
   animation: slideInRight 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
+@keyframes tkPulse {
+  0%, 100% {
+    opacity: 0.7;
+  }
+  50% {
+    opacity: 0.3;
+  }
+}
+
+.animate-pulse {
+  animation: tkPulse 1.6s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
 /* Kin Map Connectors (Solid Hairline SVG lines) */
 .kin-branch-active {
   stroke: #cbd5e1;
@@ -115,7 +128,8 @@ input {
 
 @media (prefers-reduced-motion: reduce) {
   .animate-fade-in,
-  .animate-slide-in {
+  .animate-slide-in,
+  .animate-pulse {
     animation: none !important;
   }
 }
@@ -370,5 +384,50 @@ input {
     justify-content: center !important;
   }
 }
+
+/* ==========================================================================
+   Responsive TopBar & Search Bar Styles
+   ========================================================================== */
+@media (max-width: 880px) {
+  .mobile-menu-btn {
+    display: flex !important;
+  }
+  .topbar-quick-chips {
+    display: none !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .topbar-header {
+    padding: 0 0.75rem !important;
+    gap: 0.5rem !important;
+  }
+  .topbar-search-btn-text {
+    display: none !important;
+  }
+  .topbar-search-btn-icon {
+    display: inline !important;
+    font-weight: 700 !important;
+    font-size: 0.9rem !important;
+  }
+  .topbar-search-btn {
+    padding: 0.35rem 0.6rem !important;
+    min-height: 36px !important;
+    min-width: 36px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+  .topbar-chain-full {
+    display: none !important;
+  }
+  .topbar-chain-compact {
+    display: inline !important;
+  }
+  .topbar-chain-container {
+    padding: 0.25rem 0.45rem !important;
+  }
+}
+
 
 
