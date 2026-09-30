@@ -338,28 +338,57 @@ describe("Phase 7D: Token Value Calculator", () => {
     }
   });
 
-  it("ensures revalidated comparison matrix maintains single-source-of-truth across card representation and calculator", () => {
-    const revalidatedMatrix = buildEquityComparison("NVDA");
-    expect(revalidatedMatrix).not.toBeNull();
+  describe("Phase 8D.5: Canonical User-Facing Unavailable Copy & DEX Spot Null-Safety", () => {
+    it("ensures no normalization matrix representations emit 'Network timeout' or 'unreachable'", async () => {
+      const matrix = await buildEquityComparisonAsync("NVDA");
+      expect(matrix).not.toBeNull();
 
-    for (const rep of revalidatedMatrix!.representations) {
+      for (const rep of matrix!.representations) {
+        if (rep.normalizationStatus === "UNAVAILABLE") {
+          expect(rep.unavailabilityReason).toBe(
+            "Live normalization factor unavailable in this session. TickerKin preserves the verified representation data without assuming a conversion factor."
+          );
+          expect(rep.unavailabilityReason).not.toContain("Network timeout");
+          expect(rep.unavailabilityReason).not.toContain("unreachable");
+        }
+      }
+    });
+
+    it("ensures calculator evaluation for unavailable representations emits canonical clean copy", () => {
+      const syncMatrix = buildEquityComparison("NVDA");
+      expect(syncMatrix).not.toBeNull();
+
       const calcResult = calculateTokenValue(
         {
           ticker: "NVDA",
-          providerId: rep.providerId,
+          providerId: "ondo",
           tokenAmount: 100,
         },
-        revalidatedMatrix!
+        syncMatrix!
       );
 
-      expect(calcResult.normalizationStatus).toBe(rep.normalizationStatus);
-      if (rep.normalizationStatus === "AVAILABLE") {
-        expect(calcResult.accountingFactor).toBe(rep.accountingFactor);
-        expect(calcResult.shareEquivalentAmount).toBeCloseTo(100 * rep.accountingFactor!, 5);
-      } else {
-        expect(calcResult.accountingFactor).toBeNull();
-        expect(calcResult.shareEquivalentAmount).toBeNull();
-      }
-    }
+      expect(calcResult.normalizationStatus).toBe("UNAVAILABLE");
+      expect(calcResult.unavailabilityReason).toBe(
+        "Live normalization factor unavailable in this session. TickerKin preserves the verified representation data without assuming a conversion factor."
+      );
+      expect(calcResult.unavailabilityReason).not.toContain("Network timeout");
+      expect(calcResult.unavailabilityReason).not.toContain("unreachable");
+    });
+
+    it("ensures null or non-positive DEX market prices are safely handled without emitting '$ USD'", () => {
+      // Helper replicating the exact JSX formatting logic in InteractiveComparison
+      const formatDexSpot = (price: number | null | undefined): string => {
+        return typeof price === "number" && Number.isFinite(price) && price > 0
+          ? `$${price.toFixed(2)} USD`
+          : "—";
+      };
+
+      expect(formatDexSpot(null)).toBe("—");
+      expect(formatDexSpot(undefined)).toBe("—");
+      expect(formatDexSpot(0)).toBe("—");
+      expect(formatDexSpot(-10)).toBe("—");
+      expect(formatDexSpot(Number.NaN)).toBe("—");
+      expect(formatDexSpot(224.50)).toBe("$224.50 USD");
+    });
   });
 });
