@@ -10,29 +10,26 @@ interface SidebarProps {
 
 export function Sidebar({ activeTicker = "NVDA", onCloseMobile }: SidebarProps) {
   const pathname = usePathname();
+  const normalizedPath = pathname.replace(/\/+$/, "") || "/";
+  const tickerUpper = activeTicker.toUpperCase();
+  const basePath = `/equity/${tickerUpper}`;
 
-  const isExploreOverview = pathname === "/";
-  const isEquities = pathname === "/equities";
-  const isProviders = pathname === "/providers";
-  const isKinMap = pathname.includes("/kin");
-  const isCompare = pathname.includes("/compare");
-  const isEvidence = pathname.includes("/evidence");
-  const isApi = pathname.startsWith("/developers");
+  // Exact route matching to prevent "/" leaking active status
+  const isExploreOverview = normalizedPath === "/";
+  const isEquities = normalizedPath === "/equities";
+  const isProviders = normalizedPath === "/providers";
 
-  const linkStyle = (active: boolean) => ({
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
-    padding: "0.55rem 0.75rem",
-    borderRadius: "var(--radius-sm)",
-    fontSize: "0.84rem",
-    fontWeight: active ? 600 : 500,
-    color: active ? "var(--accent-primary)" : "var(--text-secondary)",
-    backgroundColor: active ? "var(--accent-primary-soft)" : "transparent",
-    borderLeft: active ? "3px solid var(--accent-primary)" : "3px solid transparent",
-    transition: "all 0.15s ease",
-    textDecoration: "none",
-  });
+  const isIntelligenceOverview =
+    normalizedPath.toUpperCase() === basePath.toUpperCase();
+  const isKinMap =
+    normalizedPath.toUpperCase() === `${basePath}/kin`.toUpperCase();
+  const isCompare =
+    normalizedPath.toUpperCase() === `${basePath}/compare`.toUpperCase();
+  const isEvidence =
+    normalizedPath.toUpperCase() === `${basePath}/evidence`.toUpperCase();
+
+  const isApi =
+    normalizedPath === "/developers/api" || normalizedPath.startsWith("/developers");
 
   return (
     <aside
@@ -106,7 +103,7 @@ export function Sidebar({ activeTicker = "NVDA", onCloseMobile }: SidebarProps) 
           <Link
             href="/"
             onClick={onCloseMobile}
-            style={linkStyle(isExploreOverview)}
+            className={`sidebar-nav-link ${isExploreOverview ? "active" : ""}`}
           >
             <span>Overview</span>
           </Link>
@@ -114,7 +111,7 @@ export function Sidebar({ activeTicker = "NVDA", onCloseMobile }: SidebarProps) 
           <Link
             href="/equities"
             onClick={onCloseMobile}
-            style={linkStyle(isEquities)}
+            className={`sidebar-nav-link ${isEquities ? "active" : ""}`}
           >
             <span>Equities</span>
           </Link>
@@ -122,7 +119,7 @@ export function Sidebar({ activeTicker = "NVDA", onCloseMobile }: SidebarProps) 
           <Link
             href="/providers"
             onClick={onCloseMobile}
-            style={linkStyle(isProviders)}
+            className={`sidebar-nav-link ${isProviders ? "active" : ""}`}
           >
             <span>Providers</span>
           </Link>
@@ -140,13 +137,21 @@ export function Sidebar({ activeTicker = "NVDA", onCloseMobile }: SidebarProps) 
               padding: "0 0.5rem 0.25rem",
             }}
           >
-            Intelligence ({activeTicker})
+            Intelligence ({tickerUpper})
           </div>
 
           <Link
-            href={`/equity/${activeTicker}/kin`}
+            href={basePath}
             onClick={onCloseMobile}
-            style={linkStyle(isKinMap)}
+            className={`sidebar-nav-link ${isIntelligenceOverview ? "active" : ""}`}
+          >
+            <span>Overview</span>
+          </Link>
+
+          <Link
+            href={`${basePath}/kin`}
+            onClick={onCloseMobile}
+            className={`sidebar-nav-link ${isKinMap ? "active" : ""}`}
           >
             <span>Kin Map</span>
             <span
@@ -164,17 +169,17 @@ export function Sidebar({ activeTicker = "NVDA", onCloseMobile }: SidebarProps) 
           </Link>
 
           <Link
-            href={`/equity/${activeTicker}/compare`}
+            href={`${basePath}/compare`}
             onClick={onCloseMobile}
-            style={linkStyle(isCompare)}
+            className={`sidebar-nav-link ${isCompare ? "active" : ""}`}
           >
             <span>Compare</span>
           </Link>
 
           <Link
-            href={`/equity/${activeTicker}/evidence`}
+            href={`${basePath}/evidence`}
             onClick={onCloseMobile}
-            style={linkStyle(isEvidence)}
+            className={`sidebar-nav-link ${isEvidence ? "active" : ""}`}
           >
             <span>Evidence</span>
           </Link>
@@ -198,7 +203,7 @@ export function Sidebar({ activeTicker = "NVDA", onCloseMobile }: SidebarProps) 
           <Link
             href="/developers/api"
             onClick={onCloseMobile}
-            style={linkStyle(isApi)}
+            className={`sidebar-nav-link ${isApi ? "active" : ""}`}
           >
             <span>RWA Lens API</span>
           </Link>
