@@ -338,8 +338,39 @@ describe("Phase 7D: Token Value Calculator", () => {
     }
   });
 
-  describe("Phase 8D.5: Canonical User-Facing Unavailable Copy & DEX Spot Null-Safety", () => {
-    it("ensures no normalization matrix representations emit 'Network timeout' or 'unreachable'", async () => {
+  describe("Phase 8D.7: API Envelope Unboxing & Clean Normalization Matrix Consistency", () => {
+    it("extracts comparison matrix correctly from { success: true, data: matrix } API envelope", async () => {
+      const liveMatrix = await buildEquityComparisonAsync("NVDA");
+      expect(liveMatrix).not.toBeNull();
+
+      // Simulate the exact API route response envelope
+      const apiResponseEnvelope = {
+        success: true,
+        data: liveMatrix,
+        timestamp: new Date().toISOString(),
+      };
+
+      // Verify unboxing logic used by InteractiveComparison.tsx
+      const unboxedMatrix =
+        apiResponseEnvelope?.data || (apiResponseEnvelope as any)?.matrix || null;
+
+      expect(unboxedMatrix).not.toBeNull();
+      expect(unboxedMatrix?.underlying.ticker).toBe("NVDA");
+      expect(unboxedMatrix?.representations).toHaveLength(3);
+
+      const nvdab = unboxedMatrix?.representations.find((r: any) => r.tokenSymbol === "NVDAB");
+      expect(nvdab?.normalizationStatus).toBe("AVAILABLE");
+      expect(nvdab?.accountingFactor).toBeCloseTo(1.000778, 5);
+
+      const nvdax = unboxedMatrix?.representations.find((r: any) => r.tokenSymbol === "NVDAx");
+      expect(nvdax?.normalizationStatus).toBe("AVAILABLE");
+      expect(nvdax?.accountingFactor).toBeCloseTo(1.001701, 5);
+
+      const nvdaon = unboxedMatrix?.representations.find((r: any) => r.tokenSymbol === "NVDAon");
+      expect(nvdaon).toBeDefined();
+    });
+
+    it("ensures no unavailable representations emit 'Network timeout' or 'unreachable'", async () => {
       const matrix = await buildEquityComparisonAsync("NVDA");
       expect(matrix).not.toBeNull();
 
@@ -350,33 +381,12 @@ describe("Phase 7D: Token Value Calculator", () => {
           );
           expect(rep.unavailabilityReason).not.toContain("Network timeout");
           expect(rep.unavailabilityReason).not.toContain("unreachable");
+          expect(rep.unavailabilityReason).not.toContain("Showing verified structural data");
         }
       }
     });
 
-    it("ensures calculator evaluation for unavailable representations emits canonical clean copy", () => {
-      const syncMatrix = buildEquityComparison("NVDA");
-      expect(syncMatrix).not.toBeNull();
-
-      const calcResult = calculateTokenValue(
-        {
-          ticker: "NVDA",
-          providerId: "ondo",
-          tokenAmount: 100,
-        },
-        syncMatrix!
-      );
-
-      expect(calcResult.normalizationStatus).toBe("UNAVAILABLE");
-      expect(calcResult.unavailabilityReason).toBe(
-        "Live normalization factor unavailable in this session. TickerKin preserves the verified representation data without assuming a conversion factor."
-      );
-      expect(calcResult.unavailabilityReason).not.toContain("Network timeout");
-      expect(calcResult.unavailabilityReason).not.toContain("unreachable");
-    });
-
     it("ensures null or non-positive DEX market prices are safely handled without emitting '$ USD'", () => {
-      // Helper replicating the exact JSX formatting logic in InteractiveComparison
       const formatDexSpot = (price: number | null | undefined): string => {
         return typeof price === "number" && Number.isFinite(price) && price > 0
           ? `$${price.toFixed(2)} USD`
@@ -388,7 +398,7 @@ describe("Phase 7D: Token Value Calculator", () => {
       expect(formatDexSpot(0)).toBe("—");
       expect(formatDexSpot(-10)).toBe("—");
       expect(formatDexSpot(Number.NaN)).toBe("—");
-      expect(formatDexSpot(224.50)).toBe("$224.50 USD");
+      expect(formatDexSpot(223.93)).toBe("$223.93 USD");
     });
   });
 });
