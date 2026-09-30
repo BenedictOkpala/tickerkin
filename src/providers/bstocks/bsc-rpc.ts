@@ -1,12 +1,15 @@
 import type { BinanceLiveEnrichment } from "@/types/binance";
 
 /**
- * Verified BSC RPC endpoints with confirmed connectivity and low latency.
+ * Verified BSC RPC endpoints prioritized by benchmarked low-latency and reliability.
  */
 export const DEFAULT_BSC_RPC_ENDPOINTS: readonly string[] = [
-  "https://bsc-dataseed1.defibit.io",
-  "https://bsc-dataseed1.ninicoin.io",
   "https://bsc.publicnode.com",
+  "https://bsc-rpc.publicnode.com",
+  "https://bsc-dataseed.binance.org",
+  "https://bsc-dataseed1.binance.org",
+  "https://bsc-dataseed1.ninicoin.io",
+  "https://bsc-dataseed1.defibit.io",
 ];
 
 /**

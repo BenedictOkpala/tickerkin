@@ -4,6 +4,7 @@ import {
   fetchBStocksMultiplierFromRpc,
   bscMultiplierToEnrichment,
   BSTOCKS_MULTIPLIER_SELECTOR,
+  DEFAULT_BSC_RPC_ENDPOINTS,
 } from "@/providers/bstocks/bsc-rpc";
 import {
   buildEquityComparison,
@@ -13,6 +14,12 @@ import {
 import type { EquityComparisonMatrix } from "@/types/comparison";
 
 describe("BSC RPC Factor Adapter & Decoding", () => {
+  it("verifies DEFAULT_BSC_RPC_ENDPOINTS prioritizes verified low-latency public endpoints", () => {
+    expect(DEFAULT_BSC_RPC_ENDPOINTS.length).toBeGreaterThanOrEqual(3);
+    expect(DEFAULT_BSC_RPC_ENDPOINTS[0]).toBe("https://bsc.publicnode.com");
+    expect(DEFAULT_BSC_RPC_ENDPOINTS[1]).toBe("https://bsc-rpc.publicnode.com");
+    expect(DEFAULT_BSC_RPC_ENDPOINTS[2]).toBe("https://bsc-dataseed.binance.org");
+  });
   it("safely decodes an 18-decimal fixed-point hex return value", () => {
     // 1000778223752807865 wei -> 1.000778223752807865
     const hex = "0x0000000000000000000000000000000000000000000000000de37a7dfdbb85b9";

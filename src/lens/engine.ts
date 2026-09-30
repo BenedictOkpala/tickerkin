@@ -124,65 +124,79 @@ export class RWALensEngine {
       return baseline;
     }
 
-    let representations = baseline.representations;
+    // 1. Direct on-chain BSC RPC enrichment for bStocks and xStocks (Primary verified on-chain sources)
+    // 2. Binance RWA Web3 enrichment (Secondary indexer for third-party metadata / Ondo)
+    // Execute concurrently so third-party indexer network latency never delays on-chain reads.
+    const [binanceRepsResult, onChainEnriched] = await Promise.all([
+      this.enrichmentAdapter
+        .enrichRepresentationsAsync(baseline.representations, baseline.underlying.ticker)
+        .catch(() => baseline.representations),
 
-    // 1. Attempt Binance RWA Web3 enrichment (e.g. for Ondo)
-    try {
-      representations = await this.enrichmentAdapter.enrichRepresentationsAsync(
-        representations,
-        baseline.underlying.ticker
+      Promise.all(
+        baseline.representations.map(async (rep) => {
+          if (rep.providerId === "bstocks") {
+            try {
+              const bscResult = await this.bscRpcFetcher(rep.contractAddress);
+              if (bscResult) {
+                const liveEnrichment = bscMultiplierToEnrichment(bscResult, rep.contractAddress);
+                const updatedModel: EconomicModel =
+                  rep.economicModel.mechanism === "multiplier"
+                    ? { ...rep.economicModel, currentMultiplier: bscResult.multiplierValue }
+                    : rep.economicModel;
+                return {
+                  ...rep,
+                  economicModel: updatedModel,
+                  liveEnrichment,
+                };
+              }
+            } catch {
+              // Keep existing representation if BSC RPC fails
+            }
+          } else if (rep.providerId === "xstocks") {
+            try {
+              const xstocksResult = await this.xstocksRpcFetcher(rep.contractAddress);
+              if (xstocksResult) {
+                const liveEnrichment = xstocksMultiplierToEnrichment(xstocksResult, rep.contractAddress);
+                const updatedModel: EconomicModel =
+                  rep.economicModel.mechanism === "redemption_rate"
+                    ? { ...rep.economicModel, currentRate: xstocksResult.multiplierValue }
+                    : rep.economicModel;
+                return {
+                  ...rep,
+                  economicModel: updatedModel,
+                  liveEnrichment,
+                };
+              }
+            } catch {
+              // Keep existing representation if BSC RPC fails
+            }
+          }
+          return rep;
+        })
+      ),
+    ]);
+
+    // Merge: Direct on-chain BSC RPC takes precedence over Binance for bstocks/xstocks
+    const mergedRepresentations = baseline.representations.map((baseRep) => {
+      const onChainRep = onChainEnriched.find(
+        (r) => r.contractAddress.toLowerCase() === baseRep.contractAddress.toLowerCase()
       );
-    } catch {
-      // Continue with baseline if Binance fails
-    }
+      const binanceRep = binanceRepsResult.find(
+        (r) => r.contractAddress.toLowerCase() === baseRep.contractAddress.toLowerCase()
+      );
 
-    // 2. Direct on-chain BSC RPC enrichment for bStocks and xStocks (Primary verified on-chain sources)
-    const enrichedWithOnChain = await Promise.all(
-      representations.map(async (rep) => {
-        if (rep.providerId === "bstocks") {
-          try {
-            const bscResult = await this.bscRpcFetcher(rep.contractAddress);
-            if (bscResult) {
-              const liveEnrichment = bscMultiplierToEnrichment(bscResult, rep.contractAddress);
-              const updatedModel: EconomicModel =
-                rep.economicModel.mechanism === "multiplier"
-                  ? { ...rep.economicModel, currentMultiplier: bscResult.multiplierValue }
-                  : rep.economicModel;
-              return {
-                ...rep,
-                economicModel: updatedModel,
-                liveEnrichment,
-              };
-            }
-          } catch {
-            // Keep existing representation if BSC RPC fails
-          }
-        } else if (rep.providerId === "xstocks") {
-          try {
-            const xstocksResult = await this.xstocksRpcFetcher(rep.contractAddress);
-            if (xstocksResult) {
-              const liveEnrichment = xstocksMultiplierToEnrichment(xstocksResult, rep.contractAddress);
-              const updatedModel: EconomicModel =
-                rep.economicModel.mechanism === "redemption_rate"
-                  ? { ...rep.economicModel, currentRate: xstocksResult.multiplierValue }
-                  : rep.economicModel;
-              return {
-                ...rep,
-                economicModel: updatedModel,
-                liveEnrichment,
-              };
-            }
-          } catch {
-            // Keep existing representation if BSC RPC fails
-          }
-        }
-        return rep;
-      })
-    );
+      if (onChainRep && onChainRep.liveEnrichment) {
+        return onChainRep;
+      }
+      if (binanceRep && binanceRep.liveEnrichment) {
+        return binanceRep;
+      }
+      return baseRep;
+    });
 
     return {
       ...baseline,
-      representations: enrichedWithOnChain,
+      representations: mergedRepresentations,
     };
   }
 
@@ -241,53 +255,58 @@ export class RWALensEngine {
 
     let matchedRep = baseline.matchedRepresentation;
 
-    // 1. Attempt Binance enrichment
-    try {
-      matchedRep = await this.enrichmentAdapter.enrichSingleRepresentationAsync(
-        matchedRep,
-        baseline.underlying.ticker
-      );
-    } catch {
-      // Continue
-    }
+    // Execute Binance enrichment and direct on-chain BSC RPC concurrently
+    const [binanceRepResult, onChainRepResult] = await Promise.all([
+      this.enrichmentAdapter
+        .enrichSingleRepresentationAsync(matchedRep, baseline.underlying.ticker)
+        .catch(() => matchedRep),
 
-    // 2. Direct on-chain BSC RPC enrichment for bStocks and xStocks
-    if (matchedRep.providerId === "bstocks") {
-      try {
-        const bscResult = await this.bscRpcFetcher(matchedRep.contractAddress);
-        if (bscResult) {
-          const liveEnrichment = bscMultiplierToEnrichment(bscResult, matchedRep.contractAddress);
-          const updatedModel: EconomicModel =
-            matchedRep.economicModel.mechanism === "multiplier"
-              ? { ...matchedRep.economicModel, currentMultiplier: bscResult.multiplierValue }
-              : matchedRep.economicModel;
-          matchedRep = {
-            ...matchedRep,
-            economicModel: updatedModel,
-            liveEnrichment,
-          };
+      (async () => {
+        if (matchedRep.providerId === "bstocks") {
+          try {
+            const bscResult = await this.bscRpcFetcher(matchedRep.contractAddress);
+            if (bscResult) {
+              const liveEnrichment = bscMultiplierToEnrichment(bscResult, matchedRep.contractAddress);
+              const updatedModel: EconomicModel =
+                matchedRep.economicModel.mechanism === "multiplier"
+                  ? { ...matchedRep.economicModel, currentMultiplier: bscResult.multiplierValue }
+                  : matchedRep.economicModel;
+              return {
+                ...matchedRep,
+                economicModel: updatedModel,
+                liveEnrichment,
+              };
+            }
+          } catch {
+            // Keep existing
+          }
+        } else if (matchedRep.providerId === "xstocks") {
+          try {
+            const xstocksResult = await this.xstocksRpcFetcher(matchedRep.contractAddress);
+            if (xstocksResult) {
+              const liveEnrichment = xstocksMultiplierToEnrichment(xstocksResult, matchedRep.contractAddress);
+              const updatedModel: EconomicModel =
+                matchedRep.economicModel.mechanism === "redemption_rate"
+                  ? { ...matchedRep.economicModel, currentRate: xstocksResult.multiplierValue }
+                  : matchedRep.economicModel;
+              return {
+                ...matchedRep,
+                economicModel: updatedModel,
+                liveEnrichment,
+              };
+            }
+          } catch {
+            // Keep existing
+          }
         }
-      } catch {
-        // Keep existing
-      }
-    } else if (matchedRep.providerId === "xstocks") {
-      try {
-        const xstocksResult = await this.xstocksRpcFetcher(matchedRep.contractAddress);
-        if (xstocksResult) {
-          const liveEnrichment = xstocksMultiplierToEnrichment(xstocksResult, matchedRep.contractAddress);
-          const updatedModel: EconomicModel =
-            matchedRep.economicModel.mechanism === "redemption_rate"
-              ? { ...matchedRep.economicModel, currentRate: xstocksResult.multiplierValue }
-              : matchedRep.economicModel;
-          matchedRep = {
-            ...matchedRep,
-            economicModel: updatedModel,
-            liveEnrichment,
-          };
-        }
-      } catch {
-        // Keep existing
-      }
+        return matchedRep;
+      })(),
+    ]);
+
+    if (onChainRepResult && onChainRepResult.liveEnrichment) {
+      matchedRep = onChainRepResult;
+    } else if (binanceRepResult && binanceRepResult.liveEnrichment) {
+      matchedRep = binanceRepResult;
     }
 
     return {

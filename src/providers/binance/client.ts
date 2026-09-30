@@ -9,7 +9,7 @@ export interface BinanceClientOptions {
 
 const DEFAULT_BASE_URL =
   "https://www.binance.com/bapi/defi/v1/public/wallet-direct/buw/wallet/market/token/rwa/stock/detail/list/ai";
-const DEFAULT_TIMEOUT_MS = 3000;
+const DEFAULT_TIMEOUT_MS = 1500;
 const DEFAULT_CACHE_TTL_MS = 60_000;
 
 interface CacheEntry {
@@ -86,13 +86,15 @@ export class BinanceRwaClient {
       });
 
       if (!response.ok) {
-        // Graceful fallback on non-200 HTTP status
+        // Cache negative result with TTL to avoid repeated slow timeouts
+        this.cache.set(providerType, { timestamp: now, records: cached ? cached.records : [] });
         return cached ? cached.records : [];
       }
 
       const json = (await response.json()) as BinanceRawResponseEnvelope;
 
       if (!json || json.code !== "000000" || !Array.isArray(json.data)) {
+        this.cache.set(providerType, { timestamp: now, records: cached ? cached.records : [] });
         return cached ? cached.records : [];
       }
 
@@ -106,6 +108,7 @@ export class BinanceRwaClient {
       return validRecords;
     } catch {
       // Graceful fallback on network timeout, abort, or parsing failure
+      this.cache.set(providerType, { timestamp: now, records: cached ? cached.records : [] });
       return cached ? cached.records : [];
     }
   }
