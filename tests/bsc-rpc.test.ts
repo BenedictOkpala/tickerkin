@@ -304,6 +304,8 @@ describe("NVDAB Live Normalization & Calculator Math", () => {
 
     const nvdax = syncMatrix?.representations.find((r) => r.providerId === "xstocks");
     expect(nvdax?.normalizationStatus).toBe("UNAVAILABLE");
+    expect(nvdax?.accountingFactor).toBeNull();
+    expect(nvdax?.shareEquivalentPerToken).toBeNull();
     expect(nvdax?.unavailabilityReason).toContain("Live normalization factor unavailable in this session");
 
     const calcNvdax = calculateTokenValue(

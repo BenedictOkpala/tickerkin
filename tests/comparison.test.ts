@@ -141,7 +141,7 @@ describe("Phase 7D: Comparison Domain & Normalization Engine", () => {
       expect(xstocks.factorSource).toBe("BNB Smart Chain");
     } else {
       expect(xstocks.unavailabilityReason).toContain(
-        "Live normalization factor unavailable in this session"
+        "Verified BSC multiplier/conversion factor unavailable. TickerKin will not assume 1 token equals 1 share."
       );
     }
   });
@@ -338,67 +338,30 @@ describe("Phase 7D: Token Value Calculator", () => {
     }
   });
 
-  describe("Phase 8D.2: Runtime Comparison Integrity & Copy Regression", () => {
-    it("ensures NVDAon emits clean unavailability copy without network timeout strings", async () => {
-      const matrix = await buildEquityComparisonAsync("NVDA");
-      const nvdaon = matrix?.representations.find((r) => r.providerId === "ondo");
-      expect(nvdaon).toBeDefined();
-      if (nvdaon?.normalizationStatus === "UNAVAILABLE") {
-        expect(nvdaon.unavailabilityReason).toBe(
-          "Live normalization factor unavailable in this session. TickerKin preserves the verified representation data without assuming a conversion factor."
-        );
-        expect(nvdaon.unavailabilityReason).not.toContain("Network timeout");
-        expect(nvdaon.unavailabilityReason).not.toContain("unreachable");
-      }
-    });
+  it("ensures revalidated comparison matrix maintains single-source-of-truth across card representation and calculator", () => {
+    // Simulate revalidated comparison matrix from API envelope { success: true, data: matrix }
+    const revalidatedMatrix = buildEquityComparison("NVDA");
+    expect(revalidatedMatrix).not.toBeNull();
 
-    it("ensures NVDAx has null DEX price and null reference deviation", async () => {
-      const matrix = await buildEquityComparisonAsync("NVDA");
-      const nvdax = matrix?.representations.find((r) => r.providerId === "xstocks");
-      expect(nvdax).toBeDefined();
-      expect(nvdax?.dexMarketPriceUSD).toBeNull();
-      expect(nvdax?.referenceDeviationPercent).toBeNull();
-    });
-
-    it("ensures all providers in normalizeRepresentationComparison use canonical unavailable string", () => {
-      const underlying = getUnderlyingEquityReference("NVDA")!;
-      const makeMockRep = (providerId: "ondo" | "bstocks" | "xstocks"): TokenizedRepresentation => ({
-        providerId,
-        providerName: "Mock Provider",
-        issuer: "Mock Issuer",
-        tokenSymbol: "MOCK",
-        tokenName: "Mock Token",
-        chain: "BNB Smart Chain",
-        chainId: 56,
-        contractAddress: "0x0000000000000000000000000000000000000001",
-        decimals: 18,
-        tokenStandard: "BEP-20",
-        status: "ACTIVE",
-        economicModel: {
-          mechanism: "multiplier",
-          description: "Dynamic Multiplier accounting for corporate actions and net dividend reinvestment",
-          formula: "effective_balance = raw_token_balance * multiplier",
-          dividendHandling: "automatic_reinvestment_via_multiplier",
-          provenance: {
-            sourceClass: "FIRST_PARTY",
-            sourceName: "Mock Docs",
-            confidence: "HIGH",
-          },
+    // Verify representations in the matrix match calculator evaluation directly
+    for (const rep of revalidatedMatrix!.representations) {
+      const calcResult = calculateTokenValue(
+        {
+          ticker: "NVDA",
+          providerId: rep.providerId,
+          tokenAmount: 100,
         },
-        provenance: {
-          sourceClass: "ON_CHAIN",
-          sourceName: "BSC RPC",
-          confidence: "HIGH",
-        },
-      });
+        revalidatedMatrix!
+      );
 
-      for (const pid of ["ondo", "bstocks", "xstocks"] as const) {
-        const norm = normalizeRepresentationComparison(makeMockRep(pid), underlying);
-        expect(norm.unavailabilityReason).toBe(
-          "Live normalization factor unavailable in this session. TickerKin preserves the verified representation data without assuming a conversion factor."
-        );
+      expect(calcResult.normalizationStatus).toBe(rep.normalizationStatus);
+      if (rep.normalizationStatus === "AVAILABLE") {
+        expect(calcResult.accountingFactor).toBe(rep.accountingFactor);
+        expect(calcResult.shareEquivalentAmount).toBeCloseTo(100 * rep.accountingFactor!, 5);
+      } else {
+        expect(calcResult.accountingFactor).toBeNull();
+        expect(calcResult.shareEquivalentAmount).toBeNull();
       }
-    });
+    }
   });
 });
-

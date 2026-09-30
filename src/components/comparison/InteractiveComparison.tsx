@@ -25,9 +25,11 @@ export function InteractiveComparison({ matrix: initialMatrix }: InteractiveComp
           cache: "no-store",
         });
         if (res.ok) {
-          const data = await res.json();
-          if (data && data.matrix && isMounted) {
-            setActiveMatrix(data.matrix);
+          const json = await res.json();
+          const liveMatrix: EquityComparisonMatrix | null =
+            json?.data || json?.matrix || (json?.representations ? json : null);
+          if (liveMatrix && liveMatrix.representations && isMounted) {
+            setActiveMatrix(liveMatrix);
           }
         }
       } catch (err) {
@@ -333,13 +335,7 @@ export function InteractiveComparison({ matrix: initialMatrix }: InteractiveComp
                     }}
                   >
                     <span style={{ color: "var(--text-secondary)" }}>Secondary DEX Spot (Cached)</span>
-                    <span
-                      style={{
-                        fontWeight: typeof rep.dexMarketPriceUSD === "number" && Number.isFinite(rep.dexMarketPriceUSD) && rep.dexMarketPriceUSD > 0 ? 600 : 500,
-                        fontFamily: typeof rep.dexMarketPriceUSD === "number" && Number.isFinite(rep.dexMarketPriceUSD) && rep.dexMarketPriceUSD > 0 ? "var(--font-mono)" : "inherit",
-                        color: typeof rep.dexMarketPriceUSD === "number" && Number.isFinite(rep.dexMarketPriceUSD) && rep.dexMarketPriceUSD > 0 ? "var(--text-primary)" : "var(--text-muted)",
-                      }}
-                    >
+                    <span style={{ fontWeight: 600, fontFamily: "var(--font-mono)", color: "var(--text-primary)" }}>
                       {typeof rep.dexMarketPriceUSD === "number" && Number.isFinite(rep.dexMarketPriceUSD) && rep.dexMarketPriceUSD > 0
                         ? `$${rep.dexMarketPriceUSD.toFixed(2)} USD`
                         : "—"}
@@ -371,40 +367,16 @@ export function InteractiveComparison({ matrix: initialMatrix }: InteractiveComp
 
                     <span
                       style={{
-                        fontFamily:
-                          typeof rep.dexMarketPriceUSD === "number" &&
-                          Number.isFinite(rep.dexMarketPriceUSD) &&
-                          rep.dexMarketPriceUSD > 0 &&
-                          typeof rep.referenceDeviationPercent === "number" &&
-                          Number.isFinite(rep.referenceDeviationPercent)
-                            ? "var(--font-mono)"
-                            : "inherit",
-                        fontWeight:
-                          typeof rep.dexMarketPriceUSD === "number" &&
-                          Number.isFinite(rep.dexMarketPriceUSD) &&
-                          rep.dexMarketPriceUSD > 0 &&
-                          typeof rep.referenceDeviationPercent === "number" &&
-                          Number.isFinite(rep.referenceDeviationPercent)
-                            ? 800
-                            : 500,
+                        fontFamily: "var(--font-mono)",
+                        fontWeight: 800,
                         fontSize: "0.88rem",
                         color:
-                          typeof rep.dexMarketPriceUSD === "number" &&
-                          Number.isFinite(rep.dexMarketPriceUSD) &&
-                          rep.dexMarketPriceUSD > 0 &&
-                          typeof rep.referenceDeviationPercent === "number" &&
-                          Number.isFinite(rep.referenceDeviationPercent)
-                            ? rep.referenceDeviationPercent < 0
-                              ? "#4b5563"
-                              : "#2563eb"
-                            : "var(--text-muted)",
+                          rep.referenceDeviationPercent !== null && rep.referenceDeviationPercent < 0
+                            ? "#4b5563"
+                            : "#2563eb",
                       }}
                     >
-                      {typeof rep.dexMarketPriceUSD === "number" &&
-                      Number.isFinite(rep.dexMarketPriceUSD) &&
-                      rep.dexMarketPriceUSD > 0 &&
-                      typeof rep.referenceDeviationPercent === "number" &&
-                      Number.isFinite(rep.referenceDeviationPercent)
+                      {rep.referenceDeviationPercent !== null
                         ? `${rep.referenceDeviationPercent > 0 ? "+" : ""}${rep.referenceDeviationPercent.toFixed(3)}%`
                         : "—"}
                     </span>
@@ -446,9 +418,7 @@ export function InteractiveComparison({ matrix: initialMatrix }: InteractiveComp
                     <div style={{ display: "flex", justifyContent: "space-between" }}>
                       <span style={{ color: "var(--text-muted)" }}>Secondary DEX Spot:</span>
                       <span>
-                        {typeof rep.dexMarketPriceUSD === "number" &&
-                        Number.isFinite(rep.dexMarketPriceUSD) &&
-                        rep.dexMarketPriceUSD > 0
+                        {typeof rep.dexMarketPriceUSD === "number" && Number.isFinite(rep.dexMarketPriceUSD) && rep.dexMarketPriceUSD > 0
                           ? `$${rep.dexMarketPriceUSD.toFixed(2)} USD (Cached)`
                           : "—"}
                       </span>

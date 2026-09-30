@@ -226,6 +226,7 @@ describe("Phase 8C: RWA Lens Engine & Comparison Normalization for NVDAx", () =>
     expect(normalized.normalizationStatus).toBe("UNAVAILABLE");
     expect(normalized.accountingFactor).toBeNull();
     expect(normalized.shareEquivalentPerToken).toBeNull();
+    expect(normalized.referenceValuePerTokenUSD).toBeNull();
     expect(normalized.unavailabilityReason).toContain("Live normalization factor unavailable in this session");
   });
 
