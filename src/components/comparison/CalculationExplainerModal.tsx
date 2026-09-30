@@ -192,7 +192,7 @@ export function CalculationExplainerModal({ isOpen, onClose }: CalculationExplai
               Normalized Share Quantity
             </div>
             <div style={{ fontSize: "0.78rem", color: "var(--text-secondary)", lineHeight: 1.4 }}>
-              Represents the actual quantity of off-chain underlying shares backed by the tokenized holding.
+              Represents the token amount expressed in comparable underlying share-equivalent units.
             </div>
           </div>
 
@@ -217,7 +217,7 @@ export function CalculationExplainerModal({ isOpen, onClose }: CalculationExplai
               </span>
             </div>
             <div style={{ fontSize: "0.82rem", color: "var(--text-primary)", fontWeight: 600 }}>
-              Intrinsic Reference Benchmark
+              Normalized Reference Value
             </div>
             <div style={{ fontSize: "0.78rem", color: "var(--text-secondary)", lineHeight: 1.4 }}>
               Calculated using the verified Pyth Oracle snapshot for the underlying traditional equity.

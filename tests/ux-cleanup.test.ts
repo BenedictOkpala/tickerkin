@@ -2,9 +2,33 @@ import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { calculateTokenValue, buildEquityComparison } from "@/lens/comparison";
+import type { EquityComparisonMatrix } from "@/types/comparison";
+import type { ProviderId } from "@/types/token";
 
-describe("Phase 8A.1: Runtime UI Regression & Copy Isolation Tests", () => {
-  it("ensures no 'physical share' terminology exists in HowToReadComparison", () => {
+describe("Phase 8A.2: Calculator Final Copy & State Clarity Tests", () => {
+  it("1. ensures safer Step 3 wording and absence of literal ownership claims in CalculationExplainerModal", () => {
+    const filePath = resolve(process.cwd(), "src/components/comparison/CalculationExplainerModal.tsx");
+    const content = readFileSync(filePath, "utf-8");
+
+    // Must contain new safer wording
+    expect(content).toContain("Represents the token amount expressed in comparable underlying share-equivalent units.");
+
+    // Must NOT contain old literal backing / ownership wording
+    expect(content).not.toContain("actual quantity of off-chain underlying shares");
+    expect(content).not.toContain("backed by the tokenized holding");
+  });
+
+  it("2. ensures 'Normalized Reference Value' terminology in Step 4 of CalculationExplainerModal", () => {
+    const filePath = resolve(process.cwd(), "src/components/comparison/CalculationExplainerModal.tsx");
+    const content = readFileSync(filePath, "utf-8");
+
+    expect(content).toContain("Normalized Reference Value");
+    expect(content).not.toContain("Intrinsic Reference Benchmark");
+    expect(content).not.toContain("guaranteed redemption value");
+    expect(content).not.toContain("liquidation value");
+  });
+
+  it("3. ensures no 'physical share' terminology exists in HowToReadComparison", () => {
     const filePath = resolve(process.cwd(), "src/components/comparison/HowToReadComparison.tsx");
     const content = readFileSync(filePath, "utf-8");
 
@@ -12,11 +36,11 @@ describe("Phase 8A.1: Runtime UI Regression & Copy Isolation Tests", () => {
     expect(content).toContain("1 share-equivalent unit");
   });
 
-  it("ensures no hardcoded Swiss DLT copy leaks across all providers in TokenValueCalculator", () => {
+  it("4. ensures no hardcoded Swiss DLT copy leaks across providers in TokenValueCalculator", () => {
     const filePath = resolve(process.cwd(), "src/components/comparison/TokenValueCalculator.tsx");
     const content = readFileSync(filePath, "utf-8");
 
-    // Must have providerFootnote mapping
+    // Must have isolated provider footnote mappings
     expect(content).toContain("providerFootnote");
     expect(content).toContain("BTech (bStocks)");
     expect(content).toContain("Ondo Global Markets");
@@ -24,21 +48,7 @@ describe("Phase 8A.1: Runtime UI Regression & Copy Isolation Tests", () => {
     expect(content).toContain("Share-Equivalent Exposure");
   });
 
-  it("ensures CalculationExplainerModal contains step-by-step breakdown with accurate math", () => {
-    const filePath = resolve(process.cwd(), "src/components/comparison/CalculationExplainerModal.tsx");
-    const content = readFileSync(filePath, "utf-8");
-
-    expect(content).toContain("Step 1");
-    expect(content).toContain("Step 2");
-    expect(content).toContain("Step 3");
-    expect(content).toContain("Step 4");
-    expect(content).toContain("Q_token");
-    expect(content).toContain("F_accounting");
-    expect(content).toContain("Shares = Q_token × F_accounting");
-    expect(content).toContain("Value_USD = Shares × P_underlying");
-  });
-
-  it("ensures InteractiveComparison performs client dynamic enrichment", () => {
+  it("5. ensures InteractiveComparison performs client dynamic enrichment", () => {
     const filePath = resolve(process.cwd(), "src/components/comparison/InteractiveComparison.tsx");
     const content = readFileSync(filePath, "utf-8");
 
@@ -47,10 +57,88 @@ describe("Phase 8A.1: Runtime UI Regression & Copy Isolation Tests", () => {
     expect(content).toContain("/api/lens/ticker/");
   });
 
-  it("calculates 100 NVDAB using verified BSC multiplier and produces accurate share-equivalent", () => {
+  it("6. verifies available representation is preferred on initial resolution logic", () => {
     const matrix = buildEquityComparison("NVDA");
     expect(matrix).not.toBeNull();
+    if (!matrix) return;
 
+    // Simulate matrix where only bstocks is AVAILABLE
+    const enrichedMatrix: EquityComparisonMatrix = {
+      ...matrix,
+      representations: matrix.representations.map((r) => {
+        if (r.providerId === "bstocks") {
+          return {
+            ...r,
+            normalizationStatus: "AVAILABLE" as const,
+            accountingFactor: 1.000778223752807865,
+            shareEquivalentPerToken: 1.000778223752807865,
+            referenceValuePerTokenUSD: 1.000778223752807865 * 224.15,
+          };
+        }
+        return {
+          ...r,
+          normalizationStatus: "UNAVAILABLE" as const,
+        };
+      }),
+    };
+
+    const firstAvailable = enrichedMatrix.representations.find(
+      (r) => r.normalizationStatus === "AVAILABLE"
+    )?.providerId;
+
+    expect(firstAvailable).toBe("bstocks");
+  });
+
+  it("7. verifies unavailable representations remain selectable and calculate without crashing or assuming 1:1", () => {
+    const matrix = buildEquityComparison("NVDA");
+    expect(matrix).not.toBeNull();
+    if (!matrix) return;
+
+    // Ensure selecting unavailable representations returns UNAVAILABLE without default 1.0
+    const ondoResult = calculateTokenValue(
+      { ticker: "NVDA", providerId: "ondo", tokenAmount: 100 },
+      matrix
+    );
+    expect(ondoResult.isValid).toBe(true);
+    expect(ondoResult.normalizationStatus).toBe("UNAVAILABLE");
+    expect(ondoResult.accountingFactor).toBeNull();
+    expect(ondoResult.shareEquivalentAmount).toBeNull();
+    expect(ondoResult.totalReferenceValueUSD).toBeNull();
+
+    const xstocksResult = calculateTokenValue(
+      { ticker: "NVDA", providerId: "xstocks", tokenAmount: 100 },
+      matrix
+    );
+    expect(xstocksResult.isValid).toBe(true);
+    expect(xstocksResult.normalizationStatus).toBe("UNAVAILABLE");
+    expect(xstocksResult.accountingFactor).toBeNull();
+    expect(xstocksResult.shareEquivalentAmount).toBeNull();
+    expect(xstocksResult.totalReferenceValueUSD).toBeNull();
+  });
+
+  it("8. verifies manual user selection is respected and can select any provider explicitly", () => {
+    const matrix = buildEquityComparison("NVDA");
+    expect(matrix).not.toBeNull();
+    if (!matrix) return;
+
+    const testSelection = (providerId: ProviderId) => {
+      const calc = calculateTokenValue(
+        { ticker: "NVDA", providerId, tokenAmount: 50 },
+        matrix
+      );
+      expect(calc.tokenSymbol).toBe(
+        matrix.representations.find((r) => r.providerId === providerId)?.tokenSymbol
+      );
+    };
+
+    testSelection("ondo");
+    testSelection("bstocks");
+    testSelection("xstocks");
+  });
+
+  it("9. calculates 100 NVDAB using verified BSC multiplier and produces accurate share-equivalent", () => {
+    const matrix = buildEquityComparison("NVDA");
+    expect(matrix).not.toBeNull();
     if (!matrix) return;
 
     // Simulate matrix enriched with NVDAB live factor

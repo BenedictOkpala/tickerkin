@@ -11,16 +11,21 @@ interface TokenValueCalculatorProps {
 }
 
 export function TokenValueCalculator({ matrix }: TokenValueCalculatorProps) {
-  // Default to 'bstocks' if present (live multiplier available), else first representation
-  const defaultProvider = useMemo<ProviderId>(() => {
-    const hasBstocks = matrix.representations.some((r) => r.providerId === "bstocks");
-    if (hasBstocks) return "bstocks";
-    return matrix.representations[0]?.providerId || "bstocks";
-  }, [matrix.representations]);
-
-  const [selectedProvider, setSelectedProvider] = useState<ProviderId>(defaultProvider);
+  // Track explicit user selection to avoid overriding manual user choice
+  const [userSelectedProvider, setUserSelectedProvider] = useState<ProviderId | null>(null);
   const [amountStr, setAmountStr] = useState<string>("100");
   const [isExplainerOpen, setIsExplainerOpen] = useState<boolean>(false);
+
+  // Derive active provider: respect explicit user choice if valid; otherwise default to first AVAILABLE representation
+  const selectedProvider = useMemo<ProviderId>(() => {
+    if (userSelectedProvider) {
+      const exists = matrix.representations.some((r) => r.providerId === userSelectedProvider);
+      if (exists) return userSelectedProvider;
+    }
+    const firstAvailable = matrix.representations.find((r) => r.normalizationStatus === "AVAILABLE")?.providerId;
+    if (firstAvailable) return firstAvailable;
+    return matrix.representations[0]?.providerId || "bstocks";
+  }, [userSelectedProvider, matrix.representations]);
 
   const numAmount = useMemo(() => {
     if (amountStr.trim() === "") return Number.NaN;
@@ -219,7 +224,7 @@ export function TokenValueCalculator({ matrix }: TokenValueCalculatorProps) {
                 <button
                   key={rep.contractAddress}
                   type="button"
-                  onClick={() => setSelectedProvider(rep.providerId)}
+                  onClick={() => setUserSelectedProvider(rep.providerId)}
                   style={{
                     flex: "1 1 80px",
                     display: "flex",
