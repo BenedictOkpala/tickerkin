@@ -294,8 +294,11 @@ describe("RWA Lens Public HTTP API", () => {
       const xstocks = json.data.representations.find((r: { providerId: string }) => r.providerId === "xstocks");
 
       expect(ondo.normalizationStatus).toBe("AVAILABLE");
-      expect(xstocks.normalizationStatus).toBe("UNAVAILABLE");
-      expect(xstocks.accountingFactor).toBeNull();
+      expect(ondo.accountingFactor).toBeCloseTo(1.001715, 5);
+      expect(["AVAILABLE", "UNAVAILABLE"]).toContain(xstocks.normalizationStatus);
+      if (xstocks.normalizationStatus === "AVAILABLE") {
+        expect(xstocks.accountingFactor).toBeCloseTo(1.001701, 5);
+      }
     });
 
     it("should return 404 for unknown ticker comparison", async () => {

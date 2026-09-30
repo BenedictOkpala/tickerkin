@@ -1,0 +1,276 @@
+[
+  {
+    "selector": "0xca15c873",
+    "matchedNames": [
+      "getRoleMemberCount(bytes32)"
+    ],
+    "status": "ERROR",
+    "error": "execution reverted: 0x"
+  },
+  {
+    "selector": "0xd5391393",
+    "matchedNames": [
+      "MINTER_ROLE()"
+    ],
+    "status": "SUCCESS",
+    "output": "0x9f2df0fed2c77648de5860a4cc508cd0818c85b8b8a1ab4ceeef8d981c8956a6"
+  },
+  {
+    "selector": "0xd547741f",
+    "matchedNames": [
+      "revokeRole(bytes32,address)"
+    ],
+    "status": "ERROR",
+    "error": "execution reverted: 0x"
+  },
+  {
+    "selector": "0xdd62ed3e",
+    "matchedNames": [
+      "allowance(address,address)"
+    ],
+    "status": "ERROR",
+    "error": "execution reverted: 0x"
+  },
+  {
+    "selector": "0xf8981789",
+    "matchedNames": [
+      "setCompliance(address)"
+    ],
+    "status": "ERROR",
+    "error": "execution reverted: 0x"
+  },
+  {
+    "selector": "0xa9059cbb",
+    "matchedNames": [
+      "transfer(address,uint256)"
+    ],
+    "status": "ERROR",
+    "error": "execution reverted: 0x"
+  },
+  {
+    "selector": "0xabbb9f4c",
+    "matchedNames": [
+      "CONFIGURER_ROLE()"
+    ],
+    "status": "SUCCESS",
+    "output": "0xf45c97b23e2beeefda80e1ce5cb3e234aa7b6888ad5cbabb75bfd654dd8e102d"
+  },
+  {
+    "selector": "0xb84c8246",
+    "matchedNames": [
+      "setSymbol(string)"
+    ],
+    "status": "ERROR",
+    "error": "execution reverted: 0x"
+  },
+  {
+    "selector": "0xc47f0027",
+    "matchedNames": [
+      "setName(string)"
+    ],
+    "status": "ERROR",
+    "error": "execution reverted: 0x"
+  },
+  {
+    "selector": "0x95d89b41",
+    "matchedNames": [
+      "symbol()"
+    ],
+    "status": "SUCCESS",
+    "output": "0x000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000064e5644416f6e0000000000000000000000000000000000000000000000000000"
+  },
+  {
+    "selector": "0x9dc29fac",
+    "matchedNames": [
+      "burn(address,uint256)"
+    ],
+    "status": "ERROR",
+    "error": "execution reverted: 0x"
+  },
+  {
+    "selector": "0xa217fddf",
+    "matchedNames": [
+      "DEFAULT_ADMIN_ROLE()"
+    ],
+    "status": "SUCCESS",
+    "output": "0x0000000000000000000000000000000000000000000000000000000000000000"
+  },
+  {
+    "selector": "0xa457c2d7",
+    "matchedNames": [
+      "decreaseAllowance(address,uint256)"
+    ],
+    "status": "ERROR",
+    "error": "execution reverted: 0x"
+  },
+  {
+    "selector": "0x79cc6790",
+    "matchedNames": [
+      "burnFrom(address,uint256)"
+    ],
+    "status": "ERROR",
+    "error": "execution reverted: 0x"
+  },
+  {
+    "selector": "0x8f15b414",
+    "matchedNames": [
+      "initialize(string,string,address,address)"
+    ],
+    "status": "ERROR",
+    "error": "execution reverted: 0x"
+  },
+  {
+    "selector": "0x9010d07c",
+    "matchedNames": [
+      "getRoleMember(bytes32,uint256)"
+    ],
+    "status": "ERROR",
+    "error": "execution reverted: 0x"
+  },
+  {
+    "selector": "0x91d14854",
+    "matchedNames": [
+      "hasRole(bytes32,address)"
+    ],
+    "status": "ERROR",
+    "error": "execution reverted: 0x"
+  },
+  {
+    "selector": "0x40c10f19",
+    "matchedNames": [
+      "mint(address,uint256)",
+      "cat642998653(address,uint256)"
+    ],
+    "status": "ERROR",
+    "error": "execution reverted: 0x"
+  },
+  {
+    "selector": "0x42966c68",
+    "matchedNames": [
+      "burn(uint256)",
+      "collate_propagate_storage(bytes16)"
+    ],
+    "status": "ERROR",
+    "error": "execution reverted: 0x"
+  },
+  {
+    "selector": "0x461ad792",
+    "matchedNames": [
+      "tokenPauseManager()"
+    ],
+    "status": "SUCCESS",
+    "output": "0x0000000000000000000000006334924c787ebd21c881740ef6237ef51962638f"
+  },
+  {
+    "selector": "0x6290865d",
+    "matchedNames": [
+      "compliance()"
+    ],
+    "status": "SUCCESS",
+    "output": "0x00000000000000000000000076be569c94c39a2e2492de2f4d1c253f348250d0"
+  },
+  {
+    "selector": "0x70a08231",
+    "matchedNames": [
+      "balanceOf(address)"
+    ],
+    "status": "ERROR",
+    "error": "execution reverted: 0x"
+  },
+  {
+    "selector": "0x2f2ff15d",
+    "matchedNames": [
+      "grantRole(bytes32,address)"
+    ],
+    "status": "ERROR",
+    "error": "execution reverted: 0x"
+  },
+  {
+    "selector": "0x313ce567",
+    "matchedNames": [
+      "decimals()"
+    ],
+    "status": "SUCCESS",
+    "output": "0x0000000000000000000000000000000000000000000000000000000000000012"
+  },
+  {
+    "selector": "0x36568abe",
+    "matchedNames": [
+      "renounceRole(bytes32,address)"
+    ],
+    "status": "ERROR",
+    "error": "execution reverted: 0x"
+  },
+  {
+    "selector": "0x39509351",
+    "matchedNames": [
+      "increaseAllowance(address,uint256)"
+    ],
+    "status": "ERROR",
+    "error": "execution reverted: 0x"
+  },
+  {
+    "selector": "0x23b872dd",
+    "matchedNames": [
+      "transferFrom(address,address,uint256)"
+    ],
+    "status": "ERROR",
+    "error": "execution reverted: 0x"
+  },
+  {
+    "selector": "0x248609c6",
+    "matchedNames": [
+      "setTokenPauseManager(address)"
+    ],
+    "status": "ERROR",
+    "error": "execution reverted: 0x"
+  },
+  {
+    "selector": "0x248a9ca3",
+    "matchedNames": [
+      "getRoleAdmin(bytes32)"
+    ],
+    "status": "ERROR",
+    "error": "execution reverted: 0x"
+  },
+  {
+    "selector": "0x282c51f3",
+    "matchedNames": [
+      "BURNER_ROLE()"
+    ],
+    "status": "SUCCESS",
+    "output": "0x3c11d16cbaffd01df69ce1c404f6340ee057498f5f00246190ea54220576a848"
+  },
+  {
+    "selector": "0x01ffc9a7",
+    "matchedNames": [
+      "supportsInterface(bytes4)"
+    ],
+    "status": "ERROR",
+    "error": "execution reverted: 0x"
+  },
+  {
+    "selector": "0x06fdde03",
+    "matchedNames": [
+      "name()"
+    ],
+    "status": "SUCCESS",
+    "output": "0x000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000174e564944494120284f6e646f20546f6b656e697a656429000000000000000000"
+  },
+  {
+    "selector": "0x095ea7b3",
+    "matchedNames": [
+      "approve(address,uint256)"
+    ],
+    "status": "ERROR",
+    "error": "execution reverted: 0x"
+  },
+  {
+    "selector": "0x18160ddd",
+    "matchedNames": [
+      "totalSupply()"
+    ],
+    "status": "SUCCESS",
+    "output": "0x000000000000000000000000000000000000000000000f3a9a45035704c41e91"
+  }
+]

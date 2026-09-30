@@ -51,10 +51,10 @@ export function TokenValueCalculator({ matrix }: TokenValueCalculatorProps) {
       return "BTech (bStocks) tokenized equities represent 1:1 shares adjusted by an on-chain multiplier on BNB Smart Chain.";
     }
     if (selectedProvider === "ondo") {
-      return "Ondo Global Markets tokens implement an Auto-DRIP mechanism reflecting dividend reinvestment via scaled UI balances.";
+      return "Ondo Global Markets tokens implement an Auto-DRIP mechanism. TickerKin has verified the representation and mechanism, but does not currently have a verified live runtime factor for normalization.";
     }
     if (selectedProvider === "xstocks") {
-      return "Identity & legal structure verified under Swiss DLT / Backed Assets (JE) Limited prospectus. Dynamic rate tracking will be activated when an on-chain BSC Pyth redemption feed is connected.";
+      return "Swiss DLT / Backed Assets (xStocks) tokenized equities represent 1:1 shares adjusted by an on-chain multiplier read directly from the NVDAx contract on BNB Smart Chain.";
     }
     return "Token mechanism and legal structure verified in RWA Lens registry.";
   }, [selectedProvider]);

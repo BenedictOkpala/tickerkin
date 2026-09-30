@@ -1,0 +1,102 @@
+{
+  "name()": {
+    "success": true,
+    "result": "0x000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000174e564944494120284f6e646f20546f6b656e697a656429000000000000000000"
+  },
+  "symbol()": {
+    "success": true,
+    "result": "0x000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000064e5644416f6e0000000000000000000000000000000000000000000000000000"
+  },
+  "decimals()": {
+    "success": true,
+    "result": "0x0000000000000000000000000000000000000000000000000000000000000012"
+  },
+  "totalSupply()": {
+    "success": true,
+    "result": "0x000000000000000000000000000000000000000000000f3a9a45035704c41e91"
+  },
+  "multiplier()": {
+    "success": false,
+    "error": "fetch failed"
+  },
+  "getMultiplier()": {
+    "success": false,
+    "error": "fetch failed"
+  },
+  "scale()": {
+    "success": false,
+    "error": "fetch failed"
+  },
+  "scaleFactor()": {
+    "success": false,
+    "error": "fetch failed"
+  },
+  "getScaleFactor()": {
+    "success": false,
+    "error": "fetch failed"
+  },
+  "rate()": {
+    "success": false,
+    "error": "fetch failed"
+  },
+  "getRate()": {
+    "success": false,
+    "error": "fetch failed"
+  },
+  "redemptionRate()": {
+    "success": false,
+    "error": "fetch failed"
+  },
+  "getRedemptionRate()": {
+    "success": false,
+    "error": "fetch failed"
+  },
+  "conversionRate()": {
+    "success": false,
+    "error": "fetch failed"
+  },
+  "getConversionRate()": {
+    "success": false,
+    "error": "fetch failed"
+  },
+  "oracle()": {
+    "success": false,
+    "error": "fetch failed"
+  },
+  "pyth()": {
+    "success": false,
+    "error": "fetch failed"
+  },
+  "priceFeed()": {
+    "success": false,
+    "error": "fetch failed"
+  },
+  "convertToShares(1e18)": {
+    "success": false,
+    "error": "fetch failed"
+  },
+  "convertToAssets(1e18)": {
+    "success": false,
+    "error": "fetch failed"
+  },
+  "sharesPerToken()": {
+    "success": false,
+    "error": "fetch failed"
+  },
+  "tokensPerShare()": {
+    "success": false,
+    "error": "fetch failed"
+  },
+  "owner()": {
+    "success": false,
+    "error": "fetch failed"
+  },
+  "implementation()": {
+    "success": false,
+    "error": "fetch failed"
+  },
+  "getImplementation()": {
+    "success": false,
+    "error": "fetch failed"
+  }
+}

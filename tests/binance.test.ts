@@ -292,7 +292,7 @@ describe("Binance Web3 RWA Live Data Adapter", () => {
 
       const client = new BinanceRwaClient({ fetchFn: mockFetch as unknown as typeof fetch });
       const adapter = new BinanceRwaAdapter({ client });
-      const engine = new RWALensEngine(VERIFIED_REGISTRY, adapter);
+      const engine = new RWALensEngine(VERIFIED_REGISTRY, adapter, async () => null, async () => null);
 
       const result = await engine.lookupByTickerAsync("NVDA");
       expect(result.success).toBe(true);
@@ -321,7 +321,7 @@ describe("Binance Web3 RWA Live Data Adapter", () => {
 
       const client = new BinanceRwaClient({ fetchFn: mockFetch as unknown as typeof fetch });
       const adapter = new BinanceRwaAdapter({ client });
-      const engine = new RWALensEngine(VERIFIED_REGISTRY, adapter);
+      const engine = new RWALensEngine(VERIFIED_REGISTRY, adapter, async () => null, async () => null);
 
       const contract = "0x02fca66c1d1afb4e2a7884261eb00f63598a7436";
       const result = await engine.lookupByContractAsync(contract);
@@ -337,7 +337,7 @@ describe("Binance Web3 RWA Live Data Adapter", () => {
       const mockFetch = vi.fn().mockRejectedValue(new Error("Network timeout"));
       const client = new BinanceRwaClient({ fetchFn: mockFetch as unknown as typeof fetch });
       const adapter = new BinanceRwaAdapter({ client });
-      const engine = new RWALensEngine(VERIFIED_REGISTRY, adapter, async () => null);
+      const engine = new RWALensEngine(VERIFIED_REGISTRY, adapter, async () => null, async () => null);
 
       const result = await engine.lookupByTickerAsync("NVDA");
       expect(result.success).toBe(true);

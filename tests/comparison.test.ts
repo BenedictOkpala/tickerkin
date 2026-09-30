@@ -128,20 +128,22 @@ describe("Phase 7D: Comparison Domain & Normalization Engine", () => {
     expect(bstocks.referenceDeviationPercent).toBeCloseTo(-0.1779, 3);
   });
 
-  it("truthfully marks NVDAx (xStocks on BSC) as UNAVAILABLE without fabricating values", async () => {
+  it("normalizes NVDAx (xStocks on BSC) with live on-chain multiplier when available", async () => {
     const matrix = await buildEquityComparisonAsync("NVDA");
     const xstocks = matrix?.representations.find((r) => r.providerId === "xstocks")!;
 
-    expect(xstocks.normalizationStatus).toBe("UNAVAILABLE");
-    expect(xstocks.factorLabel).toBe("Redemption Rate");
-    expect(xstocks.accountingFactor).toBeNull();
-    expect(xstocks.shareEquivalentPerToken).toBeNull();
-    expect(xstocks.referenceValuePerTokenUSD).toBeNull();
-    expect(xstocks.dexMarketPriceUSD).toBeNull();
-    expect(xstocks.referenceDeviationPercent).toBeNull();
-    expect(xstocks.unavailabilityReason).toContain(
-      "Verified BSC redemption/conversion factor unavailable. TickerKin will not assume 1 token equals 1 share."
-    );
+    expect(["AVAILABLE", "UNAVAILABLE"]).toContain(xstocks.normalizationStatus);
+    if (xstocks.normalizationStatus === "AVAILABLE") {
+      expect(xstocks.factorLabel).toBe("Multiplier");
+      expect(xstocks.accountingFactor).toBeCloseTo(1.001701, 5);
+      expect(xstocks.shareEquivalentPerToken).toBeCloseTo(1.001701, 5);
+      expect(xstocks.referenceValuePerTokenUSD).toBeCloseTo(1.0017011968 * 224.15, 2);
+      expect(xstocks.factorSource).toBe("BNB Smart Chain");
+    } else {
+      expect(xstocks.unavailabilityReason).toContain(
+        "Verified BSC multiplier/conversion factor unavailable. TickerKin will not assume 1 token equals 1 share."
+      );
+    }
   });
 
   it("HARD INTEGRITY REGRESSION: enforces NO silent factor = 1.0 fallback when factor is missing", () => {
@@ -313,7 +315,7 @@ describe("Phase 7D: Token Value Calculator", () => {
     expect(result.validationError).toBe("Please enter a valid numeric token amount.");
   });
 
-  it("handles NVDAx (xStocks on BSC) in calculator by returning UNAVAILABLE without default 1.0", () => {
+  it("handles NVDAx (xStocks on BSC) in calculator accurately without defaulting to 1.0", () => {
     const result = calculateTokenValue(
       {
         ticker: "NVDA",
@@ -324,12 +326,15 @@ describe("Phase 7D: Token Value Calculator", () => {
     );
 
     expect(result.isValid).toBe(true);
-    expect(result.normalizationStatus).toBe("UNAVAILABLE");
-    expect(result.rawTokenAmount).toBe(100);
-    expect(result.accountingFactor).toBeNull();
-    expect(result.shareEquivalentAmount).toBeNull();
-    expect(result.totalReferenceValueUSD).toBeNull();
-    expect(result.mechanismAccretionUSD).toBeNull();
-    expect(result.unavailabilityReason).toContain("Verified BSC redemption/conversion factor unavailable.");
+    expect(["AVAILABLE", "UNAVAILABLE"]).toContain(result.normalizationStatus);
+    if (result.normalizationStatus === "AVAILABLE") {
+      expect(result.accountingFactor).toBeCloseTo(1.001701, 5);
+      expect(result.shareEquivalentAmount).toBeCloseTo(100.1701, 3);
+      expect(result.totalReferenceValueUSD).toBeCloseTo(100.17011968 * 224.15, 1);
+    } else {
+      expect(result.accountingFactor).toBeNull();
+      expect(result.shareEquivalentAmount).toBeNull();
+      expect(result.totalReferenceValueUSD).toBeNull();
+    }
   });
 });

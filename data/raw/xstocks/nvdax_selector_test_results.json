@@ -1,0 +1,577 @@
+[
+  {
+    "selector": "0x7ecebe00",
+    "matchedNames": [
+      "nonces(address)",
+      "_$_$$_$__$$$$$$$$__$__$$_$$$_$$$(address)",
+      "transfer_attention_tg_invmru_5811b86(uint256,address,address)"
+    ],
+    "status": "ERROR",
+    "error": "execution reverted: 0x"
+  },
+  {
+    "selector": "0x7f120587",
+    "matchedNames": [
+      "DELEGATED_TRANSFER_TYPEHASH()"
+    ],
+    "status": "SUCCESS",
+    "output": "0x4eba51a08f56c21035fcbda11b779f91748d3ae295b24c3e032d1eeff84edc2e"
+  },
+  {
+    "selector": "0x8038cb58",
+    "matchedNames": [
+      "updateMultiplierValue(uint256,uint256,uint256)"
+    ],
+    "status": "ERROR",
+    "error": "execution reverted: 0x"
+  },
+  {
+    "selector": "0x8230ef7c",
+    "matchedNames": [
+      "lastMultiplierNonce()"
+    ],
+    "status": "SUCCESS",
+    "output": "0x0000000000000000000000000000000000000000000000000000000000000005"
+  },
+  {
+    "selector": "0x8da5cb5b",
+    "matchedNames": [
+      "owner()"
+    ],
+    "status": "SUCCESS",
+    "output": "0x00000000000000000000000049754062e35f7591b93cc4f9915965be89643a65"
+  },
+  {
+    "selector": "0x8fcb4e5b",
+    "matchedNames": [
+      "transferShares(address,uint256)"
+    ],
+    "status": "ERROR",
+    "error": "execution reverted: 0x"
+  },
+  {
+    "selector": "0x944b511c",
+    "matchedNames": [
+      "getUnderlyingAmountByShares(uint256)"
+    ],
+    "status": "ERROR",
+    "error": "execution reverted: 0x"
+  },
+  {
+    "selector": "0x944e4469",
+    "matchedNames": [
+      "initialize_v4((uint256,uint256,uint256)[])"
+    ],
+    "status": "ERROR",
+    "error": "execution reverted: 0x"
+  },
+  {
+    "selector": "0x95d89b41",
+    "matchedNames": [
+      "symbol()"
+    ],
+    "status": "SUCCESS",
+    "output": "0x000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000054e56444178000000000000000000000000000000000000000000000000000000"
+  },
+  {
+    "selector": "0x9dc29fac",
+    "matchedNames": [
+      "burn(address,uint256)"
+    ],
+    "status": "ERROR",
+    "error": "execution reverted: 0x"
+  },
+  {
+    "selector": "0x9fd0506d",
+    "matchedNames": [
+      "pauser()"
+    ],
+    "status": "SUCCESS",
+    "output": "0x0000000000000000000000008768cda7a463dae1baa6b2500efb025ebd7ffc50"
+  },
+  {
+    "selector": "0xa15f84da",
+    "matchedNames": [
+      "setDelegateMode(bool)"
+    ],
+    "status": "ERROR",
+    "error": "execution reverted: 0x"
+  },
+  {
+    "selector": "0xa457c2d7",
+    "matchedNames": [
+      "decreaseAllowance(address,uint256)"
+    ],
+    "status": "ERROR",
+    "error": "execution reverted: 0x"
+  },
+  {
+    "selector": "0xa9059cbb",
+    "matchedNames": [
+      "transfer(address,uint256)"
+    ],
+    "status": "ERROR",
+    "error": "execution reverted: 0x"
+  },
+  {
+    "selector": "0xa996d6ce",
+    "matchedNames": [
+      "setBurner(address)"
+    ],
+    "status": "ERROR",
+    "error": "execution reverted: 0x"
+  },
+  {
+    "selector": "0xaea77ac3",
+    "matchedNames": [
+      "delegatedTransfer(address,address,uint256,uint256,uint8,bytes32,bytes32)"
+    ],
+    "status": "ERROR",
+    "error": "execution reverted: 0x"
+  },
+  {
+    "selector": "0xb187bd26",
+    "matchedNames": [
+      "isPaused()"
+    ],
+    "status": "SUCCESS",
+    "output": "0x0000000000000000000000000000000000000000000000000000000000000000"
+  },
+  {
+    "selector": "0xb6ca6e12",
+    "matchedNames": [
+      "setDelegateWhitelist(address,bool)"
+    ],
+    "status": "ERROR",
+    "error": "execution reverted: 0x"
+  },
+  {
+    "selector": "0xbedb86fb",
+    "matchedNames": [
+      "setPause(bool)"
+    ],
+    "status": "ERROR",
+    "error": "execution reverted: 0x"
+  },
+  {
+    "selector": "0xd1786aab",
+    "matchedNames": [
+      "lastMultiplier()"
+    ],
+    "status": "SUCCESS",
+    "output": "0x0000000000000000000000000000000000000000000000000de6c1ee66696350"
+  },
+  {
+    "selector": "0xd2ca2115",
+    "matchedNames": [
+      "periodLength()"
+    ],
+    "status": "SUCCESS",
+    "output": "0x0000000000000000000000000000000000000000000000000000000000093a80"
+  },
+  {
+    "selector": "0xd5025625",
+    "matchedNames": [
+      "terms()"
+    ],
+    "status": "SUCCESS",
+    "output": "0x0000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000002f68747470733a2f2f7777772e6261636b65646173736574732e66692f6c6567616c2d646f63756d656e746174696f6e0000000000000000000000000000000000"
+  },
+  {
+    "selector": "0xd505accf",
+    "matchedNames": [
+      "permit(address,address,uint256,uint256,uint8,bytes32,bytes32)",
+      "$____$$_$$___$$$_$$$$__$$$__$$$$$$$$$(address,address,uint256,uint256,uint8,bytes32,bytes32)",
+      "watch_tg_invmru_168a06(bool,address,bool)"
+    ],
+    "status": "ERROR",
+    "error": "execution reverted: 0x"
+  },
+  {
+    "selector": "0xd9bef6c3",
+    "matchedNames": [
+      "multiplierUpdates(uint256)"
+    ],
+    "status": "ERROR",
+    "error": "execution reverted: 0x"
+  },
+  {
+    "selector": "0xdd62ed3e",
+    "matchedNames": [
+      "allowance(address,address)"
+    ],
+    "status": "ERROR",
+    "error": "execution reverted: 0x"
+  },
+  {
+    "selector": "0xdeeb8bfd",
+    "matchedNames": [
+      "DELEGATED_TRANSFER_SHARES_TYPEHASH()"
+    ],
+    "status": "SUCCESS",
+    "output": "0x9e94967fdaa8d9ec120d5cd909b051117451405dec84a6cd95bb12f2eb37bf75"
+  },
+  {
+    "selector": "0xec571c6a",
+    "matchedNames": [
+      "sanctionsList()"
+    ],
+    "status": "SUCCESS",
+    "output": "0x00000000000000000000000040c57923924b5c5c5455c48d93317139addac8fb"
+  },
+  {
+    "selector": "0xf00c1dff",
+    "matchedNames": [
+      "feePerPeriod()"
+    ],
+    "status": "SUCCESS",
+    "output": "0x0000000000000000000000000000000000000000000000000000000000000000"
+  },
+  {
+    "selector": "0xf2fde38b",
+    "matchedNames": [
+      "transferOwnership(address)",
+      "_SIMONdotBLACK_(int8[],uint256,address,bytes8,int96)"
+    ],
+    "status": "ERROR",
+    "error": "execution reverted: 0x"
+  },
+  {
+    "selector": "0xf5eb42dc",
+    "matchedNames": [
+      "sharesOf(address)"
+    ],
+    "status": "ERROR",
+    "error": "execution reverted: 0x"
+  },
+  {
+    "selector": "0xf5f68898",
+    "matchedNames": [
+      "setMultiplierUpdater(address)"
+    ],
+    "status": "ERROR",
+    "error": "execution reverted: 0x"
+  },
+  {
+    "selector": "0xf7a08958",
+    "matchedNames": [
+      "newMultiplierNonce()"
+    ],
+    "status": "SUCCESS",
+    "output": "0x0000000000000000000000000000000000000000000000000000000000000005"
+  },
+  {
+    "selector": "0xf9e47896",
+    "matchedNames": [
+      "multiplierNonce()"
+    ],
+    "status": "SUCCESS",
+    "output": "0x0000000000000000000000000000000000000000000000000000000000000005"
+  },
+  {
+    "selector": "0xfca3b5aa",
+    "matchedNames": [
+      "setMinter(address)"
+    ],
+    "status": "ERROR",
+    "error": "execution reverted: 0x"
+  },
+  {
+    "selector": "0xff29130c",
+    "matchedNames": [
+      "delegatedTransferShares(address,address,uint256,uint256,uint8,bytes32,bytes32)"
+    ],
+    "status": "ERROR",
+    "error": "execution reverted: 0x"
+  },
+  {
+    "selector": "0xffa1ad74",
+    "matchedNames": [
+      "VERSION()"
+    ],
+    "status": "SUCCESS",
+    "output": "0x00000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000005312e312e30000000000000000000000000000000000000000000000000000000"
+  },
+  {
+    "selector": "0x0194b09b",
+    "matchedNames": [
+      "multiplierUpdater()"
+    ],
+    "status": "SUCCESS",
+    "output": "0x0000000000000000000000005f7a4c11bde4f218f0025ef444c369d838ffa2ad"
+  },
+  {
+    "selector": "0x05602501",
+    "matchedNames": [
+      "initialize_v2(uint256,uint256,uint256)"
+    ],
+    "status": "ERROR",
+    "error": "execution reverted: 0x"
+  },
+  {
+    "selector": "0x06fdde03",
+    "matchedNames": [
+      "name()"
+    ],
+    "status": "SUCCESS",
+    "output": "0x0000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000000d4e5649444941207853746f636b00000000000000000000000000000000000000"
+  },
+  {
+    "selector": "0x07546172",
+    "matchedNames": [
+      "minter()"
+    ],
+    "status": "SUCCESS",
+    "output": "0x0000000000000000000000000a934bc9c64309c9654451f23d8331c2dad34c2a"
+  },
+  {
+    "selector": "0x095ea7b3",
+    "matchedNames": [
+      "approve(address,uint256)"
+    ],
+    "status": "ERROR",
+    "error": "execution reverted: 0x"
+  },
+  {
+    "selector": "0x0a4d8a71",
+    "matchedNames": [
+      "updateMultiplierWithNonce(uint256,uint256,uint256,uint256)"
+    ],
+    "status": "ERROR",
+    "error": "execution reverted: 0x"
+  },
+  {
+    "selector": "0x18160ddd",
+    "matchedNames": [
+      "totalSupply()"
+    ],
+    "status": "SUCCESS",
+    "output": "0x0000000000000000000000000000000000000000000008b91c17b3840c62a6ef"
+  },
+  {
+    "selector": "0x18d8ec3c",
+    "matchedNames": [
+      "initialize_v3()"
+    ],
+    "status": "ERROR",
+    "error": "execution reverted: BackedAutoFeeTokenImplementation v3 already initialized: 0x08c379a0000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000374261636b65644175746f466565546f6b656e496d706c656d656e746174696f6e20763320616c726561647920696e697469616c697a6564000000000000000000"
+  },
+  {
+    "selector": "0x1b3ed722",
+    "matchedNames": [
+      "multiplier()"
+    ],
+    "status": "SUCCESS",
+    "output": "0x0000000000000000000000000000000000000000000000000de6c1ee66696350"
+  },
+  {
+    "selector": "0x1c5633d7",
+    "matchedNames": [
+      "setPeriodLength(uint256)"
+    ],
+    "status": "ERROR",
+    "error": "execution reverted: 0x"
+  },
+  {
+    "selector": "0x23b872dd",
+    "matchedNames": [
+      "transferFrom(address,address,uint256)"
+    ],
+    "status": "ERROR",
+    "error": "execution reverted: 0x"
+  },
+  {
+    "selector": "0x27810b6e",
+    "matchedNames": [
+      "burner()"
+    ],
+    "status": "SUCCESS",
+    "output": "0x0000000000000000000000005f7a4c11bde4f218f0025ef444c369d838ffa2ad"
+  },
+  {
+    "selector": "0x2b63c300",
+    "matchedNames": [
+      "getCurrentMultiplier()"
+    ],
+    "status": "SUCCESS",
+    "output": "0x0000000000000000000000000000000000000000000000000de6c1ee6669635000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000005"
+  },
+  {
+    "selector": "0x2cc5ecd5",
+    "matchedNames": [
+      "delegateWhitelist(address)"
+    ],
+    "status": "ERROR",
+    "error": "execution reverted: 0x"
+  },
+  {
+    "selector": "0x2d88af4a",
+    "matchedNames": [
+      "setPauser(address)"
+    ],
+    "status": "ERROR",
+    "error": "execution reverted: 0x"
+  },
+  {
+    "selector": "0x30adf81f",
+    "matchedNames": [
+      "PERMIT_TYPEHASH()",
+      "transfer_attention_tg_invmru_6c0d2a(uint256,uint256)"
+    ],
+    "status": "SUCCESS",
+    "output": "0x6e71edae12b1b97f4d1f60370fef10105fa2faae0126114a169c64845d6126c9"
+  },
+  {
+    "selector": "0x313ce567",
+    "matchedNames": [
+      "decimals()"
+    ],
+    "status": "SUCCESS",
+    "output": "0x0000000000000000000000000000000000000000000000000000000000000012"
+  },
+  {
+    "selector": "0x3644e515",
+    "matchedNames": [
+      "DOMAIN_SEPARATOR()"
+    ],
+    "status": "SUCCESS",
+    "output": "0x9f99b5bf9a805f35546594039af4e742dc8b38c3e8a2c2a14be0c5c6986d3f5e"
+  },
+  {
+    "selector": "0x39509351",
+    "matchedNames": [
+      "increaseAllowance(address,uint256)"
+    ],
+    "status": "ERROR",
+    "error": "execution reverted: 0x"
+  },
+  {
+    "selector": "0x3dfa34cd",
+    "matchedNames": [
+      "lastTimeFeeApplied()"
+    ],
+    "status": "SUCCESS",
+    "output": "0x000000000000000000000000000000000000000000000000000000006ab85c80"
+  },
+  {
+    "selector": "0x40c10f19",
+    "matchedNames": [
+      "mint(address,uint256)",
+      "cat642998653(address,uint256)"
+    ],
+    "status": "ERROR",
+    "error": "execution reverted: 0x"
+  },
+  {
+    "selector": "0x430c777c",
+    "matchedNames": [
+      "setLastTimeFeeApplied(uint256)"
+    ],
+    "status": "ERROR",
+    "error": "execution reverted: 0x"
+  },
+  {
+    "selector": "0x44acb51b",
+    "matchedNames": [
+      "getSharesByUnderlyingAmount(uint256)"
+    ],
+    "status": "ERROR",
+    "error": "execution reverted: 0x"
+  },
+  {
+    "selector": "0x49dc5e8d",
+    "matchedNames": [
+      "setSanctionsList(address)"
+    ],
+    "status": "ERROR",
+    "error": "execution reverted: 0x"
+  },
+  {
+    "selector": "0x4cd88b76",
+    "matchedNames": [
+      "initialize(string,string)"
+    ],
+    "status": "ERROR",
+    "error": "execution reverted: 0x"
+  },
+  {
+    "selector": "0x5416d876",
+    "matchedNames": [
+      "newMultiplierActivationTime()"
+    ],
+    "status": "SUCCESS",
+    "output": "0x0000000000000000000000000000000000000000000000000000000000000000"
+  },
+  {
+    "selector": "0x5666795d",
+    "matchedNames": [
+      "multiplierUpdatesLength()"
+    ],
+    "status": "SUCCESS",
+    "output": "0x0000000000000000000000000000000000000000000000000000000000000002"
+  },
+  {
+    "selector": "0x5add8efc",
+    "matchedNames": [
+      "updateFeePerPeriod(uint256)"
+    ],
+    "status": "ERROR",
+    "error": "execution reverted: 0x"
+  },
+  {
+    "selector": "0x5c575ef3",
+    "matchedNames": [
+      "delegateMode()"
+    ],
+    "status": "SUCCESS",
+    "output": "0x0000000000000000000000000000000000000000000000000000000000000000"
+  },
+  {
+    "selector": "0x60638067",
+    "matchedNames": [
+      "newMultiplier()"
+    ],
+    "status": "SUCCESS",
+    "output": "0x0000000000000000000000000000000000000000000000000de6c1ee66696350"
+  },
+  {
+    "selector": "0x6d780459",
+    "matchedNames": [
+      "transferSharesFrom(address,address,uint256)"
+    ],
+    "status": "ERROR",
+    "error": "execution reverted: 0x"
+  },
+  {
+    "selector": "0x70a08231",
+    "matchedNames": [
+      "balanceOf(address)"
+    ],
+    "status": "ERROR",
+    "error": "execution reverted: 0x"
+  },
+  {
+    "selector": "0x715018a6",
+    "matchedNames": [
+      "renounceOwnership()"
+    ],
+    "status": "ERROR",
+    "error": "execution reverted: Ownable: caller is not the owner: 0x08c379a0000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000204f776e61626c653a2063616c6c6572206973206e6f7420746865206f776e6572"
+  },
+  {
+    "selector": "0x7544e6b3",
+    "matchedNames": [
+      "initialize(string,string,uint256,uint256,uint256)"
+    ],
+    "status": "ERROR",
+    "error": "execution reverted: 0x"
+  },
+  {
+    "selector": "0x78f86afc",
+    "matchedNames": [
+      "setTerms(string)"
+    ],
+    "status": "ERROR",
+    "error": "execution reverted: 0x"
+  }
+]

@@ -157,14 +157,22 @@ export function normalizeRepresentationComparison(
       unavailabilityReason = "Live multiplier factor unreachable (Network timeout). Showing verified structural data.";
     }
   } else if (representation.providerId === "xstocks") {
-    factorLabel = "Redemption Rate";
-    // Backed / xStocks is indexed on Solana (CT_501) in Binance Web3 RWA API.
-    // BSC contract 0xc845... has no live rate in Binance dataset.
-    // Must remain UNAVAILABLE without falling back to 1.0 or borrowing Solana data.
-    normalizationStatus = "UNAVAILABLE";
-    accountingFactor = null;
-    unavailabilityReason =
-      "Verified BSC redemption/conversion factor unavailable. TickerKin will not assume 1 token equals 1 share.";
+    factorLabel = "Multiplier";
+    if (representation.liveEnrichment?.rawMultiplier) {
+      const parsed = Number.parseFloat(representation.liveEnrichment.rawMultiplier);
+      if (!Number.isNaN(parsed) && Number.isFinite(parsed) && parsed > 0) {
+        accountingFactor = parsed;
+        normalizationStatus = "AVAILABLE";
+        factorSource =
+          representation.liveEnrichment.matchBasis === "DIRECT_ON_CHAIN_BSC_ETH_CALL"
+            ? "BNB Smart Chain"
+            : "Binance Web3 RWA API (Type 2)";
+      }
+    }
+    if (normalizationStatus === "UNAVAILABLE") {
+      unavailabilityReason =
+        "Verified BSC multiplier/conversion factor unavailable. TickerKin will not assume 1 token equals 1 share.";
+    }
   }
 
   // Calculate Share-Equivalent and Reference Value (only when factor is available)

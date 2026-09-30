@@ -299,7 +299,7 @@ describe("NVDAB Live Normalization & Calculator Math", () => {
     expect(nvdax?.normalizationStatus).toBe("UNAVAILABLE");
     expect(nvdax?.accountingFactor).toBeNull();
     expect(nvdax?.shareEquivalentPerToken).toBeNull();
-    expect(nvdax?.unavailabilityReason).toContain("Verified BSC redemption/conversion factor unavailable");
+    expect(nvdax?.unavailabilityReason).toContain("Verified BSC multiplier/conversion factor unavailable");
 
     const calcNvdax = calculateTokenValue(
       {

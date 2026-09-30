@@ -616,3 +616,26 @@
 
 
 
+
+---
+
+## Entry 22: Phase 8B Complete Calculator Factor Investigation (NVDAon & NVDAx)
+**Date:** 2026-09-30  
+**Subject:** EVM bytecode disassembly of NVDAx implementation (`BackedAutoFeeTokenImplementation`) and NVDAon Beacon implementation (`OndoToken`), discovery of direct BSC on-chain multiplier on NVDAx, and validation of Pyth Hermes access constraints.
+
+### 1. Developer Experience & Friction Encountered
+- **EVM Dispatcher Disassembly vs Proxy ABI**:
+  - Relying solely on proxy ABIs in previous phases had masked the presence of `multiplier()` on `0xc845b2894dbddd03858fd2d643b4ef725fe0849d` (NVDAx on BSC).
+  - By pulling the raw implementation bytecode from ERC-1967 implementation slot `0x3608...` (`0x65c40d624af3b18c109fbf87b7deff34cdc5f19b`) and extracting the 4-byte EVM dispatcher table, we discovered that Backed's `BackedAutoFeeTokenImplementation` v1.1.0 natively implements `multiplier()` (`0x1b3ed722`) and `lastMultiplier()` (`0xd1786aab`), returning `1.001701196801074` directly on BNB Smart Chain.
+- **Beacon Proxy Resolution for Ondo (`NVDAon`)**:
+  - Resolved Beacon proxy slot `0xa3f0...` on `0xa9ee...` to Beacon contract `0xc046b05a920e4b412815934dd8e58904dda73315`, and retrieved implementation `0x578f397ca4661d1db4d9a65065d6b284a1a850fd`.
+  - Disassembling all 34 function selectors proved that `OndoToken` is a standard fixed-unit BEP-20 with AccessControl and Compliance, confirming that Auto-DRIP is managed strictly at the off-chain platform indexer layer.
+- **Pyth Hermes Endpoint Authentication**:
+  - `https://hermes.pyth.network/v2/updates/price/latest` returned `401 Unauthorized` for raw HTTP access without API credentials. Because direct on-chain BSC RPC `eth_call` to NVDAx is zero-cost and authoritative, external oracle dependencies are unnecessary for NVDAx normalization on BSC.
+
+### 2. Quality Gates & Artifacts
+- **Investigation Report**: Published `docs/calculator-remaining-factors.md`.
+- **Raw Evidence Artifacts**: Archived in `data/raw/ondo/`, `data/raw/xstocks/`, and `data/raw/pyth/`.
+- **Unit & Integration Tests**: 132/132 tests passing (`npm test`).
+- **TypeScript & Lint**: 0 errors (`tsc --noEmit`, `next lint`).
+- **Production Build**: Clean dynamic Next.js compilation (`next build`).
