@@ -105,7 +105,7 @@ export function Sidebar({ activeTicker = "NVDA", onCloseMobile }: SidebarProps) 
             onClick={onCloseMobile}
             className={`sidebar-nav-link ${isExploreOverview ? "active" : ""}`}
           >
-            <span>Overview</span>
+            <span>Home</span>
           </Link>
 
           <Link

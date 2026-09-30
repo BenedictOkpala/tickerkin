@@ -9,11 +9,13 @@ describe("Phase 8C.1: Sidebar Navigation Fix Tests", () => {
 
     // EXPLORE section
     expect(content).toContain('href="/"');
+    expect(content).toContain('<span>Home</span>');
     expect(content).toContain('href="/equities"');
     expect(content).toContain('href="/providers"');
 
     // INTELLIGENCE section (with Overview)
     expect(content).toContain("href={basePath}");
+    expect(content).toContain('<span>Overview</span>');
     expect(content).toContain("href={`${basePath}/kin`}");
     expect(content).toContain("href={`${basePath}/compare`}");
     expect(content).toContain("href={`${basePath}/evidence`}");
