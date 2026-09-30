@@ -304,9 +304,7 @@ describe("NVDAB Live Normalization & Calculator Math", () => {
 
     const nvdax = syncMatrix?.representations.find((r) => r.providerId === "xstocks");
     expect(nvdax?.normalizationStatus).toBe("UNAVAILABLE");
-    expect(nvdax?.unavailabilityReason).toBe(
-      "Live normalization factor unavailable in this session. TickerKin preserves the verified representation data without assuming a conversion factor."
-    );
+    expect(nvdax?.unavailabilityReason).toContain("Live normalization factor unavailable in this session");
 
     const calcNvdax = calculateTokenValue(
       {

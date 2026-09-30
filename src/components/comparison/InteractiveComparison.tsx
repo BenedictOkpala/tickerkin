@@ -157,9 +157,7 @@ export function InteractiveComparison({ matrix: initialMatrix }: InteractiveComp
                 letterSpacing: "-0.01em",
               }}
             >
-              {typeof underlying.referencePriceUSD === "number" && Number.isFinite(underlying.referencePriceUSD)
-                ? `$${underlying.referencePriceUSD.toFixed(2)} USD`
-                : "—"}
+              ${underlying.referencePriceUSD?.toFixed(2)} USD
             </div>
           </div>
 
@@ -288,9 +286,7 @@ export function InteractiveComparison({ matrix: initialMatrix }: InteractiveComp
                   >
                     <span style={{ color: "var(--text-secondary)" }}>{rep.factorLabel}</span>
                     <span style={{ fontWeight: 700, fontFamily: "var(--font-mono)", color: "var(--accent-primary)" }}>
-                      {typeof rep.accountingFactor === "number" && Number.isFinite(rep.accountingFactor)
-                        ? `${rep.accountingFactor.toFixed(6)}×`
-                        : "—"}
+                      {rep.accountingFactor?.toFixed(6)}×
                     </span>
                   </div>
 
@@ -306,9 +302,7 @@ export function InteractiveComparison({ matrix: initialMatrix }: InteractiveComp
                   >
                     <span style={{ color: "var(--text-secondary)" }}>Share-Equivalent / Token</span>
                     <span style={{ fontWeight: 700, fontFamily: "var(--font-mono)", color: "var(--text-primary)" }}>
-                      {typeof rep.shareEquivalentPerToken === "number" && Number.isFinite(rep.shareEquivalentPerToken)
-                        ? `${rep.shareEquivalentPerToken.toFixed(4)} shares`
-                        : "—"}
+                      {rep.shareEquivalentPerToken?.toFixed(4)} shares
                     </span>
                   </div>
 
@@ -324,9 +318,7 @@ export function InteractiveComparison({ matrix: initialMatrix }: InteractiveComp
                   >
                     <span style={{ color: "var(--text-secondary)" }}>Reference Value / Token</span>
                     <span style={{ fontWeight: 800, fontFamily: "var(--font-mono)", color: "var(--text-primary)" }}>
-                      {typeof rep.referenceValuePerTokenUSD === "number" && Number.isFinite(rep.referenceValuePerTokenUSD)
-                        ? `$${rep.referenceValuePerTokenUSD.toFixed(2)} USD`
-                        : "—"}
+                      ${rep.referenceValuePerTokenUSD?.toFixed(2)} USD
                     </span>
                   </div>
 

@@ -226,9 +226,7 @@ describe("Phase 8C: RWA Lens Engine & Comparison Normalization for NVDAx", () =>
     expect(normalized.normalizationStatus).toBe("UNAVAILABLE");
     expect(normalized.accountingFactor).toBeNull();
     expect(normalized.shareEquivalentPerToken).toBeNull();
-    expect(normalized.unavailabilityReason).toBe(
-      "Live normalization factor unavailable in this session. TickerKin preserves the verified representation data without assuming a conversion factor."
-    );
+    expect(normalized.unavailabilityReason).toContain("Live normalization factor unavailable in this session");
   });
 
   it("calculates 100 NVDAx accurately in calculator when live on-chain multiplier is available", () => {

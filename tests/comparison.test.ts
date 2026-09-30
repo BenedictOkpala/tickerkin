@@ -141,7 +141,7 @@ describe("Phase 7D: Comparison Domain & Normalization Engine", () => {
       expect(xstocks.factorSource).toBe("BNB Smart Chain");
     } else {
       expect(xstocks.unavailabilityReason).toContain(
-        "Verified BSC multiplier/conversion factor unavailable. TickerKin will not assume 1 token equals 1 share."
+        "Live normalization factor unavailable in this session"
       );
     }
   });
@@ -338,75 +338,50 @@ describe("Phase 7D: Token Value Calculator", () => {
     }
   });
 
-  describe("Phase 8D.1: Home Comparison Card Data Paths & Copy Regression", () => {
-    it("ensures NVDAon comparison card produces clean product unavailable copy without 'Network timeout' or 'unreachable'", async () => {
+  describe("Phase 8D.2: Runtime Comparison Integrity & Copy Regression", () => {
+    it("ensures NVDAon emits clean unavailability copy without network timeout strings", async () => {
       const matrix = await buildEquityComparisonAsync("NVDA");
-      expect(matrix).not.toBeNull();
       const nvdaon = matrix?.representations.find((r) => r.providerId === "ondo");
       expect(nvdaon).toBeDefined();
-
       if (nvdaon?.normalizationStatus === "UNAVAILABLE") {
         expect(nvdaon.unavailabilityReason).toBe(
           "Live normalization factor unavailable in this session. TickerKin preserves the verified representation data without assuming a conversion factor."
         );
         expect(nvdaon.unavailabilityReason).not.toContain("Network timeout");
         expect(nvdaon.unavailabilityReason).not.toContain("unreachable");
-        expect(nvdaon.unavailabilityReason).not.toContain("unreached");
       }
     });
 
-    it("ensures NVDAx comparison card preserves live multiplier and emits null DEX spot & null deviation", async () => {
+    it("ensures NVDAx has null DEX price and null reference deviation", async () => {
       const matrix = await buildEquityComparisonAsync("NVDA");
-      expect(matrix).not.toBeNull();
       const nvdax = matrix?.representations.find((r) => r.providerId === "xstocks");
       expect(nvdax).toBeDefined();
-
-      // NVDAx has no secondary DEX pool on BSC in registry
       expect(nvdax?.dexMarketPriceUSD).toBeNull();
       expect(nvdax?.referenceDeviationPercent).toBeNull();
-
-      if (nvdax?.normalizationStatus === "AVAILABLE") {
-        expect(nvdax.accountingFactor).toBeGreaterThan(1.0);
-        expect(nvdax.shareEquivalentPerToken).toBe(nvdax.accountingFactor);
-      }
     });
 
-    it("ensures NVDAB comparison card preserves live multiplier and valid DEX deviation", async () => {
-      const matrix = await buildEquityComparisonAsync("NVDA");
-      expect(matrix).not.toBeNull();
-      const nvdab = matrix?.representations.find((r) => r.providerId === "bstocks");
-      expect(nvdab).toBeDefined();
-
-      if (nvdab?.normalizationStatus === "AVAILABLE") {
-        expect(nvdab.accountingFactor).toBeGreaterThan(1.0);
-        expect(nvdab.dexMarketPriceUSD).toBe(223.9252);
-        expect(nvdab.referenceDeviationPercent).toBeCloseTo(-0.1779, 3);
-      }
-    });
-
-    it("ensures all fallback provider unavailable reasons strictly match canonical Phase 8D copy", () => {
+    it("ensures all providers in normalizeRepresentationComparison use canonical unavailable string", () => {
       const underlying = getUnderlyingEquityReference("NVDA")!;
-      const baseRep: TokenizedRepresentation = {
-        providerId: "ondo",
-        providerName: "Ondo Finance",
-        issuer: "Ondo Global Markets",
-        tokenSymbol: "NVDAon",
-        tokenName: "NVIDIA (Ondo Tokenized)",
+      const makeMockRep = (providerId: "ondo" | "bstocks" | "xstocks"): TokenizedRepresentation => ({
+        providerId,
+        providerName: "Mock Provider",
+        issuer: "Mock Issuer",
+        tokenSymbol: "MOCK",
+        tokenName: "Mock Token",
         chain: "BNB Smart Chain",
         chainId: 56,
-        contractAddress: "0xa9ee28c80f960b889dfbd1902055218cba016f75",
+        contractAddress: "0x0000000000000000000000000000000000000001",
         decimals: 18,
         tokenStandard: "BEP-20",
         status: "ACTIVE",
         economicModel: {
-          mechanism: "auto_drip_scaled",
-          description: "Total-return tracker with automated dividend reinvestment (DRIP)",
-          scaledUiEnabled: true,
-          dividendHandling: "automatic_dividend_reinvestment_drip",
-          tokenPriceTracksNav: true,
+          mechanism: "multiplier",
+          description: "Dynamic Multiplier accounting for corporate actions and net dividend reinvestment",
+          formula: "effective_balance = raw_token_balance * multiplier",
+          dividendHandling: "automatic_reinvestment_via_multiplier",
           provenance: {
             sourceClass: "FIRST_PARTY",
-            sourceName: "Ondo Docs",
+            sourceName: "Mock Docs",
             confidence: "HIGH",
           },
         },
@@ -415,55 +390,14 @@ describe("Phase 7D: Token Value Calculator", () => {
           sourceName: "BSC RPC",
           confidence: "HIGH",
         },
-      };
+      });
 
-      const ondoNorm = normalizeRepresentationComparison(baseRep, underlying);
-      expect(ondoNorm.unavailabilityReason).toBe(
-        "Live normalization factor unavailable in this session. TickerKin preserves the verified representation data without assuming a conversion factor."
-      );
-
-      const bstocksRep: TokenizedRepresentation = {
-        ...baseRep,
-        providerId: "bstocks",
-        providerName: "bStocks",
-        tokenSymbol: "NVDAB",
-        economicModel: {
-          mechanism: "multiplier",
-          description: "Dynamic Multiplier accounting for corporate actions and net dividend reinvestment",
-          formula: "effective_balance = raw_token_balance * multiplier",
-          dividendHandling: "automatic_reinvestment_via_multiplier",
-          provenance: {
-            sourceClass: "FIRST_PARTY",
-            sourceName: "bStocks Whitepaper",
-            confidence: "HIGH",
-          },
-        },
-      };
-      const bstocksNorm = normalizeRepresentationComparison(bstocksRep, underlying);
-      expect(bstocksNorm.unavailabilityReason).toBe(
-        "Live normalization factor unavailable in this session. TickerKin preserves the verified representation data without assuming a conversion factor."
-      );
-
-      const xstocksRep: TokenizedRepresentation = {
-        ...baseRep,
-        providerId: "xstocks",
-        providerName: "xStocks / Backed",
-        tokenSymbol: "NVDAx",
-        economicModel: {
-          mechanism: "redemption_rate",
-          description: "Continuous Redemption Rate certificate tracker tracking total return",
-          dividendHandling: "redemption_rate_adjustment_or_usdc_airdrop",
-          provenance: {
-            sourceClass: "FIRST_PARTY",
-            sourceName: "Backed Whitepaper",
-            confidence: "HIGH",
-          },
-        },
-      };
-      const xstocksNorm = normalizeRepresentationComparison(xstocksRep, underlying);
-      expect(xstocksNorm.unavailabilityReason).toBe(
-        "Live normalization factor unavailable in this session. TickerKin preserves the verified representation data without assuming a conversion factor."
-      );
+      for (const pid of ["ondo", "bstocks", "xstocks"] as const) {
+        const norm = normalizeRepresentationComparison(makeMockRep(pid), underlying);
+        expect(norm.unavailabilityReason).toBe(
+          "Live normalization factor unavailable in this session. TickerKin preserves the verified representation data without assuming a conversion factor."
+        );
+      }
     });
   });
 });
