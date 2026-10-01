@@ -30,10 +30,10 @@ export function UnderlyingNode({ equity, representationCount }: UnderlyingNodePr
           display: "flex",
           alignItems: "center",
           gap: "0.4rem",
-          fontSize: "0.75rem",
-          fontWeight: 600,
-          color: "var(--text-muted)",
-          letterSpacing: "0.02em",
+          fontSize: "0.74rem",
+          fontWeight: 700,
+          color: "var(--accent-primary)",
+          letterSpacing: "0.05em",
           textTransform: "uppercase",
           marginBottom: "0.35rem",
         }}
@@ -50,12 +50,12 @@ export function UnderlyingNode({ equity, representationCount }: UnderlyingNodePr
       {/* Main Stock Company Name */}
       <h2
         style={{
-          fontSize: "1.55rem",
-          fontWeight: 700,
-          letterSpacing: "-0.025em",
+          fontSize: "1.85rem",
+          fontWeight: 800,
+          letterSpacing: "-0.03em",
           color: "var(--text-primary)",
-          marginBottom: "0.4rem",
-          lineHeight: 1.25,
+          marginBottom: "0.45rem",
+          lineHeight: 1.2,
         }}
       >
         {equity.name}

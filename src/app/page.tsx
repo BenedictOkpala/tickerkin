@@ -24,43 +24,7 @@ export default async function OverviewPage() {
           gap: "2.5rem",
         }}
       >
-        {/* 1. Hero Header */}
-        <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
-          <div
-            style={{
-              fontSize: "0.78rem",
-              fontWeight: 700,
-              color: "var(--accent-primary)",
-              letterSpacing: "0.04em",
-              textTransform: "uppercase",
-            }}
-          >
-            BNB Smart Chain RWA Intelligence
-          </div>
-          <h1
-            style={{
-              fontSize: "2.2rem",
-              fontWeight: 800,
-              letterSpacing: "-0.03em",
-              color: "var(--text-primary)",
-              lineHeight: 1.15,
-            }}
-          >
-            Tokenized equity intelligence
-          </h1>
-          <p
-            style={{
-              fontSize: "1.05rem",
-              color: "var(--text-secondary)",
-              maxWidth: "760px",
-              lineHeight: 1.5,
-            }}
-          >
-            Trace an equity across its verified tokenized representations and understand how they differ in structure, economic model, and verification.
-          </p>
-        </div>
-
-        {/* 2. Primary Interactive Showcase: Normalized Comparison & Value Calculator */}
+        {/* 1. Primary Interactive Showcase: First Viewport Hero + Kin Motif + Comparison Matrix + Calculator */}
         {nvdaComparison && (
           <InteractiveComparison matrix={nvdaComparison} />
         )}

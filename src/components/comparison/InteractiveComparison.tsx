@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import Link from "next/link";
 import type { EquityComparisonMatrix, NormalizedRepresentationComparison } from "@/types/comparison";
 import type { TokenizedRepresentation } from "@/types/token";
 import { lookupByContract } from "@/lens";
@@ -64,413 +65,392 @@ export function InteractiveComparison({ matrix: initialMatrix }: InteractiveComp
   };
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "1.75rem", width: "100%" }}>
-      {/* 1. Comparison Section Header */}
-      <div style={{ display: "flex", flexDirection: "column", gap: "0.35rem" }}>
-        <div
-          style={{
-            fontSize: "0.75rem",
-            fontWeight: 700,
-            color: "var(--accent-primary)",
-            letterSpacing: "0.04em",
-            textTransform: "uppercase",
-          }}
-        >
-          Cross-Representation Normalization
-        </div>
-        <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", flexWrap: "wrap", gap: "0.5rem" }}>
-          <h2
-            style={{
-              fontSize: "1.65rem",
-              fontWeight: 800,
-              color: "var(--text-primary)",
-              letterSpacing: "-0.02em",
-            }}
-          >
-            Compare Tokenized {underlying.ticker}
-          </h2>
-          <span style={{ fontSize: "0.84rem", color: "var(--text-secondary)", fontWeight: 500 }}>
-            {underlying.name} · {underlying.exchange} · BNB Smart Chain
-          </span>
-        </div>
-        <p style={{ fontSize: "0.88rem", color: "var(--text-secondary)", maxWidth: "800px", lineHeight: 1.45 }}>
-          Trace how NVIDIA is represented across distinct tokenization protocols on BNB Smart Chain and normalize their disparate economic mechanisms.
-        </p>
-      </div>
-
-      {/* 2. Underlying Benchmark Reference Card */}
-      <div
-        style={{
-          backgroundColor: "var(--bg-card)",
-          border: "1px solid var(--border-card)",
-          borderRadius: "var(--radius-lg)",
-          padding: "1.25rem 1.5rem",
-          boxShadow: "var(--shadow-card)",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          flexWrap: "wrap",
-          gap: "1rem",
-        }}
-      >
-        <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
-          <div
-            style={{
-              width: "44px",
-              height: "44px",
-              borderRadius: "var(--radius-md)",
-              backgroundColor: "var(--accent-primary-soft)",
-              border: "1px solid var(--accent-primary-border)",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontWeight: 800,
-              color: "var(--accent-primary)",
-              fontSize: "1rem",
-            }}
-          >
-            {underlying.ticker}
+    <div style={{ display: "flex", flexDirection: "column", gap: "2.5rem", width: "100%" }}>
+      {/* 1. FIRST VIEWPORT: HERO & FINANCIAL BENCHMARK QUOTE MODULE */}
+      <section className="tk-hero-container">
+        {/* Left / Primary Editorial Hero */}
+        <div style={{ display: "flex", flexDirection: "column" }}>
+          <div className="tk-kicker">
+            Tokenized Equity Intelligence
           </div>
-          <div>
-            <div style={{ fontSize: "0.76rem", fontWeight: 700, color: "var(--text-muted)", textTransform: "uppercase" }}>
-              Underlying Equity Benchmark
-            </div>
-            <div style={{ fontSize: "1.1rem", fontWeight: 800, color: "var(--text-primary)" }}>
-              {underlying.name} ({underlying.ticker})
-            </div>
-            <div style={{ fontSize: "0.75rem", color: "var(--text-secondary)", marginTop: "0.1rem" }}>
-              Primary Exchange: <strong>{underlying.exchange}</strong> · Currency: <strong>{underlying.quoteCurrency}</strong>
-            </div>
+          <h1 className="tk-hero-headline">
+            Trace an equity<br />across its tokenized kin.
+          </h1>
+          <p className="tk-hero-subtext">
+            Resolve one equity into its verified tokenized representations across BNB Smart Chain.
+          </p>
+          <div className="tk-hero-actions">
+            <a href="#comparison-matrix" className="tk-btn-primary">
+              Explore {underlying.ticker}
+            </a>
+            <Link href="/developers/api" className="tk-btn-secondary">
+              RWA Lens API →
+            </Link>
           </div>
         </div>
 
-        <div style={{ display: "flex", alignItems: "center", gap: "1.5rem" }}>
-          <div style={{ textAlign: "right" }}>
-            <div style={{ fontSize: "0.74rem", fontWeight: 600, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.03em" }}>
+        {/* Right / Data Area: Benchmark Quote Module */}
+        <div className="tk-quote-module">
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "0.5rem" }}>
+            <span className="tk-metric-label">Underlying Equity Benchmark</span>
+            <span
+              style={{
+                fontSize: "0.68rem",
+                fontWeight: 700,
+                color: "#92400e",
+                backgroundColor: "#fef3c7",
+                border: "1px solid #fde68a",
+                padding: "0.2rem 0.5rem",
+                borderRadius: "var(--radius-xs)",
+              }}
+            >
+              MARKET CLOSED · US Market Session
+            </span>
+          </div>
+
+          <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", flexWrap: "wrap", gap: "0.5rem" }}>
+            <div>
+              <h2 style={{ fontSize: "1.35rem", fontWeight: 800, color: "var(--text-primary)", letterSpacing: "-0.02em" }}>
+                {underlying.name}
+              </h2>
+              <div style={{ fontSize: "0.78rem", color: "var(--text-muted)", marginTop: "0.1rem" }}>
+                Primary Exchange: <strong style={{ color: "var(--text-primary)" }}>{underlying.exchange}</strong> · Currency: <strong style={{ color: "var(--text-primary)" }}>{underlying.quoteCurrency}</strong>
+              </div>
+            </div>
+            <span
+              style={{
+                fontSize: "0.88rem",
+                fontWeight: 800,
+                color: "var(--accent-primary)",
+                backgroundColor: "var(--accent-primary-soft)",
+                border: "1px solid var(--accent-primary-border)",
+                padding: "0.2rem 0.55rem",
+                borderRadius: "var(--radius-xs)",
+              }}
+            >
+              {underlying.ticker}
+            </span>
+          </div>
+
+          <div style={{ borderTop: "1px solid var(--border-subtle)", paddingTop: "0.75rem" }}>
+            <div style={{ fontSize: "0.72rem", color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.03em" }}>
               Reference Price (Pyth Oracle Snapshot)
             </div>
             <div
               style={{
-                fontSize: "1.5rem",
+                fontSize: "2.1rem",
                 fontWeight: 800,
                 color: "var(--text-primary)",
                 fontFamily: "var(--font-mono)",
                 fontVariantNumeric: "tabular-nums",
-                letterSpacing: "-0.01em",
+                letterSpacing: "-0.02em",
+                marginTop: "0.15rem",
               }}
             >
               ${underlying.referencePriceUSD?.toFixed(2)} USD
             </div>
           </div>
 
-          <div
-            style={{
-              fontSize: "0.72rem",
-              fontWeight: 700,
-              color: "#92400e",
-              backgroundColor: "#fef3c7",
-              border: "1px solid #fde68a",
-              padding: "0.35rem 0.65rem",
-              borderRadius: "var(--radius-xs)",
-              textAlign: "center",
-            }}
-          >
-            <div>MARKET CLOSED</div>
-            <div style={{ fontSize: "0.68rem", fontWeight: 500, opacity: 0.85, marginTop: "0.1rem" }}>
-              US Market Session
-            </div>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", fontSize: "0.74rem", color: "var(--text-muted)", borderTop: "1px solid var(--border-subtle)", paddingTop: "0.5rem" }}>
+            <span>BNB Smart Chain</span>
+            <span style={{ fontWeight: 600, color: "var(--accent-primary)" }}>
+              {representations.length} Verified Representations
+            </span>
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* 3. Three Representation Comparison Cards */}
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
-          gap: "1.25rem",
-        }}
-      >
-        {representations.map((rep) => {
-          const isAvailable = rep.normalizationStatus === "AVAILABLE";
+      {/* 2. SIGNATURE "KIN" VISUAL LINEAGE MOTIF */}
+      <section className="tk-kin-motif-container">
+        {/* Root Equity Anchor */}
+        <div className="tk-kin-motif-root">
+          <span style={{ width: "8px", height: "8px", borderRadius: "50%", backgroundColor: "var(--accent-primary)" }} />
+          <strong style={{ fontSize: "0.88rem", color: "var(--text-primary)" }}>
+            {underlying.name} ({underlying.ticker})
+          </strong>
+          <span style={{ fontSize: "0.78rem", color: "var(--text-muted)" }}>
+            ${underlying.referencePriceUSD?.toFixed(2)} USD
+          </span>
+        </div>
 
-          return (
-            <div
-              key={rep.contractAddress}
-              style={{
-                backgroundColor: "var(--bg-card)",
-                border: "1px solid var(--border-card)",
-                borderRadius: "var(--radius-lg)",
-                padding: "1.4rem",
-                boxShadow: "var(--shadow-card)",
-                display: "flex",
-                flexDirection: "column",
-                gap: "1rem",
-              }}
-            >
-              {/* Card Header */}
-              <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between" }}>
-                <div>
-                  <div style={{ display: "flex", alignItems: "center", gap: "0.45rem" }}>
-                    <span
-                      style={{
-                        fontSize: "1.3rem",
-                        fontWeight: 800,
-                        color: "var(--text-primary)",
-                        letterSpacing: "-0.02em",
-                      }}
-                    >
-                      {rep.tokenSymbol}
-                    </span>
-                    <span
-                      style={{
-                        fontSize: "0.72rem",
-                        fontWeight: 600,
-                        color: "var(--accent-primary)",
-                        backgroundColor: "var(--accent-primary-soft)",
-                        padding: "0.15rem 0.45rem",
-                        borderRadius: "var(--radius-xs)",
-                        border: "1px solid var(--accent-primary-border)",
-                      }}
-                    >
-                      {rep.providerName}
-                    </span>
-                  </div>
-                  <div style={{ fontSize: "0.78rem", color: "var(--text-muted)", marginTop: "0.15rem" }}>
-                    Issuer: {rep.issuer}
-                  </div>
+        {/* Thin TickerKin Blue SVG Lineage Tree */}
+        <svg className="tk-kin-motif-tree-svg" viewBox="0 0 900 40" preserveAspectRatio="none">
+          {/* Origin Point */}
+          <circle cx="450" cy="0" r="3.5" fill="var(--accent-primary)" />
+          {/* Center Vertical Down */}
+          <line x1="450" y1="0" x2="450" y2="40" stroke="var(--accent-primary)" strokeWidth="1.5" />
+          <circle cx="450" cy="40" r="3" fill="var(--accent-primary)" />
+          {/* Left Branch */}
+          <path d="M 450 0 C 450 20, 150 20, 150 40" fill="none" stroke="var(--accent-primary)" strokeWidth="1.5" />
+          <circle cx="150" cy="40" r="3" fill="var(--accent-primary)" />
+          {/* Right Branch */}
+          <path d="M 450 0 C 450 20, 750 20, 750 40" fill="none" stroke="var(--accent-primary)" strokeWidth="1.5" />
+          <circle cx="750" cy="40" r="3" fill="var(--accent-primary)" />
+        </svg>
+
+        {/* 3 Kin Representation Columns */}
+        <div className="tk-kin-motif-columns">
+          {representations.map((rep) => {
+            const isAvailable = rep.normalizationStatus === "AVAILABLE";
+            return (
+              <div key={`motif-${rep.contractAddress}`} className="tk-kin-motif-item">
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                  <span style={{ fontSize: "1.05rem", fontWeight: 800, color: "var(--text-primary)", letterSpacing: "-0.01em" }}>
+                    {rep.tokenSymbol}
+                  </span>
+                  <span style={{ fontSize: "0.7rem", fontWeight: 600, color: "var(--accent-primary)", backgroundColor: "var(--accent-primary-soft)", padding: "0.12rem 0.4rem", borderRadius: "var(--radius-xs)" }}>
+                    {rep.providerName}
+                  </span>
                 </div>
-
-                <button
-                  type="button"
-                  onClick={() => handleOpenDrawer(rep)}
-                  style={{
-                    fontSize: "0.72rem",
-                    fontWeight: 600,
-                    color: "var(--accent-primary)",
-                    backgroundColor: "var(--bg-app)",
-                    border: "1px solid var(--border-subtle)",
-                    padding: "0.25rem 0.5rem",
-                    borderRadius: "var(--radius-xs)",
-                    cursor: "pointer",
-                  }}
-                >
-                  Intelligence ↗
-                </button>
-              </div>
-
-              {/* Economic Mechanism Badge */}
-              <div
-                style={{
-                  backgroundColor: "var(--bg-app)",
-                  padding: "0.55rem 0.75rem",
-                  borderRadius: "var(--radius-xs)",
-                  border: "1px solid var(--border-subtle)",
-                  fontSize: "0.78rem",
-                }}
-              >
-                <span style={{ color: "var(--text-muted)" }}>Mechanism: </span>
-                <strong style={{ color: "var(--text-primary)" }}>{rep.economicMechanism}</strong>
-              </div>
-
-              {/* Data Metrics Grid */}
-              {isAvailable ? (
-                <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem" }}>
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                      fontSize: "0.82rem",
-                      paddingBottom: "0.4rem",
-                      borderBottom: "1px solid var(--border-subtle)",
-                    }}
-                  >
-                    <span style={{ color: "var(--text-secondary)" }}>{rep.factorLabel}</span>
-                    <span style={{ fontWeight: 700, fontFamily: "var(--font-mono)", fontVariantNumeric: "tabular-nums", color: "var(--accent-primary)" }}>
-                      {rep.accountingFactor?.toFixed(6)}×
-                    </span>
-                  </div>
-
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                      fontSize: "0.82rem",
-                      paddingBottom: "0.4rem",
-                      borderBottom: "1px solid var(--border-subtle)",
-                    }}
-                  >
-                    <span style={{ color: "var(--text-secondary)" }}>Share-Equivalent / Token</span>
-                    <span style={{ fontWeight: 700, fontFamily: "var(--font-mono)", fontVariantNumeric: "tabular-nums", color: "var(--text-primary)" }}>
-                      {rep.shareEquivalentPerToken?.toFixed(4)} shares
-                    </span>
-                  </div>
-
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                      fontSize: "0.82rem",
-                      paddingBottom: "0.4rem",
-                      borderBottom: "1px solid var(--border-subtle)",
-                    }}
-                  >
-                    <span style={{ color: "var(--text-secondary)" }}>Reference Value / Token</span>
-                    <span style={{ fontWeight: 800, fontFamily: "var(--font-mono)", fontVariantNumeric: "tabular-nums", color: "var(--text-primary)" }}>
-                      ${rep.referenceValuePerTokenUSD?.toFixed(2)} USD
-                    </span>
-                  </div>
-
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                      fontSize: "0.82rem",
-                      paddingBottom: "0.4rem",
-                      borderBottom: "1px solid var(--border-subtle)",
-                    }}
-                  >
-                    <span style={{ color: "var(--text-secondary)" }}>Secondary DEX Spot (Cached)</span>
-                    <span style={{ fontWeight: 600, fontFamily: "var(--font-mono)", fontVariantNumeric: "tabular-nums", color: "var(--text-primary)" }}>
-                      {typeof rep.dexMarketPriceUSD === "number" && Number.isFinite(rep.dexMarketPriceUSD) && rep.dexMarketPriceUSD > 0
-                        ? `$${rep.dexMarketPriceUSD.toFixed(2)} USD`
-                        : "—"}
-                    </span>
-                  </div>
-
-                  {/* Reference Deviation Pill */}
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                      fontSize: "0.82rem",
-                      padding: "0.45rem 0.65rem",
-                      backgroundColor: "var(--bg-app)",
-                      borderRadius: "var(--radius-xs)",
-                      border: "1px solid var(--border-subtle)",
-                      marginTop: "0.2rem",
-                    }}
-                  >
-                    <div>
-                      <div style={{ fontSize: "0.74rem", fontWeight: 600, color: "var(--text-primary)" }}>
-                        Reference Deviation
-                      </div>
-                      <div style={{ fontSize: "0.68rem", color: "var(--text-muted)" }}>
-                        DEX spot vs reference value
-                      </div>
-                    </div>
-
-                    <span
-                      style={{
-                        fontFamily: "var(--font-mono)",
-                        fontVariantNumeric: "tabular-nums",
-                        fontWeight: 800,
-                        fontSize: "0.88rem",
-                        color:
-                          rep.referenceDeviationPercent !== null && rep.referenceDeviationPercent < 0
-                            ? "#4b5563"
-                            : "#2563eb",
-                      }}
-                    >
-                      {rep.referenceDeviationPercent !== null
-                        ? `${rep.referenceDeviationPercent > 0 ? "+" : ""}${rep.referenceDeviationPercent.toFixed(3)}%`
-                        : "—"}
-                    </span>
-                  </div>
+                <div style={{ fontSize: "0.76rem", color: "var(--text-secondary)" }}>
+                  Mechanism: <strong>{rep.economicMechanism}</strong>
                 </div>
-              ) : (
-                /* UNAVAILABLE Normalization Card State */
-                <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
-                  <div
-                    style={{
-                      backgroundColor: "var(--bg-app)",
-                      border: "1px solid var(--border-subtle)",
-                      borderRadius: "var(--radius-sm)",
-                      padding: "0.85rem 1rem",
-                      fontSize: "0.78rem",
-                      color: "var(--text-secondary)",
-                      lineHeight: 1.45,
-                    }}
-                  >
-                    <div style={{ fontWeight: 700, marginBottom: "0.25rem", color: "var(--text-primary)" }}>
-                      Normalization Status: UNAVAILABLE
-                    </div>
-                    {rep.unavailabilityReason}
-                  </div>
+                <div style={{ fontSize: "0.72rem", fontWeight: 600, color: isAvailable ? "#16a34a" : "var(--text-muted)", marginTop: "0.15rem" }}>
+                  {isAvailable ? "Available · Live BNB Chain factor" : "Live normalization factor unavailable"}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </section>
 
-                  <div style={{ display: "flex", flexDirection: "column", gap: "0.45rem", opacity: 0.65, fontSize: "0.8rem" }}>
-                    <div style={{ display: "flex", justifyContent: "space-between" }}>
-                      <span style={{ color: "var(--text-muted)" }}>Conversion Factor:</span>
-                      <span style={{ fontStyle: "italic" }}>Not Assumed</span>
-                    </div>
-                    <div style={{ display: "flex", justifyContent: "space-between" }}>
-                      <span style={{ color: "var(--text-muted)" }}>Share-Equivalent:</span>
-                      <span>—</span>
-                    </div>
-                    <div style={{ display: "flex", justifyContent: "space-between" }}>
-                      <span style={{ color: "var(--text-muted)" }}>Reference Value:</span>
-                      <span>—</span>
-                    </div>
-                    <div style={{ display: "flex", justifyContent: "space-between" }}>
-                      <span style={{ color: "var(--text-muted)" }}>Secondary DEX Spot:</span>
-                      <span>
+      {/* 3. COHESIVE FINANCIAL COMPARISON INSTRUMENT */}
+      <section id="comparison-matrix" style={{ display: "flex", flexDirection: "column", gap: "1rem", width: "100%" }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: "0.3rem" }}>
+          <div className="tk-kicker">
+            Cross-Representation Normalization
+          </div>
+          <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", flexWrap: "wrap", gap: "0.5rem" }}>
+            <h2 style={{ fontSize: "1.65rem", fontWeight: 800, color: "var(--text-primary)", letterSpacing: "-0.02em" }}>
+              Compare Tokenized {underlying.ticker}
+            </h2>
+            <span style={{ fontSize: "0.84rem", color: "var(--text-secondary)", fontWeight: 500 }}>
+              {underlying.name} · {underlying.exchange} · BNB Smart Chain
+            </span>
+          </div>
+          <p style={{ fontSize: "0.88rem", color: "var(--text-secondary)", maxWidth: "800px", lineHeight: 1.45 }}>
+            Trace how NVIDIA is represented across distinct tokenization protocols on BNB Smart Chain and normalize their disparate economic mechanisms.
+          </p>
+        </div>
+
+        {/* Unified Market Comparison Table Instrument */}
+        <div className="tk-matrix-instrument">
+          <div className="tk-matrix-table-wrap">
+            <table className="tk-matrix-table">
+              <thead>
+                <tr>
+                  <th className="tk-matrix-th tk-matrix-row-label">Property</th>
+                  {representations.map((rep) => (
+                    <th key={`header-${rep.contractAddress}`} className="tk-matrix-th" style={{ minWidth: "240px" }}>
+                      <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: "0.5rem" }}>
+                        <div>
+                          <div style={{ display: "flex", alignItems: "center", gap: "0.45rem" }}>
+                            <span style={{ fontSize: "1.25rem", fontWeight: 800, color: "var(--text-primary)", letterSpacing: "-0.02em" }}>
+                              {rep.tokenSymbol}
+                            </span>
+                            <span style={{ fontSize: "0.7rem", fontWeight: 600, color: "var(--accent-primary)", backgroundColor: "var(--accent-primary-soft)", padding: "0.15rem 0.45rem", borderRadius: "var(--radius-xs)" }}>
+                              {rep.providerName}
+                            </span>
+                          </div>
+                          <div style={{ fontSize: "0.74rem", color: "var(--text-muted)", marginTop: "0.15rem" }}>
+                            Issuer: {rep.issuer}
+                          </div>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => handleOpenDrawer(rep)}
+                          style={{
+                            fontSize: "0.7rem",
+                            fontWeight: 600,
+                            color: "var(--accent-primary)",
+                            backgroundColor: "var(--bg-card)",
+                            border: "1px solid var(--border-card)",
+                            padding: "0.2rem 0.45rem",
+                            borderRadius: "var(--radius-xs)",
+                            cursor: "pointer",
+                            whiteSpace: "nowrap",
+                          }}
+                        >
+                          Intelligence ↗
+                        </button>
+                      </div>
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {/* Row 1: Economic Mechanism */}
+                <tr>
+                  <td className="tk-matrix-td tk-matrix-row-label">Mechanism</td>
+                  {representations.map((rep) => (
+                    <td key={`mech-${rep.contractAddress}`} className="tk-matrix-td">
+                      <strong style={{ color: "var(--text-primary)" }}>{rep.economicMechanism}</strong>
+                    </td>
+                  ))}
+                </tr>
+
+                {/* Row 2: Accounting Factor */}
+                <tr>
+                  <td className="tk-matrix-td tk-matrix-row-label">Accounting Factor</td>
+                  {representations.map((rep) => {
+                    const isAvailable = rep.normalizationStatus === "AVAILABLE";
+                    return (
+                      <td key={`factor-${rep.contractAddress}`} className="tk-matrix-td">
+                        {isAvailable ? (
+                          <div style={{ display: "flex", alignItems: "center", gap: "0.45rem" }}>
+                            <span style={{ fontWeight: 700, fontFamily: "var(--font-mono)", fontVariantNumeric: "tabular-nums", color: "var(--accent-primary)", fontSize: "0.95rem" }}>
+                              {rep.accountingFactor?.toFixed(6)}×
+                            </span>
+                            <span style={{ fontSize: "0.68rem", fontWeight: 600, color: "#16a34a", backgroundColor: "#f0fdf4", border: "1px solid #bbf7d0", padding: "0.1rem 0.35rem", borderRadius: "var(--radius-xs)" }}>
+                              Live BSC
+                            </span>
+                          </div>
+                        ) : (
+                          <span style={{ fontStyle: "italic", color: "var(--text-muted)", fontSize: "0.8rem" }}>
+                            Not Assumed (Unavailable)
+                          </span>
+                        )}
+                      </td>
+                    );
+                  })}
+                </tr>
+
+                {/* Row 3: Share-Equivalent / Token */}
+                <tr>
+                  <td className="tk-matrix-td tk-matrix-row-label">Share-Equivalent</td>
+                  {representations.map((rep) => {
+                    const isAvailable = rep.normalizationStatus === "AVAILABLE";
+                    return (
+                      <td key={`share-${rep.contractAddress}`} className="tk-matrix-td">
+                        {isAvailable ? (
+                          <span style={{ fontWeight: 700, fontFamily: "var(--font-mono)", fontVariantNumeric: "tabular-nums", color: "var(--text-primary)" }}>
+                            {rep.shareEquivalentPerToken?.toFixed(4)} shares
+                          </span>
+                        ) : (
+                          <span style={{ color: "var(--text-muted)" }}>—</span>
+                        )}
+                      </td>
+                    );
+                  })}
+                </tr>
+
+                {/* Row 4: Reference Value / Token */}
+                <tr>
+                  <td className="tk-matrix-td tk-matrix-row-label">Reference Value</td>
+                  {representations.map((rep) => {
+                    const isAvailable = rep.normalizationStatus === "AVAILABLE";
+                    return (
+                      <td key={`refval-${rep.contractAddress}`} className="tk-matrix-td">
+                        {isAvailable ? (
+                          <span style={{ fontWeight: 800, fontFamily: "var(--font-mono)", fontVariantNumeric: "tabular-nums", color: "var(--text-primary)" }}>
+                            ${rep.referenceValuePerTokenUSD?.toFixed(2)} USD
+                          </span>
+                        ) : (
+                          <span style={{ color: "var(--text-muted)" }}>—</span>
+                        )}
+                      </td>
+                    );
+                  })}
+                </tr>
+
+                {/* Row 5: Secondary DEX Spot (Cached) */}
+                <tr>
+                  <td className="tk-matrix-td tk-matrix-row-label">Secondary DEX Spot</td>
+                  {representations.map((rep) => (
+                    <td key={`dex-${rep.contractAddress}`} className="tk-matrix-td">
+                      <span style={{ fontWeight: 600, fontFamily: "var(--font-mono)", fontVariantNumeric: "tabular-nums", color: "var(--text-primary)" }}>
                         {typeof rep.dexMarketPriceUSD === "number" && Number.isFinite(rep.dexMarketPriceUSD) && rep.dexMarketPriceUSD > 0
-                          ? `$${rep.dexMarketPriceUSD.toFixed(2)} USD (Cached)`
+                          ? `$${rep.dexMarketPriceUSD.toFixed(2)} USD`
                           : "—"}
                       </span>
-                    </div>
-                  </div>
-                </div>
-              )}
+                    </td>
+                  ))}
+                </tr>
 
-              {/* Card Footer: BscScan Link & Liquidity Info */}
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  fontSize: "0.74rem",
-                  color: "var(--text-muted)",
-                  paddingTop: "0.6rem",
-                  borderTop: "1px solid var(--border-subtle)",
-                  marginTop: "auto",
-                }}
-              >
-                <a
-                  href={`https://bscscan.com/token/${rep.contractAddress}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  style={{
-                    fontFamily: "var(--font-mono)",
-                    color: "var(--accent-primary)",
-                    textDecoration: "none",
-                    fontWeight: 600,
-                  }}
-                >
-                  {rep.contractAddress.slice(0, 6)}...{rep.contractAddress.slice(-4)} ↗
-                </a>
+                {/* Row 6: Reference Deviation */}
+                <tr>
+                  <td className="tk-matrix-td tk-matrix-row-label">Reference Deviation</td>
+                  {representations.map((rep) => {
+                    const isAvailable = rep.normalizationStatus === "AVAILABLE";
+                    return (
+                      <td key={`dev-${rep.contractAddress}`} className="tk-matrix-td">
+                        {isAvailable && rep.referenceDeviationPercent !== null ? (
+                          <span
+                            style={{
+                              fontFamily: "var(--font-mono)",
+                              fontVariantNumeric: "tabular-nums",
+                              fontWeight: 800,
+                              color: rep.referenceDeviationPercent < 0 ? "#4b5563" : "#2563eb",
+                            }}
+                          >
+                            {rep.referenceDeviationPercent > 0 ? "+" : ""}
+                            {rep.referenceDeviationPercent.toFixed(3)}%
+                          </span>
+                        ) : (
+                          <span style={{ color: "var(--text-muted)" }}>—</span>
+                        )}
+                      </td>
+                    );
+                  })}
+                </tr>
 
-                <span>
-                  Liquidity: <strong style={{ color: "var(--text-primary)" }}>{rep.dexLiquidityTier}</strong>
-                </span>
-              </div>
+                {/* Row 7: Contract & Liquidity */}
+                <tr>
+                  <td className="tk-matrix-td tk-matrix-row-label">Contract & Liquidity</td>
+                  {representations.map((rep) => (
+                    <td key={`addr-${rep.contractAddress}`} className="tk-matrix-td">
+                      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "0.5rem" }}>
+                        <a
+                          href={`https://bscscan.com/token/${rep.contractAddress}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          style={{
+                            fontFamily: "var(--font-mono)",
+                            color: "var(--accent-primary)",
+                            fontSize: "0.78rem",
+                            fontWeight: 600,
+                            textDecoration: "none",
+                          }}
+                        >
+                          {rep.contractAddress.slice(0, 6)}...{rep.contractAddress.slice(-4)} ↗
+                        </a>
+                        <span style={{ fontSize: "0.72rem", color: "var(--text-muted)" }}>
+                          {rep.dexLiquidityTier}
+                        </span>
+                      </div>
+                    </td>
+                  ))}
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          {/* Explicit Unavailable Note Banner if any representation is unavailable */}
+          {representations.some((r) => r.normalizationStatus === "UNAVAILABLE") && (
+            <div
+              style={{
+                backgroundColor: "var(--bg-app)",
+                borderTop: "1px solid var(--border-subtle)",
+                padding: "0.75rem 1.25rem",
+                fontSize: "0.78rem",
+                color: "var(--text-secondary)",
+                lineHeight: 1.45,
+              }}
+            >
+              <strong style={{ color: "var(--text-primary)" }}>Normalization Notice:</strong>{" "}
+              {representations.find((r) => r.normalizationStatus === "UNAVAILABLE")?.unavailabilityReason}
             </div>
-          );
-        })}
-      </div>
+          )}
+        </div>
+      </section>
 
-      {/* 4. Token Value Calculator Component */}
+      {/* 4. PRIMARY INTERACTIVE CALCULATOR INSTRUMENT */}
       <TokenValueCalculator matrix={activeMatrix} />
 
-      {/* 5. How To Read Guidance */}
+      {/* 5. HOW TO READ GUIDANCE */}
       <HowToReadComparison />
 
-      {/* 6. Deep Representation Detail Drawer */}
+      {/* 6. DEEP REPRESENTATION DETAIL DRAWER */}
       <RepresentationDetailDrawer
         representation={selectedRepForDrawer}
         underlying={underlyingForDrawer}

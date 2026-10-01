@@ -308,12 +308,34 @@ export function TokenValueCalculator({ matrix }: TokenValueCalculatorProps) {
               {/* Top Banner: Primary Calculated Reference Value */}
               <div className="tk-calc-result-header">
                 <div>
-                  <div style={{ fontSize: "0.76rem", fontWeight: 600, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.03em" }}>
+                  <div style={{ fontSize: "0.95rem", fontWeight: 700, color: "var(--text-muted)", marginBottom: "0.2rem" }}>
+                    {calculation.rawTokenAmount} {calculation.tokenSymbol}
+                  </div>
+                  <div style={{ fontSize: "0.74rem", fontWeight: 700, color: "var(--accent-primary)", textTransform: "uppercase", letterSpacing: "0.04em" }}>
+                    Share-Equivalent Exposure ({matrix.underlying.ticker})
+                  </div>
+                  <div
+                    style={{
+                      fontSize: "1.65rem",
+                      fontWeight: 800,
+                      color: "var(--accent-primary)",
+                      fontFamily: "var(--font-mono)",
+                      fontVariantNumeric: "tabular-nums",
+                      letterSpacing: "-0.02em",
+                      marginTop: "0.1rem",
+                    }}
+                  >
+                    ≈ {calculation.shareEquivalentAmount?.toFixed(4)} shares
+                  </div>
+                </div>
+
+                <div className="tk-calc-result-header-secondary">
+                  <div style={{ fontSize: "0.74rem", fontWeight: 700, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.04em" }}>
                     Total Normalized Reference Value
                   </div>
                   <div
                     style={{
-                      fontSize: "1.85rem",
+                      fontSize: "2rem",
                       fontWeight: 800,
                       color: "var(--text-primary)",
                       fontFamily: "var(--font-mono)",
@@ -323,24 +345,6 @@ export function TokenValueCalculator({ matrix }: TokenValueCalculatorProps) {
                     }}
                   >
                     ${calculation.totalReferenceValueUSD?.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USD
-                  </div>
-                </div>
-
-                <div className="tk-calc-result-header-secondary">
-                  <div style={{ fontSize: "0.76rem", fontWeight: 600, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.03em" }}>
-                    Share-Equivalent Exposure
-                  </div>
-                  <div
-                    style={{
-                      fontSize: "1.3rem",
-                      fontWeight: 800,
-                      color: "var(--accent-primary)",
-                      fontFamily: "var(--font-mono)",
-                      fontVariantNumeric: "tabular-nums",
-                      marginTop: "0.1rem",
-                    }}
-                  >
-                    {calculation.shareEquivalentAmount?.toFixed(4)} shares
                   </div>
                 </div>
               </div>
