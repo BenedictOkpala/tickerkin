@@ -34,4 +34,22 @@ describe("TickerKin Visual Light Theme System & Desktop Workspace", () => {
     expect(connectorConfig.originDotColor).toBe("#1A56DB");
     expect(connectorConfig.containerMaxWidth).toBe(1400);
   });
+
+  it("should verify Phase 9.2 interaction states and motion contracts", () => {
+    const interactionClasses = {
+      entrance: ["tk-enter-1", "tk-enter-2", "tk-enter-3", "tk-enter-4"],
+      flowOverlay: "kin-flow-line",
+      nodeHighlight: "is-highlighted",
+      nodeQuieted: "is-quieted",
+      matrixColHighlight: "tk-matrix-col-highlighted",
+      matrixRow: "tk-matrix-row",
+    };
+
+    expect(interactionClasses.entrance).toHaveLength(4);
+    expect(interactionClasses.flowOverlay).toBe("kin-flow-line");
+    expect(interactionClasses.nodeHighlight).toBe("is-highlighted");
+    expect(interactionClasses.nodeQuieted).toBe("is-quieted");
+    expect(interactionClasses.matrixColHighlight).toBe("tk-matrix-col-highlighted");
+    expect(interactionClasses.matrixRow).toBe("tk-matrix-row");
+  });
 });

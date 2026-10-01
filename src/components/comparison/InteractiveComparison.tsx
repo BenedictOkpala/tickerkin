@@ -176,39 +176,96 @@ export function InteractiveComparison({ matrix: initialMatrix }: InteractiveComp
 
         {/* Thin TickerKin Blue SVG Lineage Tree with Travelling Highlight Dash */}
         <svg className="tk-kin-motif-tree-svg" viewBox="0 0 900 40" preserveAspectRatio="none">
-          {/* Static Baseline Structure */}
+          {/* Origin Root Node */}
           <circle cx="450" cy="0" r="3.5" fill="var(--accent-primary)" />
-          <line x1="450" y1="0" x2="450" y2="40" stroke="#cbd5e1" strokeWidth="1.5" />
-          <circle cx="450" cy="40" r="3" fill="#94a3b8" />
-          <path d="M 450 0 C 450 20, 150 20, 150 40" fill="none" stroke="#cbd5e1" strokeWidth="1.5" />
-          <circle cx="150" cy="40" r="3" fill="#94a3b8" />
-          <path d="M 450 0 C 450 20, 750 20, 750 40" fill="none" stroke="#cbd5e1" strokeWidth="1.5" />
-          <circle cx="750" cy="40" r="3" fill="#94a3b8" />
 
-          {/* Animated Travelling Kin Flow Overlays */}
-          <path
-            d="M 450 0 C 450 20, 150 20, 150 40"
-            fill="none"
-            stroke="var(--accent-primary)"
-            strokeWidth="2"
-            className="kin-flow-line kin-flow-line-1"
-          />
-          <line
-            x1="450"
-            y1="0"
-            x2="450"
-            y2="40"
-            stroke="var(--accent-primary)"
-            strokeWidth="2"
-            className="kin-flow-line kin-flow-line-2"
-          />
-          <path
-            d="M 450 0 C 450 20, 750 20, 750 40"
-            fill="none"
-            stroke="var(--accent-primary)"
-            strokeWidth="2"
-            className="kin-flow-line kin-flow-line-3"
-          />
+          {/* Left Branch (Index 0) */}
+          <g
+            style={{
+              transition: "opacity 0.2s ease",
+              opacity: highlightedRep !== null && highlightedRep !== representations[0]?.contractAddress ? 0.35 : 1,
+            }}
+          >
+            <path
+              d="M 450 0 C 450 20, 150 20, 150 40"
+              fill="none"
+              stroke={highlightedRep === representations[0]?.contractAddress ? "var(--accent-primary)" : "#cbd5e1"}
+              strokeWidth={highlightedRep === representations[0]?.contractAddress ? 2.5 : 1.5}
+            />
+            <circle
+              cx="150"
+              cy="40"
+              r={highlightedRep === representations[0]?.contractAddress ? 4 : 3}
+              fill={highlightedRep === representations[0]?.contractAddress ? "var(--accent-primary)" : "#94a3b8"}
+            />
+            <path
+              d="M 450 0 C 450 20, 150 20, 150 40"
+              fill="none"
+              stroke="var(--accent-primary)"
+              strokeWidth={highlightedRep === representations[0]?.contractAddress ? 2.75 : 2}
+              className="kin-flow-line kin-flow-line-1"
+            />
+          </g>
+
+          {/* Center Branch (Index 1) */}
+          <g
+            style={{
+              transition: "opacity 0.2s ease",
+              opacity: highlightedRep !== null && highlightedRep !== representations[1]?.contractAddress ? 0.35 : 1,
+            }}
+          >
+            <line
+              x1="450"
+              y1="0"
+              x2="450"
+              y2="40"
+              stroke={highlightedRep === representations[1]?.contractAddress ? "var(--accent-primary)" : "#cbd5e1"}
+              strokeWidth={highlightedRep === representations[1]?.contractAddress ? 2.5 : 1.5}
+            />
+            <circle
+              cx="450"
+              cy="40"
+              r={highlightedRep === representations[1]?.contractAddress ? 4 : 3}
+              fill={highlightedRep === representations[1]?.contractAddress ? "var(--accent-primary)" : "#94a3b8"}
+            />
+            <line
+              x1="450"
+              y1="0"
+              x2="450"
+              y2="40"
+              stroke="var(--accent-primary)"
+              strokeWidth={highlightedRep === representations[1]?.contractAddress ? 2.75 : 2}
+              className="kin-flow-line kin-flow-line-2"
+            />
+          </g>
+
+          {/* Right Branch (Index 2) */}
+          <g
+            style={{
+              transition: "opacity 0.2s ease",
+              opacity: highlightedRep !== null && highlightedRep !== representations[2]?.contractAddress ? 0.35 : 1,
+            }}
+          >
+            <path
+              d="M 450 0 C 450 20, 750 20, 750 40"
+              fill="none"
+              stroke={highlightedRep === representations[2]?.contractAddress ? "var(--accent-primary)" : "#cbd5e1"}
+              strokeWidth={highlightedRep === representations[2]?.contractAddress ? 2.5 : 1.5}
+            />
+            <circle
+              cx="750"
+              cy="40"
+              r={highlightedRep === representations[2]?.contractAddress ? 4 : 3}
+              fill={highlightedRep === representations[2]?.contractAddress ? "var(--accent-primary)" : "#94a3b8"}
+            />
+            <path
+              d="M 450 0 C 450 20, 750 20, 750 40"
+              fill="none"
+              stroke="var(--accent-primary)"
+              strokeWidth={highlightedRep === representations[2]?.contractAddress ? 2.75 : 2}
+              className="kin-flow-line kin-flow-line-3"
+            />
+          </g>
         </svg>
 
         {/* 3 Kin Representation Columns */}
@@ -284,8 +341,12 @@ export function InteractiveComparison({ matrix: initialMatrix }: InteractiveComp
                         key={`header-${rep.contractAddress}`}
                         className={`tk-matrix-th ${isColHighlighted ? "is-highlighted" : ""}`}
                         style={{ minWidth: "240px", cursor: "pointer" }}
+                        tabIndex={0}
                         onMouseEnter={() => setHighlightedRep(rep.contractAddress)}
                         onMouseLeave={() => setHighlightedRep(null)}
+                        onFocus={() => setHighlightedRep(rep.contractAddress)}
+                        onBlur={() => setHighlightedRep(null)}
+                        onClick={() => setHighlightedRep((prev) => (prev === rep.contractAddress ? null : rep.contractAddress))}
                       >
                         <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: "0.5rem" }}>
                           <div>

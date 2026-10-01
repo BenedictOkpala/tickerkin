@@ -14,6 +14,7 @@ interface RepresentationCardProps {
   readonly isHighlighted?: boolean;
   readonly isQuieted?: boolean;
   readonly onHoverChange?: (isHovered: boolean) => void;
+  readonly onSelectToggle?: () => void;
 }
 
 export function RepresentationCard({
@@ -24,10 +25,12 @@ export function RepresentationCard({
   isHighlighted,
   isQuieted,
   onHoverChange,
+  onSelectToggle,
 }: RepresentationCardProps) {
   const [copied, setCopied] = useState(false);
 
-  const handleCopy = async () => {
+  const handleCopy = async (e: React.MouseEvent) => {
+    e.stopPropagation();
     try {
       await navigator.clipboard.writeText(representation.contractAddress);
       setCopied(true);
@@ -42,6 +45,9 @@ export function RepresentationCard({
   return (
     <div
       className={`kin-rep-card ${isHighlighted ? "is-highlighted" : isQuieted ? "is-quieted" : ""}`}
+      tabIndex={0}
+      role="region"
+      aria-label={`Representation ${representation.tokenSymbol} by ${representation.providerName}`}
       style={{
         display: "flex",
         flexDirection: "column",
@@ -62,9 +68,13 @@ export function RepresentationCard({
           ? "0 2px 14px rgba(180, 133, 0, 0.12)"
           : "var(--shadow-card)",
         position: "relative",
+        cursor: "pointer",
       }}
       onMouseEnter={() => onHoverChange?.(true)}
       onMouseLeave={() => onHoverChange?.(false)}
+      onFocus={() => onHoverChange?.(true)}
+      onBlur={() => onHoverChange?.(false)}
+      onClick={() => onSelectToggle?.()}
     >
       {/* Target Match Badge if reverse lookup resolved this exact token */}
       {isTargetMatch && (
@@ -107,7 +117,10 @@ export function RepresentationCard({
         {onInspectRepresentation && (
           <button
             type="button"
-            onClick={() => onInspectRepresentation(representation)}
+            onClick={(e) => {
+              e.stopPropagation();
+              onInspectRepresentation(representation);
+            }}
             style={{
               fontSize: "0.7rem",
               fontWeight: 600,
@@ -224,6 +237,7 @@ export function RepresentationCard({
             href={`https://bscscan.com/token/${representation.contractAddress}`}
             target="_blank"
             rel="noopener noreferrer"
+            onClick={(e) => e.stopPropagation()}
             style={{
               fontSize: "0.72rem",
               padding: "0.15rem 0.45rem",
@@ -259,7 +273,10 @@ export function RepresentationCard({
         {representation.liveEnrichment ? (
           <button
             type="button"
-            onClick={() => onInspectEvidence(representation.liveEnrichment!.provenance)}
+            onClick={(e) => {
+              e.stopPropagation();
+              onInspectEvidence(representation.liveEnrichment!.provenance);
+            }}
             style={{
               display: "inline-flex",
               alignItems: "center",

@@ -51,17 +51,26 @@ export function DnaGraph({ data, onInspectEvidence, onInspectRepresentation }: D
         >
           {count === 1 && (
             /* Single branch straight down */
-            <g>
+            <g
+              style={{
+                transition: "opacity 0.2s ease",
+              }}
+            >
               <line
                 x1="500"
                 y1="0"
                 x2="500"
                 y2="32"
-                stroke="#CBD5E1"
-                strokeWidth="1.5"
+                stroke={highlightedContract === representations[0]?.contractAddress ? "var(--accent-primary)" : "#CBD5E1"}
+                strokeWidth={highlightedContract === representations[0]?.contractAddress ? 2.5 : 1.5}
               />
               <circle cx="500" cy="0" r="3.5" fill="var(--accent-primary)" />
-              <circle cx="500" cy="32" r="3" fill="#94A3B8" />
+              <circle
+                cx="500"
+                cy="32"
+                r={highlightedContract === representations[0]?.contractAddress ? 4 : 3}
+                fill={highlightedContract === representations[0]?.contractAddress ? "var(--accent-primary)" : "#94A3B8"}
+              />
 
               {/* Travelling Kin Dash Flow Overlay */}
               <line
@@ -70,7 +79,7 @@ export function DnaGraph({ data, onInspectEvidence, onInspectRepresentation }: D
                 x2="500"
                 y2="32"
                 stroke="var(--accent-primary)"
-                strokeWidth="2"
+                strokeWidth={highlightedContract === representations[0]?.contractAddress ? 2.75 : 2}
                 className="kin-flow-line kin-flow-line-1"
               />
             </g>
@@ -82,39 +91,61 @@ export function DnaGraph({ data, onInspectEvidence, onInspectRepresentation }: D
               {/* Origin central node in TickerKin Blue */}
               <circle cx="500" cy="0" r="3.5" fill="var(--accent-primary)" />
 
-              {/* Left smooth solid bezier curve */}
-              <path
-                d="M 500 0 C 500 24, 280 24, 280 48"
-                fill="none"
-                stroke="#CBD5E1"
-                strokeWidth="1.5"
-              />
-              <circle cx="280" cy="48" r="3" fill="#94A3B8" />
+              {/* Left Branch (Index 0) */}
+              <g
+                style={{
+                  transition: "opacity 0.2s ease",
+                  opacity: highlightedContract !== null && highlightedContract !== representations[0]?.contractAddress ? 0.35 : 1,
+                }}
+              >
+                <path
+                  d="M 500 0 C 500 24, 280 24, 280 48"
+                  fill="none"
+                  stroke={highlightedContract === representations[0]?.contractAddress ? "var(--accent-primary)" : "#CBD5E1"}
+                  strokeWidth={highlightedContract === representations[0]?.contractAddress ? 2.5 : 1.5}
+                />
+                <circle
+                  cx="280"
+                  cy="48"
+                  r={highlightedContract === representations[0]?.contractAddress ? 4 : 3}
+                  fill={highlightedContract === representations[0]?.contractAddress ? "var(--accent-primary)" : "#94A3B8"}
+                />
+                <path
+                  d="M 500 0 C 500 24, 280 24, 280 48"
+                  fill="none"
+                  stroke="var(--accent-primary)"
+                  strokeWidth={highlightedContract === representations[0]?.contractAddress ? 2.75 : 2}
+                  className="kin-flow-line kin-flow-line-1"
+                />
+              </g>
 
-              {/* Right smooth solid bezier curve */}
-              <path
-                d="M 500 0 C 500 24, 720 24, 720 48"
-                fill="none"
-                stroke="#CBD5E1"
-                strokeWidth="1.5"
-              />
-              <circle cx="720" cy="48" r="3" fill="#94A3B8" />
-
-              {/* Travelling Kin Dash Flow Overlays */}
-              <path
-                d="M 500 0 C 500 24, 280 24, 280 48"
-                fill="none"
-                stroke="var(--accent-primary)"
-                strokeWidth="2"
-                className="kin-flow-line kin-flow-line-1"
-              />
-              <path
-                d="M 500 0 C 500 24, 720 24, 720 48"
-                fill="none"
-                stroke="var(--accent-primary)"
-                strokeWidth="2"
-                className="kin-flow-line kin-flow-line-2"
-              />
+              {/* Right Branch (Index 1) */}
+              <g
+                style={{
+                  transition: "opacity 0.2s ease",
+                  opacity: highlightedContract !== null && highlightedContract !== representations[1]?.contractAddress ? 0.35 : 1,
+                }}
+              >
+                <path
+                  d="M 500 0 C 500 24, 720 24, 720 48"
+                  fill="none"
+                  stroke={highlightedContract === representations[1]?.contractAddress ? "var(--accent-primary)" : "#CBD5E1"}
+                  strokeWidth={highlightedContract === representations[1]?.contractAddress ? 2.5 : 1.5}
+                />
+                <circle
+                  cx="720"
+                  cy="48"
+                  r={highlightedContract === representations[1]?.contractAddress ? 4 : 3}
+                  fill={highlightedContract === representations[1]?.contractAddress ? "var(--accent-primary)" : "#94A3B8"}
+                />
+                <path
+                  d="M 500 0 C 500 24, 720 24, 720 48"
+                  fill="none"
+                  stroke="var(--accent-primary)"
+                  strokeWidth={highlightedContract === representations[1]?.contractAddress ? 2.75 : 2}
+                  className="kin-flow-line kin-flow-line-2"
+                />
+              </g>
             </g>
           )}
 
@@ -124,59 +155,93 @@ export function DnaGraph({ data, onInspectEvidence, onInspectRepresentation }: D
               {/* Origin central node in TickerKin Blue */}
               <circle cx="500" cy="0" r="3.5" fill="var(--accent-primary)" />
 
-              {/* Left smooth curved branch */}
-              <path
-                d="M 500 0 C 500 24, 175 24, 175 48"
-                fill="none"
-                stroke="#CBD5E1"
-                strokeWidth="1.5"
-              />
-              <circle cx="175" cy="48" r="3" fill="#94A3B8" />
+              {/* Left Branch (Index 0) */}
+              <g
+                style={{
+                  transition: "opacity 0.2s ease",
+                  opacity: highlightedContract !== null && highlightedContract !== representations[0]?.contractAddress ? 0.35 : 1,
+                }}
+              >
+                <path
+                  d="M 500 0 C 500 24, 175 24, 175 48"
+                  fill="none"
+                  stroke={highlightedContract === representations[0]?.contractAddress ? "var(--accent-primary)" : "#CBD5E1"}
+                  strokeWidth={highlightedContract === representations[0]?.contractAddress ? 2.5 : 1.5}
+                />
+                <circle
+                  cx="175"
+                  cy="48"
+                  r={highlightedContract === representations[0]?.contractAddress ? 4 : 3}
+                  fill={highlightedContract === representations[0]?.contractAddress ? "var(--accent-primary)" : "#94A3B8"}
+                />
+                <path
+                  d="M 500 0 C 500 24, 175 24, 175 48"
+                  fill="none"
+                  stroke="var(--accent-primary)"
+                  strokeWidth={highlightedContract === representations[0]?.contractAddress ? 2.75 : 2}
+                  className="kin-flow-line kin-flow-line-1"
+                />
+              </g>
 
-              {/* Center direct branch */}
-              <line
-                x1="500"
-                y1="0"
-                x2="500"
-                y2="48"
-                stroke="#CBD5E1"
-                strokeWidth="1.5"
-              />
-              <circle cx="500" cy="48" r="3" fill="#94A3B8" />
+              {/* Center Branch (Index 1) */}
+              <g
+                style={{
+                  transition: "opacity 0.2s ease",
+                  opacity: highlightedContract !== null && highlightedContract !== representations[1]?.contractAddress ? 0.35 : 1,
+                }}
+              >
+                <line
+                  x1="500"
+                  y1="0"
+                  x2="500"
+                  y2="48"
+                  stroke={highlightedContract === representations[1]?.contractAddress ? "var(--accent-primary)" : "#CBD5E1"}
+                  strokeWidth={highlightedContract === representations[1]?.contractAddress ? 2.5 : 1.5}
+                />
+                <circle
+                  cx="500"
+                  cy="48"
+                  r={highlightedContract === representations[1]?.contractAddress ? 4 : 3}
+                  fill={highlightedContract === representations[1]?.contractAddress ? "var(--accent-primary)" : "#94A3B8"}
+                />
+                <line
+                  x1="500"
+                  y1="0"
+                  x2="500"
+                  y2="48"
+                  stroke="var(--accent-primary)"
+                  strokeWidth={highlightedContract === representations[1]?.contractAddress ? 2.75 : 2}
+                  className="kin-flow-line kin-flow-line-2"
+                />
+              </g>
 
-              {/* Right smooth curved branch */}
-              <path
-                d="M 500 0 C 500 24, 825 24, 825 48"
-                fill="none"
-                stroke="#CBD5E1"
-                strokeWidth="1.5"
-              />
-              <circle cx="825" cy="48" r="3" fill="#94A3B8" />
-
-              {/* Travelling Kin Dash Flow Overlays */}
-              <path
-                d="M 500 0 C 500 24, 175 24, 175 48"
-                fill="none"
-                stroke="var(--accent-primary)"
-                strokeWidth="2"
-                className="kin-flow-line kin-flow-line-1"
-              />
-              <line
-                x1="500"
-                y1="0"
-                x2="500"
-                y2="48"
-                stroke="var(--accent-primary)"
-                strokeWidth="2"
-                className="kin-flow-line kin-flow-line-2"
-              />
-              <path
-                d="M 500 0 C 500 24, 825 24, 825 48"
-                fill="none"
-                stroke="var(--accent-primary)"
-                strokeWidth="2"
-                className="kin-flow-line kin-flow-line-3"
-              />
+              {/* Right Branch (Index 2) */}
+              <g
+                style={{
+                  transition: "opacity 0.2s ease",
+                  opacity: highlightedContract !== null && highlightedContract !== representations[2]?.contractAddress ? 0.35 : 1,
+                }}
+              >
+                <path
+                  d="M 500 0 C 500 24, 825 24, 825 48"
+                  fill="none"
+                  stroke={highlightedContract === representations[2]?.contractAddress ? "var(--accent-primary)" : "#CBD5E1"}
+                  strokeWidth={highlightedContract === representations[2]?.contractAddress ? 2.5 : 1.5}
+                />
+                <circle
+                  cx="825"
+                  cy="48"
+                  r={highlightedContract === representations[2]?.contractAddress ? 4 : 3}
+                  fill={highlightedContract === representations[2]?.contractAddress ? "var(--accent-primary)" : "#94A3B8"}
+                />
+                <path
+                  d="M 500 0 C 500 24, 825 24, 825 48"
+                  fill="none"
+                  stroke="var(--accent-primary)"
+                  strokeWidth={highlightedContract === representations[2]?.contractAddress ? 2.75 : 2}
+                  className="kin-flow-line kin-flow-line-3"
+                />
+              </g>
             </g>
           )}
         </svg>
@@ -217,6 +282,11 @@ export function DnaGraph({ data, onInspectEvidence, onInspectRepresentation }: D
                   isQuieted={isQuieted}
                   onHoverChange={(hovered) =>
                     setHighlightedContract(hovered ? rep.contractAddress : null)
+                  }
+                  onSelectToggle={() =>
+                    setHighlightedContract((prev) =>
+                      prev === rep.contractAddress ? null : rep.contractAddress
+                    )
                   }
                 />
               </div>
