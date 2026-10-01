@@ -104,6 +104,65 @@
   color: var(--text-primary);
 }
 
+/* First-Load & Scroll Reveal Keyframes */
+@keyframes tkEntrance {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.tk-enter-1 {
+  animation: tkEntrance 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.04s both;
+}
+
+.tk-enter-2 {
+  animation: tkEntrance 0.45s cubic-bezier(0.16, 1, 0.3, 1) 0.12s both;
+}
+
+.tk-enter-3 {
+  animation: tkEntrance 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
+}
+
+.tk-enter-4 {
+  animation: tkEntrance 0.55s cubic-bezier(0.16, 1, 0.3, 1) 0.28s both;
+}
+
+/* Travelling Dash Highlight on Relationship Connectors */
+@keyframes kinDashFlow {
+  from {
+    stroke-dashoffset: 80;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.kin-flow-line {
+  stroke: var(--accent-primary);
+  stroke-width: 2;
+  stroke-dasharray: 12 68;
+  animation: kinDashFlow 2.4s linear infinite;
+  fill: none;
+  opacity: 0.85;
+}
+
+.kin-flow-line-1 {
+  animation-delay: 0s;
+}
+
+.kin-flow-line-2 {
+  animation-delay: 0.4s;
+}
+
+.kin-flow-line-3 {
+  animation-delay: 0.8s;
+}
+
 /* ==========================================================================
    First Viewport Hero & Financial Quote Module
    ========================================================================== */
@@ -158,12 +217,13 @@
   padding: 0.55rem 1.15rem;
   border-radius: var(--radius-sm);
   text-decoration: none;
-  transition: background-color 0.15s ease;
+  transition: all 0.15s ease;
   min-height: 42px;
 }
 
 .tk-btn-primary:hover {
   background-color: var(--accent-primary-hover);
+  transform: translateY(-1px);
 }
 
 .tk-btn-secondary {
@@ -185,6 +245,7 @@
 .tk-btn-secondary:hover {
   background-color: var(--bg-app);
   border-color: var(--border-hover);
+  transform: translateY(-1px);
 }
 
 /* Financial Quote Module */
@@ -197,6 +258,12 @@
   display: flex;
   flex-direction: column;
   gap: 0.9rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.tk-quote-module:hover {
+  border-color: var(--accent-primary-border);
+  box-shadow: 0 4px 18px rgba(15, 23, 42, 0.08);
 }
 
 /* ==========================================================================
@@ -219,6 +286,7 @@
   border: 1.5px solid var(--accent-primary);
   border-radius: var(--radius-md);
   box-shadow: 0 2px 8px rgba(26, 86, 219, 0.08);
+  transition: all 0.2s ease;
 }
 
 .tk-kin-motif-tree-svg {
@@ -253,12 +321,22 @@
   display: flex;
   flex-direction: column;
   gap: 0.35rem;
-  transition: all 0.15s ease;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-sizing: border-box;
 }
 
-.tk-kin-motif-item:hover {
-  border-color: var(--accent-primary);
-  box-shadow: var(--shadow-hover);
+.tk-kin-motif-item:hover,
+.tk-kin-motif-item:focus-visible,
+.tk-kin-motif-item.is-highlighted {
+  border-color: var(--accent-primary) !important;
+  background-color: var(--accent-primary-soft) !important;
+  box-shadow: 0 4px 14px rgba(26, 86, 219, 0.12) !important;
+  transform: translateY(-1px);
+}
+
+.tk-kin-motif-item.is-quieted {
+  opacity: 0.55;
 }
 
 /* ==========================================================================
@@ -292,6 +370,12 @@
   font-weight: 700;
   color: var(--text-muted);
   vertical-align: top;
+  transition: all 0.15s ease;
+}
+
+.tk-matrix-th.is-highlighted {
+  border-bottom: 2px solid var(--accent-primary) !important;
+  background-color: rgba(26, 86, 219, 0.06) !important;
 }
 
 .tk-matrix-td {
@@ -299,6 +383,24 @@
   border-bottom: 1px solid var(--border-subtle);
   font-size: 0.84rem;
   vertical-align: middle;
+  transition: background-color 0.15s ease;
+}
+
+.tk-matrix-col-highlighted {
+  background-color: rgba(26, 86, 219, 0.035) !important;
+}
+
+.tk-matrix-row:hover .tk-matrix-td {
+  background-color: #f8fafc;
+}
+
+.tk-matrix-row:hover .tk-matrix-row-label {
+  background-color: #f1f5f9;
+  color: var(--accent-primary);
+}
+
+.tk-matrix-row:hover .tk-matrix-col-highlighted {
+  background-color: rgba(26, 86, 219, 0.07) !important;
 }
 
 .tk-matrix-row-label {
@@ -310,6 +412,7 @@
   color: var(--text-muted);
   background-color: #fafbfc;
   border-right: 1px solid var(--border-subtle);
+  transition: all 0.15s ease;
 }
 
 * {
@@ -381,8 +484,18 @@ input {
 @media (prefers-reduced-motion: reduce) {
   .animate-fade-in,
   .animate-slide-in,
-  .animate-pulse {
+  .animate-pulse,
+  .tk-enter-1,
+  .tk-enter-2,
+  .tk-enter-3,
+  .tk-enter-4 {
     animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  .kin-flow-line {
+    animation: none !important;
+    opacity: 0 !important;
   }
 }
 
@@ -760,6 +873,162 @@ input {
     z-index: 2;
   }
 }
+
+/* ==========================================================================
+   Phase 9.2: TickerKin Interaction, Motion & Kin Coordination System
+   ========================================================================== */
+
+/* 1. Subtle, restrained page entrance sequence */
+@keyframes tkEntrance {
+  0% {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.tk-enter-1 {
+  animation: tkEntrance 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: 0ms;
+}
+
+.tk-enter-2 {
+  animation: tkEntrance 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: 80ms;
+}
+
+.tk-enter-3 {
+  animation: tkEntrance 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: 160ms;
+}
+
+.tk-enter-4 {
+  animation: tkEntrance 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: 240ms;
+}
+
+/* 2. Kin Travelling Dash Flow Animation */
+@keyframes kinDashFlow {
+  from {
+    stroke-dashoffset: 80;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.kin-flow-line {
+  stroke-dasharray: 12 68;
+  animation: kinDashFlow 4s linear infinite;
+  pointer-events: none;
+}
+
+.kin-flow-line-1 {
+  animation-delay: 0s;
+}
+
+.kin-flow-line-2 {
+  animation-delay: 0.6s;
+}
+
+.kin-flow-line-3 {
+  animation-delay: 1.2s;
+}
+
+/* 3. Quote module tactile hover */
+.tk-quote-module {
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.tk-quote-module:hover {
+  border-color: var(--border-hover);
+  box-shadow: var(--shadow-hover);
+}
+
+/* 4. Kin Lineage Motif Items & State Coordination */
+.tk-kin-motif-item {
+  transition: transform 0.18s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.18s ease, box-shadow 0.18s ease, opacity 0.2s ease;
+  cursor: pointer;
+  user-select: none;
+}
+
+.tk-kin-motif-item:hover,
+.tk-kin-motif-item:focus-visible,
+.tk-kin-motif-item.is-highlighted {
+  border-color: var(--accent-primary) !important;
+  box-shadow: 0 0 0 1px var(--accent-primary), var(--shadow-hover) !important;
+  transform: translateY(-2px);
+}
+
+.tk-kin-motif-item.is-quieted {
+  opacity: 0.55;
+}
+
+/* 5. Matrix Column & Row Hover Coordination */
+.tk-matrix-table th.is-highlighted {
+  background-color: var(--accent-primary-soft) !important;
+  border-bottom-color: var(--accent-primary) !important;
+}
+
+.tk-matrix-td.tk-matrix-col-highlighted {
+  background-color: rgba(26, 86, 219, 0.04) !important;
+}
+
+.tk-matrix-row {
+  transition: background-color 0.12s ease;
+}
+
+.tk-matrix-row:hover td {
+  background-color: rgba(15, 23, 42, 0.02) !important;
+}
+
+.tk-matrix-row:hover td.tk-matrix-col-highlighted {
+  background-color: rgba(26, 86, 219, 0.07) !important;
+}
+
+/* 6. Kin Map Representation Card Hover & State Coordination */
+.kin-rep-card {
+  transition: transform 0.18s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.18s ease, box-shadow 0.18s ease, opacity 0.2s ease;
+}
+
+.kin-rep-card:hover,
+.kin-rep-card.is-highlighted {
+  border-color: var(--accent-primary) !important;
+  box-shadow: 0 0 0 1px var(--accent-primary), var(--shadow-hover) !important;
+  transform: translateY(-2px);
+}
+
+.kin-rep-card.is-quieted {
+  opacity: 0.55;
+}
+
+/* 7. Prefers-Reduced-Motion Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .kin-flow-line {
+    animation: none !important;
+    display: none !important;
+  }
+  .tk-enter-1,
+  .tk-enter-2,
+  .tk-enter-3,
+  .tk-enter-4 {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
 
 
 

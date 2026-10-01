@@ -11,6 +11,9 @@ interface RepresentationCardProps {
   readonly onInspectEvidence: (evidence: EvidenceRecord) => void;
   readonly onInspectRepresentation?: (representation: TokenizedRepresentation) => void;
   readonly isTargetMatch?: boolean;
+  readonly isHighlighted?: boolean;
+  readonly isQuieted?: boolean;
+  readonly onHoverChange?: (isHovered: boolean) => void;
 }
 
 export function RepresentationCard({
@@ -18,6 +21,9 @@ export function RepresentationCard({
   onInspectEvidence,
   onInspectRepresentation,
   isTargetMatch,
+  isHighlighted,
+  isQuieted,
+  onHoverChange,
 }: RepresentationCardProps) {
   const [copied, setCopied] = useState(false);
 
@@ -35,32 +41,30 @@ export function RepresentationCard({
 
   return (
     <div
+      className={`kin-rep-card ${isHighlighted ? "is-highlighted" : isQuieted ? "is-quieted" : ""}`}
       style={{
         display: "flex",
         flexDirection: "column",
         gap: "0.95rem",
         padding: "1.35rem 1.4rem",
         backgroundColor: "var(--bg-card)",
-        border: `1px solid ${isTargetMatch ? "var(--accent-bnb)" : "var(--border-card)"}`,
+        border: `1px solid ${
+          isHighlighted
+            ? "var(--accent-primary)"
+            : isTargetMatch
+            ? "var(--accent-bnb)"
+            : "var(--border-card)"
+        }`,
         borderRadius: "var(--radius-lg)",
-        boxShadow: isTargetMatch
+        boxShadow: isHighlighted
+          ? "0 0 0 1px var(--accent-primary), var(--shadow-hover)"
+          : isTargetMatch
           ? "0 2px 14px rgba(180, 133, 0, 0.12)"
           : "var(--shadow-card)",
-        transition: "border-color 0.15s, box-shadow 0.15s",
         position: "relative",
       }}
-      onMouseEnter={(e) => {
-        if (!isTargetMatch) {
-          e.currentTarget.style.borderColor = "var(--border-hover)";
-          e.currentTarget.style.boxShadow = "var(--shadow-hover)";
-        }
-      }}
-      onMouseLeave={(e) => {
-        if (!isTargetMatch) {
-          e.currentTarget.style.borderColor = "var(--border-card)";
-          e.currentTarget.style.boxShadow = "var(--shadow-card)";
-        }
-      }}
+      onMouseEnter={() => onHoverChange?.(true)}
+      onMouseLeave={() => onHoverChange?.(false)}
     >
       {/* Target Match Badge if reverse lookup resolved this exact token */}
       {isTargetMatch && (

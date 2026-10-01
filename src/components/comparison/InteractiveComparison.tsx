@@ -16,6 +16,7 @@ interface InteractiveComparisonProps {
 export function InteractiveComparison({ matrix: initialMatrix }: InteractiveComparisonProps) {
   const [activeMatrix, setActiveMatrix] = useState<EquityComparisonMatrix>(initialMatrix);
   const [selectedRepForDrawer, setSelectedRepForDrawer] = useState<TokenizedRepresentation | null>(null);
+  const [highlightedRep, setHighlightedRep] = useState<string | null>(null);
 
   // Client-side dynamic enrichment to ensure live BSC RPC state is always freshest
   useEffect(() => {
@@ -69,7 +70,7 @@ export function InteractiveComparison({ matrix: initialMatrix }: InteractiveComp
       {/* 1. FIRST VIEWPORT: HERO & FINANCIAL BENCHMARK QUOTE MODULE */}
       <section className="tk-hero-container">
         {/* Left / Primary Editorial Hero */}
-        <div style={{ display: "flex", flexDirection: "column" }}>
+        <div className="tk-enter-1" style={{ display: "flex", flexDirection: "column" }}>
           <div className="tk-kicker">
             Tokenized Equity Intelligence
           </div>
@@ -90,7 +91,7 @@ export function InteractiveComparison({ matrix: initialMatrix }: InteractiveComp
         </div>
 
         {/* Right / Data Area: Benchmark Quote Module */}
-        <div className="tk-quote-module">
+        <div className="tk-quote-module tk-enter-2">
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "0.5rem" }}>
             <span className="tk-metric-label">Underlying Equity Benchmark</span>
             <span
@@ -161,7 +162,7 @@ export function InteractiveComparison({ matrix: initialMatrix }: InteractiveComp
       </section>
 
       {/* 2. SIGNATURE "KIN" VISUAL LINEAGE MOTIF */}
-      <section className="tk-kin-motif-container">
+      <section className="tk-kin-motif-container tk-enter-3">
         {/* Root Equity Anchor */}
         <div className="tk-kin-motif-root">
           <span style={{ width: "8px", height: "8px", borderRadius: "50%", backgroundColor: "var(--accent-primary)" }} />
@@ -173,27 +174,63 @@ export function InteractiveComparison({ matrix: initialMatrix }: InteractiveComp
           </span>
         </div>
 
-        {/* Thin TickerKin Blue SVG Lineage Tree */}
+        {/* Thin TickerKin Blue SVG Lineage Tree with Travelling Highlight Dash */}
         <svg className="tk-kin-motif-tree-svg" viewBox="0 0 900 40" preserveAspectRatio="none">
-          {/* Origin Point */}
+          {/* Static Baseline Structure */}
           <circle cx="450" cy="0" r="3.5" fill="var(--accent-primary)" />
-          {/* Center Vertical Down */}
-          <line x1="450" y1="0" x2="450" y2="40" stroke="var(--accent-primary)" strokeWidth="1.5" />
-          <circle cx="450" cy="40" r="3" fill="var(--accent-primary)" />
-          {/* Left Branch */}
-          <path d="M 450 0 C 450 20, 150 20, 150 40" fill="none" stroke="var(--accent-primary)" strokeWidth="1.5" />
-          <circle cx="150" cy="40" r="3" fill="var(--accent-primary)" />
-          {/* Right Branch */}
-          <path d="M 450 0 C 450 20, 750 20, 750 40" fill="none" stroke="var(--accent-primary)" strokeWidth="1.5" />
-          <circle cx="750" cy="40" r="3" fill="var(--accent-primary)" />
+          <line x1="450" y1="0" x2="450" y2="40" stroke="#cbd5e1" strokeWidth="1.5" />
+          <circle cx="450" cy="40" r="3" fill="#94a3b8" />
+          <path d="M 450 0 C 450 20, 150 20, 150 40" fill="none" stroke="#cbd5e1" strokeWidth="1.5" />
+          <circle cx="150" cy="40" r="3" fill="#94a3b8" />
+          <path d="M 450 0 C 450 20, 750 20, 750 40" fill="none" stroke="#cbd5e1" strokeWidth="1.5" />
+          <circle cx="750" cy="40" r="3" fill="#94a3b8" />
+
+          {/* Animated Travelling Kin Flow Overlays */}
+          <path
+            d="M 450 0 C 450 20, 150 20, 150 40"
+            fill="none"
+            stroke="var(--accent-primary)"
+            strokeWidth="2"
+            className="kin-flow-line kin-flow-line-1"
+          />
+          <line
+            x1="450"
+            y1="0"
+            x2="450"
+            y2="40"
+            stroke="var(--accent-primary)"
+            strokeWidth="2"
+            className="kin-flow-line kin-flow-line-2"
+          />
+          <path
+            d="M 450 0 C 450 20, 750 20, 750 40"
+            fill="none"
+            stroke="var(--accent-primary)"
+            strokeWidth="2"
+            className="kin-flow-line kin-flow-line-3"
+          />
         </svg>
 
         {/* 3 Kin Representation Columns */}
         <div className="tk-kin-motif-columns">
           {representations.map((rep) => {
             const isAvailable = rep.normalizationStatus === "AVAILABLE";
+            const isHighlighted = highlightedRep === rep.contractAddress;
+            const isQuieted = highlightedRep !== null && !isHighlighted;
+
             return (
-              <div key={`motif-${rep.contractAddress}`} className="tk-kin-motif-item">
+              <div
+                key={`motif-${rep.contractAddress}`}
+                className={`tk-kin-motif-item ${isHighlighted ? "is-highlighted" : isQuieted ? "is-quieted" : ""}`}
+                tabIndex={0}
+                role="button"
+                aria-label={`Highlight ${rep.tokenSymbol} comparison details`}
+                onMouseEnter={() => setHighlightedRep(rep.contractAddress)}
+                onMouseLeave={() => setHighlightedRep(null)}
+                onFocus={() => setHighlightedRep(rep.contractAddress)}
+                onBlur={() => setHighlightedRep(null)}
+                onClick={() => setHighlightedRep((prev) => (prev === rep.contractAddress ? null : rep.contractAddress))}
+              >
                 <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                   <span style={{ fontSize: "1.05rem", fontWeight: 800, color: "var(--text-primary)", letterSpacing: "-0.01em" }}>
                     {rep.tokenSymbol}
@@ -215,7 +252,7 @@ export function InteractiveComparison({ matrix: initialMatrix }: InteractiveComp
       </section>
 
       {/* 3. COHESIVE FINANCIAL COMPARISON INSTRUMENT */}
-      <section id="comparison-matrix" style={{ display: "flex", flexDirection: "column", gap: "1rem", width: "100%" }}>
+      <section id="comparison-matrix" className="tk-enter-3" style={{ display: "flex", flexDirection: "column", gap: "1rem", width: "100%" }}>
         <div style={{ display: "flex", flexDirection: "column", gap: "0.3rem" }}>
           <div className="tk-kicker">
             Cross-Representation Normalization
@@ -240,62 +277,85 @@ export function InteractiveComparison({ matrix: initialMatrix }: InteractiveComp
               <thead>
                 <tr>
                   <th className="tk-matrix-th tk-matrix-row-label">Property</th>
-                  {representations.map((rep) => (
-                    <th key={`header-${rep.contractAddress}`} className="tk-matrix-th" style={{ minWidth: "240px" }}>
-                      <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: "0.5rem" }}>
-                        <div>
-                          <div style={{ display: "flex", alignItems: "center", gap: "0.45rem" }}>
-                            <span style={{ fontSize: "1.25rem", fontWeight: 800, color: "var(--text-primary)", letterSpacing: "-0.02em" }}>
-                              {rep.tokenSymbol}
-                            </span>
-                            <span style={{ fontSize: "0.7rem", fontWeight: 600, color: "var(--accent-primary)", backgroundColor: "var(--accent-primary-soft)", padding: "0.15rem 0.45rem", borderRadius: "var(--radius-xs)" }}>
-                              {rep.providerName}
-                            </span>
+                  {representations.map((rep) => {
+                    const isColHighlighted = highlightedRep === rep.contractAddress;
+                    return (
+                      <th
+                        key={`header-${rep.contractAddress}`}
+                        className={`tk-matrix-th ${isColHighlighted ? "is-highlighted" : ""}`}
+                        style={{ minWidth: "240px", cursor: "pointer" }}
+                        onMouseEnter={() => setHighlightedRep(rep.contractAddress)}
+                        onMouseLeave={() => setHighlightedRep(null)}
+                      >
+                        <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: "0.5rem" }}>
+                          <div>
+                            <div style={{ display: "flex", alignItems: "center", gap: "0.45rem" }}>
+                              <span style={{ fontSize: "1.25rem", fontWeight: 800, color: "var(--text-primary)", letterSpacing: "-0.02em" }}>
+                                {rep.tokenSymbol}
+                              </span>
+                              <span style={{ fontSize: "0.7rem", fontWeight: 600, color: "var(--accent-primary)", backgroundColor: "var(--accent-primary-soft)", padding: "0.15rem 0.45rem", borderRadius: "var(--radius-xs)" }}>
+                                {rep.providerName}
+                              </span>
+                            </div>
+                            <div style={{ fontSize: "0.74rem", color: "var(--text-muted)", marginTop: "0.15rem" }}>
+                              Issuer: {rep.issuer}
+                            </div>
                           </div>
-                          <div style={{ fontSize: "0.74rem", color: "var(--text-muted)", marginTop: "0.15rem" }}>
-                            Issuer: {rep.issuer}
-                          </div>
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleOpenDrawer(rep);
+                            }}
+                            style={{
+                              fontSize: "0.7rem",
+                              fontWeight: 600,
+                              color: "var(--accent-primary)",
+                              backgroundColor: "var(--bg-card)",
+                              border: "1px solid var(--border-card)",
+                              padding: "0.2rem 0.45rem",
+                              borderRadius: "var(--radius-xs)",
+                              cursor: "pointer",
+                              whiteSpace: "nowrap",
+                            }}
+                          >
+                            Intelligence ↗
+                          </button>
                         </div>
-                        <button
-                          type="button"
-                          onClick={() => handleOpenDrawer(rep)}
-                          style={{
-                            fontSize: "0.7rem",
-                            fontWeight: 600,
-                            color: "var(--accent-primary)",
-                            backgroundColor: "var(--bg-card)",
-                            border: "1px solid var(--border-card)",
-                            padding: "0.2rem 0.45rem",
-                            borderRadius: "var(--radius-xs)",
-                            cursor: "pointer",
-                            whiteSpace: "nowrap",
-                          }}
-                        >
-                          Intelligence ↗
-                        </button>
-                      </div>
-                    </th>
-                  ))}
+                      </th>
+                    );
+                  })}
                 </tr>
               </thead>
               <tbody>
                 {/* Row 1: Economic Mechanism */}
-                <tr>
+                <tr className="tk-matrix-row">
                   <td className="tk-matrix-td tk-matrix-row-label">Mechanism</td>
                   {representations.map((rep) => (
-                    <td key={`mech-${rep.contractAddress}`} className="tk-matrix-td">
+                    <td
+                      key={`mech-${rep.contractAddress}`}
+                      className={`tk-matrix-td ${highlightedRep === rep.contractAddress ? "tk-matrix-col-highlighted" : ""}`}
+                      onMouseEnter={() => setHighlightedRep(rep.contractAddress)}
+                      onMouseLeave={() => setHighlightedRep(null)}
+                    >
                       <strong style={{ color: "var(--text-primary)" }}>{rep.economicMechanism}</strong>
                     </td>
                   ))}
                 </tr>
 
                 {/* Row 2: Accounting Factor */}
-                <tr>
+                <tr className="tk-matrix-row">
                   <td className="tk-matrix-td tk-matrix-row-label">Accounting Factor</td>
                   {representations.map((rep) => {
                     const isAvailable = rep.normalizationStatus === "AVAILABLE";
+                    const isColHighlighted = highlightedRep === rep.contractAddress;
                     return (
-                      <td key={`factor-${rep.contractAddress}`} className="tk-matrix-td">
+                      <td
+                        key={`factor-${rep.contractAddress}`}
+                        className={`tk-matrix-td ${isColHighlighted ? "tk-matrix-col-highlighted" : ""}`}
+                        onMouseEnter={() => setHighlightedRep(rep.contractAddress)}
+                        onMouseLeave={() => setHighlightedRep(null)}
+                      >
                         {isAvailable ? (
                           <div style={{ display: "flex", alignItems: "center", gap: "0.45rem" }}>
                             <span style={{ fontWeight: 700, fontFamily: "var(--font-mono)", fontVariantNumeric: "tabular-nums", color: "var(--accent-primary)", fontSize: "0.95rem" }}>
@@ -316,12 +376,18 @@ export function InteractiveComparison({ matrix: initialMatrix }: InteractiveComp
                 </tr>
 
                 {/* Row 3: Share-Equivalent / Token */}
-                <tr>
+                <tr className="tk-matrix-row">
                   <td className="tk-matrix-td tk-matrix-row-label">Share-Equivalent</td>
                   {representations.map((rep) => {
                     const isAvailable = rep.normalizationStatus === "AVAILABLE";
+                    const isColHighlighted = highlightedRep === rep.contractAddress;
                     return (
-                      <td key={`share-${rep.contractAddress}`} className="tk-matrix-td">
+                      <td
+                        key={`share-${rep.contractAddress}`}
+                        className={`tk-matrix-td ${isColHighlighted ? "tk-matrix-col-highlighted" : ""}`}
+                        onMouseEnter={() => setHighlightedRep(rep.contractAddress)}
+                        onMouseLeave={() => setHighlightedRep(null)}
+                      >
                         {isAvailable ? (
                           <span style={{ fontWeight: 700, fontFamily: "var(--font-mono)", fontVariantNumeric: "tabular-nums", color: "var(--text-primary)" }}>
                             {rep.shareEquivalentPerToken?.toFixed(4)} shares
@@ -335,12 +401,18 @@ export function InteractiveComparison({ matrix: initialMatrix }: InteractiveComp
                 </tr>
 
                 {/* Row 4: Reference Value / Token */}
-                <tr>
+                <tr className="tk-matrix-row">
                   <td className="tk-matrix-td tk-matrix-row-label">Reference Value</td>
                   {representations.map((rep) => {
                     const isAvailable = rep.normalizationStatus === "AVAILABLE";
+                    const isColHighlighted = highlightedRep === rep.contractAddress;
                     return (
-                      <td key={`refval-${rep.contractAddress}`} className="tk-matrix-td">
+                      <td
+                        key={`refval-${rep.contractAddress}`}
+                        className={`tk-matrix-td ${isColHighlighted ? "tk-matrix-col-highlighted" : ""}`}
+                        onMouseEnter={() => setHighlightedRep(rep.contractAddress)}
+                        onMouseLeave={() => setHighlightedRep(null)}
+                      >
                         {isAvailable ? (
                           <span style={{ fontWeight: 800, fontFamily: "var(--font-mono)", fontVariantNumeric: "tabular-nums", color: "var(--text-primary)" }}>
                             ${rep.referenceValuePerTokenUSD?.toFixed(2)} USD
@@ -354,26 +426,40 @@ export function InteractiveComparison({ matrix: initialMatrix }: InteractiveComp
                 </tr>
 
                 {/* Row 5: Secondary DEX Spot (Cached) */}
-                <tr>
+                <tr className="tk-matrix-row">
                   <td className="tk-matrix-td tk-matrix-row-label">Secondary DEX Spot</td>
-                  {representations.map((rep) => (
-                    <td key={`dex-${rep.contractAddress}`} className="tk-matrix-td">
-                      <span style={{ fontWeight: 600, fontFamily: "var(--font-mono)", fontVariantNumeric: "tabular-nums", color: "var(--text-primary)" }}>
-                        {typeof rep.dexMarketPriceUSD === "number" && Number.isFinite(rep.dexMarketPriceUSD) && rep.dexMarketPriceUSD > 0
-                          ? `$${rep.dexMarketPriceUSD.toFixed(2)} USD`
-                          : "—"}
-                      </span>
-                    </td>
-                  ))}
+                  {representations.map((rep) => {
+                    const isColHighlighted = highlightedRep === rep.contractAddress;
+                    return (
+                      <td
+                        key={`dex-${rep.contractAddress}`}
+                        className={`tk-matrix-td ${isColHighlighted ? "tk-matrix-col-highlighted" : ""}`}
+                        onMouseEnter={() => setHighlightedRep(rep.contractAddress)}
+                        onMouseLeave={() => setHighlightedRep(null)}
+                      >
+                        <span style={{ fontWeight: 600, fontFamily: "var(--font-mono)", fontVariantNumeric: "tabular-nums", color: "var(--text-primary)" }}>
+                          {typeof rep.dexMarketPriceUSD === "number" && Number.isFinite(rep.dexMarketPriceUSD) && rep.dexMarketPriceUSD > 0
+                            ? `$${rep.dexMarketPriceUSD.toFixed(2)} USD`
+                            : "—"}
+                        </span>
+                      </td>
+                    );
+                  })}
                 </tr>
 
                 {/* Row 6: Reference Deviation */}
-                <tr>
+                <tr className="tk-matrix-row">
                   <td className="tk-matrix-td tk-matrix-row-label">Reference Deviation</td>
                   {representations.map((rep) => {
                     const isAvailable = rep.normalizationStatus === "AVAILABLE";
+                    const isColHighlighted = highlightedRep === rep.contractAddress;
                     return (
-                      <td key={`dev-${rep.contractAddress}`} className="tk-matrix-td">
+                      <td
+                        key={`dev-${rep.contractAddress}`}
+                        className={`tk-matrix-td ${isColHighlighted ? "tk-matrix-col-highlighted" : ""}`}
+                        onMouseEnter={() => setHighlightedRep(rep.contractAddress)}
+                        onMouseLeave={() => setHighlightedRep(null)}
+                      >
                         {isAvailable && rep.referenceDeviationPercent !== null ? (
                           <span
                             style={{
@@ -395,31 +481,39 @@ export function InteractiveComparison({ matrix: initialMatrix }: InteractiveComp
                 </tr>
 
                 {/* Row 7: Contract & Liquidity */}
-                <tr>
+                <tr className="tk-matrix-row">
                   <td className="tk-matrix-td tk-matrix-row-label">Contract & Liquidity</td>
-                  {representations.map((rep) => (
-                    <td key={`addr-${rep.contractAddress}`} className="tk-matrix-td">
-                      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "0.5rem" }}>
-                        <a
-                          href={`https://bscscan.com/token/${rep.contractAddress}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          style={{
-                            fontFamily: "var(--font-mono)",
-                            color: "var(--accent-primary)",
-                            fontSize: "0.78rem",
-                            fontWeight: 600,
-                            textDecoration: "none",
-                          }}
-                        >
-                          {rep.contractAddress.slice(0, 6)}...{rep.contractAddress.slice(-4)} ↗
-                        </a>
-                        <span style={{ fontSize: "0.72rem", color: "var(--text-muted)" }}>
-                          {rep.dexLiquidityTier}
-                        </span>
-                      </div>
-                    </td>
-                  ))}
+                  {representations.map((rep) => {
+                    const isColHighlighted = highlightedRep === rep.contractAddress;
+                    return (
+                      <td
+                        key={`addr-${rep.contractAddress}`}
+                        className={`tk-matrix-td ${isColHighlighted ? "tk-matrix-col-highlighted" : ""}`}
+                        onMouseEnter={() => setHighlightedRep(rep.contractAddress)}
+                        onMouseLeave={() => setHighlightedRep(null)}
+                      >
+                        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "0.5rem" }}>
+                          <a
+                            href={`https://bscscan.com/token/${rep.contractAddress}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            style={{
+                              fontFamily: "var(--font-mono)",
+                              color: "var(--accent-primary)",
+                              fontSize: "0.78rem",
+                              fontWeight: 600,
+                              textDecoration: "none",
+                            }}
+                          >
+                            {rep.contractAddress.slice(0, 6)}...{rep.contractAddress.slice(-4)} ↗
+                          </a>
+                          <span style={{ fontSize: "0.72rem", color: "var(--text-muted)" }}>
+                            {rep.dexLiquidityTier}
+                          </span>
+                        </div>
+                      </td>
+                    );
+                  })}
                 </tr>
               </tbody>
             </table>
@@ -445,10 +539,14 @@ export function InteractiveComparison({ matrix: initialMatrix }: InteractiveComp
       </section>
 
       {/* 4. PRIMARY INTERACTIVE CALCULATOR INSTRUMENT */}
-      <TokenValueCalculator matrix={activeMatrix} />
+      <div className="tk-enter-4">
+        <TokenValueCalculator matrix={activeMatrix} />
+      </div>
 
       {/* 5. HOW TO READ GUIDANCE */}
-      <HowToReadComparison />
+      <div className="tk-enter-4">
+        <HowToReadComparison />
+      </div>
 
       {/* 6. DEEP REPRESENTATION DETAIL DRAWER */}
       <RepresentationDetailDrawer
@@ -459,3 +557,4 @@ export function InteractiveComparison({ matrix: initialMatrix }: InteractiveComp
     </div>
   );
 }
+
