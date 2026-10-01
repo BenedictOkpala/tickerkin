@@ -129,7 +129,7 @@ export function DnaGraph({ data, onInspectEvidence, onInspectRepresentation }: D
       </div>
 
       {/* 3. Representation Cards Container (Desktop Grid / Mobile Vertical Lineage) */}
-      <div className="kin-representations-container animate-fade-in">
+      <div className={`kin-representations-container kin-count-${count <= 1 ? 1 : count === 2 ? 2 : 3} animate-fade-in`}>
         {representations.map((rep, idx) => {
           const isTargetMatch = matchedContractAddress
             ? rep.contractAddress.toLowerCase() === matchedContractAddress.toLowerCase()
@@ -163,78 +163,6 @@ export function DnaGraph({ data, onInspectEvidence, onInspectRepresentation }: D
           );
         })}
       </div>
-
-      {/* Responsive Styles for Desktop / Mobile Kin Map layout */}
-      <style jsx>{`
-        @media (min-width: 880px) {
-          .kin-desktop-connector {
-            display: flex !important;
-          }
-          .kin-representations-container {
-            display: grid;
-            grid-template-columns: ${count === 1
-              ? "minmax(340px, 480px)"
-              : count === 2
-              ? "repeat(2, minmax(320px, 1fr))"
-              : "repeat(3, minmax(300px, 1fr))"};
-            max-width: ${count === 1 ? "480px" : "100%"};
-            margin: ${count === 1 ? "0 auto" : "0"};
-            gap: 1.75rem;
-            align-items: stretch;
-          }
-          .kin-card-wrapper {
-            display: flex;
-            height: 100%;
-          }
-          .kin-mobile-connector-node {
-            display: none !important;
-          }
-        }
-
-        @media (max-width: 879px) {
-          .kin-desktop-connector {
-            display: none !important;
-          }
-          .kin-representations-container {
-            display: flex;
-            flex-direction: column;
-            gap: 1.25rem;
-            margin-top: 1.25rem;
-            padding-left: 0.25rem;
-          }
-          .kin-card-wrapper {
-            display: flex;
-            align-items: stretch;
-            position: relative;
-            width: 100%;
-          }
-          .kin-mobile-connector-node {
-            position: relative;
-            width: 24px;
-            margin-right: 0.75rem;
-            display: flex;
-            justifyContent: center;
-          }
-          .kin-mobile-line {
-            position: absolute;
-            top: 0;
-            left: 11px;
-            width: 2px;
-            background-color: var(--border-card);
-          }
-          .kin-mobile-dot {
-            position: absolute;
-            top: 28px;
-            left: 8px;
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background-color: var(--accent-primary);
-            border: 2px solid var(--bg-surface);
-            z-index: 2;
-          }
-        }
-      `}</style>
     </div>
   );
 }

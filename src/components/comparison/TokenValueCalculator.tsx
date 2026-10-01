@@ -308,7 +308,7 @@ export function TokenValueCalculator({ matrix }: TokenValueCalculatorProps) {
               {/* Top Banner: Primary Calculated Reference Value */}
               <div className="tk-calc-result-header">
                 <div>
-                  <div style={{ fontSize: "0.76rem", fontWeight: 600, color: "var(--text-muted)", textTransform: "uppercase" }}>
+                  <div style={{ fontSize: "0.76rem", fontWeight: 600, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.03em" }}>
                     Total Normalized Reference Value
                   </div>
                   <div
@@ -317,6 +317,7 @@ export function TokenValueCalculator({ matrix }: TokenValueCalculatorProps) {
                       fontWeight: 800,
                       color: "var(--text-primary)",
                       fontFamily: "var(--font-mono)",
+                      fontVariantNumeric: "tabular-nums",
                       letterSpacing: "-0.02em",
                       marginTop: "0.1rem",
                     }}
@@ -326,7 +327,7 @@ export function TokenValueCalculator({ matrix }: TokenValueCalculatorProps) {
                 </div>
 
                 <div className="tk-calc-result-header-secondary">
-                  <div style={{ fontSize: "0.76rem", fontWeight: 600, color: "var(--text-muted)", textTransform: "uppercase" }}>
+                  <div style={{ fontSize: "0.76rem", fontWeight: 600, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.03em" }}>
                     Share-Equivalent Exposure
                   </div>
                   <div
@@ -335,6 +336,7 @@ export function TokenValueCalculator({ matrix }: TokenValueCalculatorProps) {
                       fontWeight: 800,
                       color: "var(--accent-primary)",
                       fontFamily: "var(--font-mono)",
+                      fontVariantNumeric: "tabular-nums",
                       marginTop: "0.1rem",
                     }}
                   >
@@ -347,28 +349,28 @@ export function TokenValueCalculator({ matrix }: TokenValueCalculatorProps) {
               <div className="tk-calc-metrics-grid">
                 <div className="tk-calc-metric-tile">
                   <div style={{ fontSize: "0.72rem", color: "var(--text-muted)" }}>Raw Tokens Entered</div>
-                  <div style={{ fontSize: "0.95rem", fontWeight: 700, color: "var(--text-primary)", fontFamily: "var(--font-mono)", marginTop: "0.15rem" }}>
+                  <div style={{ fontSize: "0.95rem", fontWeight: 700, color: "var(--text-primary)", fontFamily: "var(--font-mono)", fontVariantNumeric: "tabular-nums", marginTop: "0.15rem" }}>
                     {calculation.rawTokenAmount} {calculation.tokenSymbol}
                   </div>
                 </div>
 
                 <div className="tk-calc-metric-tile">
                   <div style={{ fontSize: "0.72rem", color: "var(--text-muted)" }}>Verified {calculation.factorLabel}</div>
-                  <div style={{ fontSize: "0.95rem", fontWeight: 700, color: "var(--accent-primary)", fontFamily: "var(--font-mono)", marginTop: "0.15rem" }}>
+                  <div style={{ fontSize: "0.95rem", fontWeight: 700, color: "var(--accent-primary)", fontFamily: "var(--font-mono)", fontVariantNumeric: "tabular-nums", marginTop: "0.15rem" }}>
                     {calculation.accountingFactor?.toFixed(6)}×
                   </div>
                 </div>
 
                 <div className="tk-calc-metric-tile">
                   <div style={{ fontSize: "0.72rem", color: "var(--text-muted)" }}>Underlying Stock Price</div>
-                  <div style={{ fontSize: "0.95rem", fontWeight: 700, color: "var(--text-primary)", fontFamily: "var(--font-mono)", marginTop: "0.15rem" }}>
+                  <div style={{ fontSize: "0.95rem", fontWeight: 700, color: "var(--text-primary)", fontFamily: "var(--font-mono)", fontVariantNumeric: "tabular-nums", marginTop: "0.15rem" }}>
                     ${calculation.underlyingReferencePriceUSD?.toFixed(2)} USD
                   </div>
                 </div>
 
                 <div className="tk-calc-metric-tile">
                   <div style={{ fontSize: "0.72rem", color: "var(--text-muted)" }}>Mechanism Value Accretion</div>
-                  <div style={{ fontSize: "0.95rem", fontWeight: 700, color: "#16a34a", fontFamily: "var(--font-mono)", marginTop: "0.15rem" }}>
+                  <div style={{ fontSize: "0.95rem", fontWeight: 700, color: "#16a34a", fontFamily: "var(--font-mono)", fontVariantNumeric: "tabular-nums", marginTop: "0.15rem" }}>
                     +${calculation.mechanismAccretionUSD?.toFixed(2)} USD
                   </div>
                 </div>
@@ -433,7 +435,7 @@ export function TokenValueCalculator({ matrix }: TokenValueCalculatorProps) {
               <div className="tk-calc-metrics-grid" style={{ opacity: 0.75 }}>
                 <div className="tk-calc-metric-tile">
                   <div style={{ fontSize: "0.72rem", color: "var(--text-muted)" }}>Raw Tokens Entered</div>
-                  <div style={{ fontSize: "0.95rem", fontWeight: 700, color: "var(--text-primary)", fontFamily: "var(--font-mono)", marginTop: "0.15rem" }}>
+                  <div style={{ fontSize: "0.95rem", fontWeight: 700, color: "var(--text-primary)", fontFamily: "var(--font-mono)", fontVariantNumeric: "tabular-nums", marginTop: "0.15rem" }}>
                     {calculation.rawTokenAmount} {calculation.tokenSymbol}
                   </div>
                 </div>

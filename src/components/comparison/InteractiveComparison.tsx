@@ -146,7 +146,7 @@ export function InteractiveComparison({ matrix: initialMatrix }: InteractiveComp
 
         <div style={{ display: "flex", alignItems: "center", gap: "1.5rem" }}>
           <div style={{ textAlign: "right" }}>
-            <div style={{ fontSize: "0.74rem", fontWeight: 600, color: "var(--text-muted)", textTransform: "uppercase" }}>
+            <div style={{ fontSize: "0.74rem", fontWeight: 600, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.03em" }}>
               Reference Price (Pyth Oracle Snapshot)
             </div>
             <div
@@ -155,6 +155,7 @@ export function InteractiveComparison({ matrix: initialMatrix }: InteractiveComp
                 fontWeight: 800,
                 color: "var(--text-primary)",
                 fontFamily: "var(--font-mono)",
+                fontVariantNumeric: "tabular-nums",
                 letterSpacing: "-0.01em",
               }}
             >
@@ -286,7 +287,7 @@ export function InteractiveComparison({ matrix: initialMatrix }: InteractiveComp
                     }}
                   >
                     <span style={{ color: "var(--text-secondary)" }}>{rep.factorLabel}</span>
-                    <span style={{ fontWeight: 700, fontFamily: "var(--font-mono)", color: "var(--accent-primary)" }}>
+                    <span style={{ fontWeight: 700, fontFamily: "var(--font-mono)", fontVariantNumeric: "tabular-nums", color: "var(--accent-primary)" }}>
                       {rep.accountingFactor?.toFixed(6)}×
                     </span>
                   </div>
@@ -302,7 +303,7 @@ export function InteractiveComparison({ matrix: initialMatrix }: InteractiveComp
                     }}
                   >
                     <span style={{ color: "var(--text-secondary)" }}>Share-Equivalent / Token</span>
-                    <span style={{ fontWeight: 700, fontFamily: "var(--font-mono)", color: "var(--text-primary)" }}>
+                    <span style={{ fontWeight: 700, fontFamily: "var(--font-mono)", fontVariantNumeric: "tabular-nums", color: "var(--text-primary)" }}>
                       {rep.shareEquivalentPerToken?.toFixed(4)} shares
                     </span>
                   </div>
@@ -318,7 +319,7 @@ export function InteractiveComparison({ matrix: initialMatrix }: InteractiveComp
                     }}
                   >
                     <span style={{ color: "var(--text-secondary)" }}>Reference Value / Token</span>
-                    <span style={{ fontWeight: 800, fontFamily: "var(--font-mono)", color: "var(--text-primary)" }}>
+                    <span style={{ fontWeight: 800, fontFamily: "var(--font-mono)", fontVariantNumeric: "tabular-nums", color: "var(--text-primary)" }}>
                       ${rep.referenceValuePerTokenUSD?.toFixed(2)} USD
                     </span>
                   </div>
@@ -334,7 +335,7 @@ export function InteractiveComparison({ matrix: initialMatrix }: InteractiveComp
                     }}
                   >
                     <span style={{ color: "var(--text-secondary)" }}>Secondary DEX Spot (Cached)</span>
-                    <span style={{ fontWeight: 600, fontFamily: "var(--font-mono)", color: "var(--text-primary)" }}>
+                    <span style={{ fontWeight: 600, fontFamily: "var(--font-mono)", fontVariantNumeric: "tabular-nums", color: "var(--text-primary)" }}>
                       {typeof rep.dexMarketPriceUSD === "number" && Number.isFinite(rep.dexMarketPriceUSD) && rep.dexMarketPriceUSD > 0
                         ? `$${rep.dexMarketPriceUSD.toFixed(2)} USD`
                         : "—"}
@@ -367,6 +368,7 @@ export function InteractiveComparison({ matrix: initialMatrix }: InteractiveComp
                     <span
                       style={{
                         fontFamily: "var(--font-mono)",
+                        fontVariantNumeric: "tabular-nums",
                         fontWeight: 800,
                         fontSize: "0.88rem",
                         color:

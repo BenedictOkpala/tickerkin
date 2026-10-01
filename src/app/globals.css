@@ -60,6 +60,50 @@
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 }
 
+/* Editorial Financial Typography Utilities */
+.tk-tabular-nums {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+}
+
+.tk-kicker {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--accent-primary);
+}
+
+.tk-editorial-heading {
+  font-family: var(--font-sans);
+  letter-spacing: -0.025em;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+.tk-hairline-divider {
+  height: 1px;
+  background-color: var(--border-subtle);
+  margin: 0.5rem 0;
+  border: none;
+}
+
+.tk-metric-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--text-muted);
+}
+
+.tk-metric-value {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -426,6 +470,86 @@ input {
   }
   .topbar-chain-container {
     padding: 0.25rem 0.45rem !important;
+  }
+}
+
+/* ==========================================================================
+   Responsive Kin Map (Desktop Grid & Hairline Connectors vs Mobile Vertical)
+   ========================================================================== */
+@media (min-width: 880px) {
+  .kin-desktop-connector {
+    display: flex !important;
+  }
+  .kin-representations-container {
+    display: grid !important;
+    gap: 1.75rem;
+    align-items: stretch;
+  }
+  .kin-representations-container.kin-count-1 {
+    grid-template-columns: minmax(340px, 480px) !important;
+    max-width: 480px !important;
+    margin: 0 auto !important;
+  }
+  .kin-representations-container.kin-count-2 {
+    grid-template-columns: repeat(2, minmax(320px, 1fr)) !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+  }
+  .kin-representations-container.kin-count-3 {
+    grid-template-columns: repeat(3, minmax(300px, 1fr)) !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+  }
+  .kin-card-wrapper {
+    display: flex;
+    height: 100%;
+  }
+  .kin-mobile-connector-node {
+    display: none !important;
+  }
+}
+
+@media (max-width: 879px) {
+  .kin-desktop-connector {
+    display: none !important;
+  }
+  .kin-representations-container {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 1.25rem !important;
+    margin-top: 1.25rem !important;
+    padding-left: 0.25rem !important;
+  }
+  .kin-card-wrapper {
+    display: flex;
+    align-items: stretch;
+    position: relative;
+    width: 100%;
+  }
+  .kin-mobile-connector-node {
+    position: relative;
+    width: 24px;
+    margin-right: 0.75rem;
+    display: flex;
+    justify-content: center;
+  }
+  .kin-mobile-line {
+    position: absolute;
+    top: 0;
+    left: 11px;
+    width: 2px;
+    background-color: var(--border-card);
+  }
+  .kin-mobile-dot {
+    position: absolute;
+    top: 28px;
+    left: 8px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: var(--accent-primary);
+    border: 2px solid var(--bg-surface);
+    z-index: 2;
   }
 }
 

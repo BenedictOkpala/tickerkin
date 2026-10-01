@@ -83,7 +83,7 @@ export function TopBar({ onToggleMobileSidebar, currentQuery = "" }: TopBarProps
       }}
     >
       {/* Left: Mobile Toggle + Search Bar */}
-      <div style={{ display: "flex", alignItems: "center", gap: "0.65rem", flex: 1, maxWidth: "780px" }}>
+      <div style={{ display: "flex", alignItems: "center", gap: "0.85rem", flex: 1, maxWidth: "780px" }}>
         {/* Mobile Hamburger Button */}
         <button
           type="button"
@@ -94,15 +94,13 @@ export function TopBar({ onToggleMobileSidebar, currentQuery = "" }: TopBarProps
             display: "none",
             alignItems: "center",
             justifyContent: "center",
-            width: "38px",
-            height: "38px",
-            minWidth: "38px",
-            minHeight: "38px",
+            width: "36px",
+            height: "36px",
             borderRadius: "var(--radius-xs)",
             backgroundColor: "var(--bg-app)",
             border: "1px solid var(--border-subtle)",
             color: "var(--text-primary)",
-            fontSize: "1.15rem",
+            fontSize: "1.1rem",
           }}
         >
           ☰
@@ -118,11 +116,11 @@ export function TopBar({ onToggleMobileSidebar, currentQuery = "" }: TopBarProps
             backgroundColor: "var(--bg-app)",
             border: "1px solid var(--border-card)",
             borderRadius: "var(--radius-md)",
-            padding: "0.3rem 0.55rem",
+            padding: "0.3rem 0.65rem",
             transition: "border-color 0.15s",
           }}
         >
-          <span style={{ color: "var(--text-muted)", fontSize: "0.9rem", marginRight: "0.4rem" }}>
+          <span style={{ color: "var(--text-muted)", fontSize: "0.9rem", marginRight: "0.5rem" }}>
             ⌕
           </span>
 
@@ -130,7 +128,7 @@ export function TopBar({ onToggleMobileSidebar, currentQuery = "" }: TopBarProps
             type="text"
             value={inputVal}
             onChange={(e) => setInputVal(e.target.value)}
-            placeholder="Search ticker (e.g. NVDA) or contract (0x...)"
+            placeholder="Search ticker (e.g. NVDA, AAPL) or BSC contract (0x...)"
             aria-label="Search ticker or BSC contract"
             style={{
               flex: 1,
@@ -140,7 +138,6 @@ export function TopBar({ onToggleMobileSidebar, currentQuery = "" }: TopBarProps
               color: "var(--text-primary)",
               fontSize: "0.86rem",
               fontFamily: inputVal.startsWith("0x") ? "var(--font-mono)" : "inherit",
-              minWidth: 0,
             }}
           />
 
@@ -148,7 +145,6 @@ export function TopBar({ onToggleMobileSidebar, currentQuery = "" }: TopBarProps
             type="submit"
             disabled={searching || !inputVal.trim()}
             className="topbar-search-btn"
-            aria-label="Submit search"
             style={{
               backgroundColor: "var(--accent-primary)",
               color: "#ffffff",
@@ -158,11 +154,10 @@ export function TopBar({ onToggleMobileSidebar, currentQuery = "" }: TopBarProps
               borderRadius: "var(--radius-xs)",
               opacity: searching || !inputVal.trim() ? 0.6 : 1,
               transition: "opacity 0.15s",
-              cursor: "pointer",
             }}
           >
             <span className="topbar-search-btn-text">{searching ? "..." : "Search"}</span>
-            <span className="topbar-search-btn-icon" style={{ display: "none" }}>{searching ? "..." : "↵"}</span>
+            <span className="topbar-search-btn-icon" style={{ display: "none" }}>{searching ? "..." : "⌕"}</span>
           </button>
         </form>
 
@@ -193,7 +188,7 @@ export function TopBar({ onToggleMobileSidebar, currentQuery = "" }: TopBarProps
       </div>
 
       {/* Right: Chain Context */}
-      <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", flexShrink: 0 }}>
+      <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
         <div
           className="topbar-chain-container"
           style={{
@@ -209,7 +204,7 @@ export function TopBar({ onToggleMobileSidebar, currentQuery = "" }: TopBarProps
             border: "1px solid var(--accent-bnb-border)",
           }}
         >
-          <span style={{ width: "6px", height: "6px", borderRadius: "50%", backgroundColor: "var(--accent-bnb)", flexShrink: 0 }} />
+          <span style={{ width: "6px", height: "6px", borderRadius: "50%", backgroundColor: "var(--accent-bnb)" }} />
           <span className="topbar-chain-full">BNB Smart Chain</span>
           <span className="topbar-chain-compact" style={{ display: "none" }}>BSC</span>
         </div>
