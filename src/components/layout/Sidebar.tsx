@@ -29,6 +29,29 @@ export function Sidebar({ activeTicker = "NVDA", onCloseMobile }: SidebarProps) 
 
   const isApi = cleanPath === "/developers/api" || cleanPath.startsWith("/developers");
 
+  const handleNavClick = (targetHref: string) => {
+    onCloseMobile?.();
+
+    if (typeof window === "undefined") return;
+
+    const targetNormalized =
+      targetHref.split("?")[0].replace(/\/+$/, "").toLowerCase() || "/";
+    const currentNormalized =
+      (pathname ? pathname.split("?")[0].replace(/\/+$/, "") : "").toLowerCase() || "/";
+
+    if (targetNormalized === currentNormalized) {
+      const prefersReducedMotion =
+        typeof window.matchMedia === "function" &&
+        window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+      window.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: prefersReducedMotion ? "auto" : "smooth",
+      });
+    }
+  };
+
   return (
     <aside
       style={{
@@ -100,7 +123,7 @@ export function Sidebar({ activeTicker = "NVDA", onCloseMobile }: SidebarProps) 
 
           <Link
             href="/"
-            onClick={onCloseMobile}
+            onClick={() => handleNavClick("/")}
             className={`sidebar-nav-link ${isExploreOverview ? "active" : ""}`}
           >
             <span>Home</span>
@@ -108,7 +131,7 @@ export function Sidebar({ activeTicker = "NVDA", onCloseMobile }: SidebarProps) 
 
           <Link
             href="/equities"
-            onClick={onCloseMobile}
+            onClick={() => handleNavClick("/equities")}
             className={`sidebar-nav-link ${isEquities ? "active" : ""}`}
           >
             <span>Equities</span>
@@ -116,7 +139,7 @@ export function Sidebar({ activeTicker = "NVDA", onCloseMobile }: SidebarProps) 
 
           <Link
             href="/providers"
-            onClick={onCloseMobile}
+            onClick={() => handleNavClick("/providers")}
             className={`sidebar-nav-link ${isProviders ? "active" : ""}`}
           >
             <span>Providers</span>
@@ -140,7 +163,7 @@ export function Sidebar({ activeTicker = "NVDA", onCloseMobile }: SidebarProps) 
 
           <Link
             href={basePath}
-            onClick={onCloseMobile}
+            onClick={() => handleNavClick(basePath)}
             className={`sidebar-nav-link ${isIntelligenceOverview ? "active" : ""}`}
           >
             <span>Overview</span>
@@ -148,7 +171,7 @@ export function Sidebar({ activeTicker = "NVDA", onCloseMobile }: SidebarProps) 
 
           <Link
             href={`${basePath}/kin`}
-            onClick={onCloseMobile}
+            onClick={() => handleNavClick(`${basePath}/kin`)}
             className={`sidebar-nav-link ${isKinMap ? "active" : ""}`}
           >
             <span>Kin Map</span>
@@ -168,7 +191,7 @@ export function Sidebar({ activeTicker = "NVDA", onCloseMobile }: SidebarProps) 
 
           <Link
             href={`${basePath}/compare`}
-            onClick={onCloseMobile}
+            onClick={() => handleNavClick(`${basePath}/compare`)}
             className={`sidebar-nav-link ${isCompare ? "active" : ""}`}
           >
             <span>Compare</span>
@@ -176,7 +199,7 @@ export function Sidebar({ activeTicker = "NVDA", onCloseMobile }: SidebarProps) 
 
           <Link
             href={`${basePath}/evidence`}
-            onClick={onCloseMobile}
+            onClick={() => handleNavClick(`${basePath}/evidence`)}
             className={`sidebar-nav-link ${isEvidence ? "active" : ""}`}
           >
             <span>Evidence</span>
@@ -200,7 +223,7 @@ export function Sidebar({ activeTicker = "NVDA", onCloseMobile }: SidebarProps) 
 
           <Link
             href="/developers/api"
-            onClick={onCloseMobile}
+            onClick={() => handleNavClick("/developers/api")}
             className={`sidebar-nav-link ${isApi ? "active" : ""}`}
           >
             <span>RWA Lens API</span>

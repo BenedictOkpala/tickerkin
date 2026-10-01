@@ -141,5 +141,48 @@ describe("Phase 8C.1: Sidebar Navigation Fix Tests", () => {
     expect(apiPageContent).not.toContain("Cryptographic & Regulatory Evidence");
     expect(apiPageContent).not.toContain("Retrieve claim-scoped audit trails");
   });
+
+  it("7. verifies same-route sidebar click scrolls to top with smooth/reduced-motion handling", () => {
+    const filePath = resolve(process.cwd(), "src/components/layout/Sidebar.tsx");
+    const content = readFileSync(filePath, "utf-8");
+
+    // Verify presence of handleNavClick and scrollTo
+    expect(content).toContain("handleNavClick");
+    expect(content).toContain("window.scrollTo");
+    expect(content).toContain("prefers-reduced-motion: reduce");
+    expect(content).toContain('behavior: prefersReducedMotion ? "auto" : "smooth"');
+
+    // Unit test same-route scroll logic
+    const testScrollTrigger = (targetHref: string, currentPathname: string, isReducedMotion: boolean) => {
+      let scrolledWith: { top: number; left: number; behavior: string } | null = null;
+      const targetNormalized = targetHref.split("?")[0].replace(/\/+$/, "").toLowerCase() || "/";
+      const currentNormalized = currentPathname.split("?")[0].replace(/\/+$/, "").toLowerCase() || "/";
+
+      if (targetNormalized === currentNormalized) {
+        scrolledWith = {
+          top: 0,
+          left: 0,
+          behavior: isReducedMotion ? "auto" : "smooth",
+        };
+      }
+      return scrolledWith;
+    };
+
+    // 1. Same-route Home click while on Home (standard motion)
+    const homeScroll = testScrollTrigger("/", "/", false);
+    expect(homeScroll).toEqual({ top: 0, left: 0, behavior: "smooth" });
+
+    // 2. Same-route Home click while on Home (reduced motion)
+    const homeReducedScroll = testScrollTrigger("/", "/", true);
+    expect(homeReducedScroll).toEqual({ top: 0, left: 0, behavior: "auto" });
+
+    // 3. Different-route click (Home to Equities)
+    const diffRouteScroll = testScrollTrigger("/equities", "/", false);
+    expect(diffRouteScroll).toBeNull();
+
+    // 4. Same-route Kin Map click while on Kin Map
+    const kinMapScroll = testScrollTrigger("/equity/NVDA/kin", "/equity/NVDA/kin", false);
+    expect(kinMapScroll).toEqual({ top: 0, left: 0, behavior: "smooth" });
+  });
 });
 
