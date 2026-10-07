@@ -1,7 +1,7 @@
+import { buildEquityComparisonAsync } from "@/lens/comparison-server";
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import {
   buildEquityComparison,
-  buildEquityComparisonAsync,
   calculateTokenValue,
   normalizeRepresentationComparison,
   getUnderlyingEquityReference,

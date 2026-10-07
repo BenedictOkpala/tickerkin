@@ -2,7 +2,7 @@
 
 import { useState, use } from "react";
 import Link from "next/link";
-import { lookupByTicker } from "@/lens";
+import { lookupByTicker } from "@/lens/baseline";
 import { formatEconomicMechanism } from "@/lens/presentation";
 import type { TokenizedRepresentation } from "@/types/token";
 import { RepresentationDetailDrawer } from "@/components/stockdna/RepresentationDetailDrawer";

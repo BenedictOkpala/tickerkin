@@ -30,7 +30,7 @@ export async function GET(
       normalizedAddress: result.normalizedAddress,
       underlying: result.underlying,
       matchedRepresentation: result.matchedRepresentation,
-    });
+    }, 200, "no-store");
   } catch {
     return errorResponse("INTERNAL_ERROR", "An unexpected error occurred processing the contract lookup.", 500);
   }

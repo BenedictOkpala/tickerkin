@@ -1,4 +1,4 @@
-import { buildEquityComparisonAsync } from "@/lens/comparison";
+import { buildEquityComparisonAsync } from "@/lens/comparison-server";
 import { successResponse, errorResponse } from "@/lib/api-response";
 
 interface RouteParams {
@@ -32,7 +32,7 @@ export async function GET(
       );
     }
 
-    return successResponse(comparison);
+    return successResponse(comparison, 200, "no-store");
   } catch {
     return errorResponse(
       "INTERNAL_ERROR",

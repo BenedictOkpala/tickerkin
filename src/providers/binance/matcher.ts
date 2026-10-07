@@ -1,3 +1,4 @@
+import { parsePositiveDecimal } from "./numeric";
 import type { TokenizedRepresentation, ProviderId } from "@/types/token";
 import type { BinanceRawStockRecord, IdentityMatchResult } from "@/types/binance";
 
@@ -94,8 +95,8 @@ export function matchRepresentationIdentity(
   }
 
   // 5. Multiplier must be a valid numeric string
-  const numMultiplier = Number.parseFloat(candidateRecord.multiplier);
-  if (Number.isNaN(numMultiplier) || !Number.isFinite(numMultiplier) || numMultiplier <= 0) {
+  const numMultiplier = parsePositiveDecimal(candidateRecord.multiplier);
+  if (numMultiplier === null) {
     return {
       matched: false,
       confidence: "NO_MATCH",

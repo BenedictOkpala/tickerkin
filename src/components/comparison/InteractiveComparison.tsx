@@ -5,7 +5,7 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import type { EquityComparisonMatrix, NormalizedRepresentationComparison } from "@/types/comparison";
 import type { TokenizedRepresentation } from "@/types/token";
-import { lookupByContract } from "@/lens";
+import { lookupByContract } from "@/lens/baseline";
 import { HowToReadComparison } from "./HowToReadComparison";
 import { TokenValueCalculator } from "./TokenValueCalculator";
 import { RepresentationDetailDrawer } from "@/components/stockdna/RepresentationDetailDrawer";

@@ -1,3 +1,4 @@
+import { parsePositiveDecimal } from "@/providers/binance/numeric";
 import type {
   EquityComparisonMatrix,
   NormalizedRepresentationComparison,
@@ -9,7 +10,7 @@ import type {
 } from "@/types/comparison";
 import type { TokenizedRepresentation } from "@/types/token";
 import { getFactorFreshness } from "./freshness";
-import { lookupByTicker, lookupByTickerAsync } from "./engine";
+import { lookupByTicker } from "./baseline";
 import { formatEconomicMechanism, getClaimScopedEvidence } from "./presentation";
 
 /**
@@ -132,8 +133,8 @@ export function normalizeRepresentationComparison(
   if (representation.providerId === "ondo") {
     factorLabel = "Scale Factor";
     if (representation.liveEnrichment?.rawMultiplier) {
-      const parsed = Number.parseFloat(representation.liveEnrichment.rawMultiplier);
-      if (!Number.isNaN(parsed) && Number.isFinite(parsed) && parsed > 0) {
+      const parsed = parsePositiveDecimal(representation.liveEnrichment.rawMultiplier);
+      if (parsed !== null) {
         accountingFactor = parsed;
         normalizationStatus = "AVAILABLE";
         factorSource = representation.liveEnrichment.provenance.sourceName;
@@ -146,8 +147,8 @@ export function normalizeRepresentationComparison(
   } else if (representation.providerId === "bstocks") {
     factorLabel = "Multiplier";
     if (representation.liveEnrichment?.rawMultiplier) {
-      const parsed = Number.parseFloat(representation.liveEnrichment.rawMultiplier);
-      if (!Number.isNaN(parsed) && Number.isFinite(parsed) && parsed > 0) {
+      const parsed = parsePositiveDecimal(representation.liveEnrichment.rawMultiplier);
+      if (parsed !== null) {
         accountingFactor = parsed;
         normalizationStatus = "AVAILABLE";
         factorSource = representation.liveEnrichment.provenance.sourceName;
@@ -160,8 +161,8 @@ export function normalizeRepresentationComparison(
   } else if (representation.providerId === "xstocks") {
     factorLabel = "Multiplier";
     if (representation.liveEnrichment?.rawMultiplier) {
-      const parsed = Number.parseFloat(representation.liveEnrichment.rawMultiplier);
-      if (!Number.isNaN(parsed) && Number.isFinite(parsed) && parsed > 0) {
+      const parsed = parsePositiveDecimal(representation.liveEnrichment.rawMultiplier);
+      if (parsed !== null) {
         accountingFactor = parsed;
         normalizationStatus = "AVAILABLE";
         factorSource = representation.liveEnrichment.provenance.sourceName;
@@ -295,27 +296,6 @@ export function buildEquityComparison(
     representations: comparisonRepresentations,
     generatedAt: new Date().toISOString(),
   };
-}
-
-/**
- * Builds the complete Equity Comparison Matrix asynchronously with dynamic enrichment.
- */
-export async function buildEquityComparisonAsync(
-  ticker: string
-): Promise<EquityComparisonMatrix | null> {
-  const cleanTicker = ticker.trim().toUpperCase();
-  const underlying = getUnderlyingEquityReference(cleanTicker);
-
-  if (!underlying) {
-    return null;
-  }
-
-  const lookup = await lookupByTickerAsync(cleanTicker);
-  if (!lookup.success) {
-    return null;
-  }
-
-  return buildEquityComparison(cleanTicker, lookup.representations);
 }
 
 /**

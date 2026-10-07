@@ -2,7 +2,7 @@
 
 import { use } from "react";
 import { notFound } from "next/navigation";
-import { lookupByTicker } from "@/lens";
+import { lookupByTicker } from "@/lens/baseline";
 import { getClaimScopedEvidence } from "@/lens/presentation";
 
 interface EvidencePageProps {

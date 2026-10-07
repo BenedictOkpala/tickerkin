@@ -55,3 +55,16 @@ export interface BinanceLiveEnrichment {
   readonly matchBasis: string;
   readonly provenance: EvidenceRecord;
 }
+
+export interface BinanceSearchObservation {
+ readonly assets: readonly { ticker: string; companyName: string; providerId: "ondo" | "bstocks"; chainId: 56; contractAddress: string; tokenSymbol: string }[];
+ readonly retrievedAt: string;
+ readonly freshness: "SNAPSHOT" | "CACHED";
+}
+export interface BinanceIdentityMetadata {
+ readonly companyName: string;
+ readonly tokenSymbol: string;
+ readonly retrievedAt: string;
+ readonly freshness: "SNAPSHOT" | "CACHED";
+ readonly provenance: EvidenceRecord;
+}

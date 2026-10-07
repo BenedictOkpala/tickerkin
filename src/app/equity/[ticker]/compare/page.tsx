@@ -2,7 +2,7 @@
 
 import { useState, useEffect, use } from "react";
 import { notFound } from "next/navigation";
-import { lookupByTicker, lookupByTickerAsync } from "@/lens";
+import { lookupByTicker } from "@/lens/baseline";
 import {
   formatEconomicMechanism,
   formatDividendHandling,
@@ -28,11 +28,9 @@ export default function ComparePage({ params }: ComparePageProps) {
 
   useEffect(() => {
     let isMounted = true;
-    lookupByTickerAsync(ticker).then((asyncResult) => {
-      if (isMounted && asyncResult.success) {
-        setActiveRepresentations(asyncResult.representations);
-      }
-    });
+    fetch("/api/lens/ticker/" + encodeURIComponent(ticker)).then((response) => response.json()).then((payload) => {
+      if (isMounted && payload.ok) setActiveRepresentations(payload.data.representations);
+    }).catch(() => { /* Preserve baseline on failure. */ });
     return () => {
       isMounted = false;
     };

@@ -28,7 +28,7 @@ export async function GET(
       query: result.query,
       underlying: result.underlying,
       representations: result.representations,
-    });
+    }, 200, "no-store");
   } catch {
     return errorResponse("INTERNAL_ERROR", "An unexpected error occurred processing the ticker lookup.", 500);
   }

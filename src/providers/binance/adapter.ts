@@ -1,3 +1,4 @@
+import { parsePositiveDecimal } from "./numeric";
 import type { TokenizedRepresentation } from "@/types/token";
 import type { EconomicModel } from "@/types/economic";
 import type { EvidenceRecord } from "@/types/provenance";
@@ -36,7 +37,7 @@ export class BinanceRwaAdapter {
       sourceName: "Binance Web3 RWA Data",
       sourceRef: this.client.getBaseUrl(),
       confidence: matchResult.confidence === "HIGH" ? "HIGH" : "MEDIUM",
-      observedAt: new Date().toISOString(),
+
       notes: `Enriched via Binance Web3 RWA Data public indexer. Identity match: ${matchResult.matchBasis}`,
     };
   }
@@ -48,9 +49,10 @@ export class BinanceRwaAdapter {
     record: BinanceRawStockRecord,
     matchResult: IdentityMatchResult
   ): BinanceLiveEnrichment {
-    const numMultiplier = Number.parseFloat(record.multiplier);
-    const lastUpdateIso = record.lastUpdateTime
-      ? new Date(record.lastUpdateTime).toISOString()
+    const numMultiplier = parsePositiveDecimal(record.multiplier);
+    if (numMultiplier === null) throw new Error("Invalid factor");
+    const lastUpdateIso = Number.isFinite(record.lastUpdateTime) && record.lastUpdateTime! > 0 && record.lastUpdateTime! <= 8640000000000000
+      ? new Date(record.lastUpdateTime!).toISOString()
       : undefined;
 
     return {
