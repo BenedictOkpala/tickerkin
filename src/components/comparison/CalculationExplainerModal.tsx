@@ -161,7 +161,7 @@ export function CalculationExplainerModal({ isOpen, onClose }: CalculationExplai
               </span>
             </div>
             <div style={{ fontSize: "0.82rem", color: "var(--text-primary)", fontWeight: 600 }}>
-              Live Accounting / Multiplier Factor
+              Verified Accounting / Multiplier Factor
             </div>
             <div style={{ fontSize: "0.78rem", color: "var(--text-secondary)", lineHeight: 1.4 }}>
               Retrieved directly from on-chain smart contracts or verified issuer feeds (e.g. BTech or Backed contract <code>multiplier()</code> on BNB Smart Chain). If unverified, the factor is not assumed.

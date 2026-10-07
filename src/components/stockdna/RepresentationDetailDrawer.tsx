@@ -1,5 +1,7 @@
 "use client";
 
+import { getFactorFreshness, formatFactorFreshness, formatFreshnessDetail } from "@/lens/freshness";
+import type { NormalizedRepresentationComparison } from "@/types/comparison";
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import type { TokenizedRepresentation } from "@/types/token";
@@ -15,12 +17,14 @@ interface RepresentationDetailDrawerProps {
   readonly representation: TokenizedRepresentation | null;
   readonly underlying: UnderlyingEquity | null;
   readonly onClose: () => void;
+  readonly comparison?: NormalizedRepresentationComparison;
 }
 
 export function RepresentationDetailDrawer({
   representation,
   underlying,
   onClose,
+  comparison,
 }: RepresentationDetailDrawerProps) {
   const [copied, setCopied] = useState(false);
 
@@ -47,7 +51,13 @@ export function RepresentationDetailDrawer({
   };
 
   const explanation = getMechanismExplanation(representation.economicModel.mechanism);
-  const claimEvidence = getClaimScopedEvidence(representation, underlying);
+  const claimEvidence = comparison?.claims ?? getClaimScopedEvidence(representation, underlying);
+  const factor = comparison ? comparison.accountingFactor : representation.liveEnrichment?.rawMultiplier;
+  const factorComponent = comparison?.dataComponents?.factor ?? (representation.liveEnrichment ? {
+    status: getFactorFreshness(representation.liveEnrichment),
+    source: representation.liveEnrichment.provenance.sourceName,
+    timestamp: representation.liveEnrichment.lastUpdateIso,
+  } : undefined);
   const dividendText = formatDividendHandling(
     "dividendHandling" in representation.economicModel
       ? representation.economicModel.dividendHandling
@@ -246,10 +256,10 @@ export function RepresentationDetailDrawer({
 
               {/* Dynamic Factor / Live Status */}
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", paddingTop: "0.25rem", borderTop: "1px solid var(--border-subtle)" }}>
-                <span style={{ fontSize: "0.8rem", color: "var(--text-muted)" }}>Current Dynamic Factor:</span>
-                {representation.liveEnrichment ? (
-                  <span style={{ fontSize: "0.84rem", fontWeight: 700, color: "var(--accent-primary)", fontFamily: "var(--font-mono)" }}>
-                    Factor: {representation.liveEnrichment.rawMultiplier} (Live)
+                <span style={{ fontSize: "0.8rem", color: "var(--text-muted)" }}>Dynamic Factor:</span>
+                {factor !== null && factor !== undefined ? (
+                  <span title={formatFreshnessDetail(factorComponent)} style={{ fontSize: "0.84rem", fontWeight: 700, color: "var(--accent-primary)", fontFamily: "var(--font-mono)" }}>
+                    Factor: {factor} ({formatFactorFreshness(factorComponent)})
                   </span>
                 ) : (
                   <span style={{ fontSize: "0.78rem", color: "var(--text-muted)", fontStyle: "italic" }}>

@@ -1,3 +1,4 @@
+import { getFactorFreshness } from "./freshness";
 import type { TokenizedRepresentation } from "@/types/token";
 import type { UnderlyingEquity } from "@/types/equity";
 import type { EvidenceClass, ConfidenceLevel } from "@/types/provenance";
@@ -171,14 +172,14 @@ export function getClaimScopedEvidence(
     const live = representation.liveEnrichment;
     claims.push({
       claimType: "DYNAMIC_FACTOR",
-      title: "Live Economic Multiplier / Rate Tracking",
-      claim: `Live factor (${live.rawMultiplier}) matched with ${live.matchConfidence} confidence based on ${live.matchBasis}.`,
+      title: "Verified Economic Multiplier / Rate Tracking",
+      claim: `${getFactorFreshness(live) === "LIVE" ? "Live" : "Cached"} factor (${live.rawMultiplier}) matched with ${live.matchConfidence} confidence based on ${live.matchBasis}.`,
       evidenceDetail: `Data source: ${live.provenance.sourceName} · Match basis: ${live.matchBasis}${
         live.lastUpdateIso ? ` · Last updated: ${live.lastUpdateIso}` : ""
       }`,
-      sourceName: "Binance Web3 RWA Data Service",
-      sourceRef: "https://www.binance.com",
-      sourceLabel: "Binance Web3 RWA ↗",
+      sourceName: live.provenance.sourceName,
+      sourceRef: live.provenance.sourceRef,
+      sourceLabel: `${live.provenance.sourceName}${live.provenance.sourceRef ? " ↗" : ""}`,
       sourceClass: live.provenance.sourceClass,
       confidence: live.provenance.confidence,
     });

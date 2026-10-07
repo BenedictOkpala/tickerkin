@@ -1,5 +1,6 @@
 "use client";
 
+import { formatFactorFreshness, formatFreshnessDetail } from "@/lens/freshness";
 import React, { useState, useMemo } from "react";
 import type { EquityComparisonMatrix } from "@/types/comparison";
 import type { ProviderId } from "@/types/token";
@@ -123,7 +124,7 @@ export function TokenValueCalculator({ matrix }: TokenValueCalculatorProps) {
             border: "1px solid var(--border-subtle)",
           }}
         >
-          Underlying: <strong style={{ color: "var(--text-primary)" }}>${matrix.underlying.referencePriceUSD?.toFixed(2)} USD</strong> (Pyth Oracle Snapshot · Market Closed)
+          Underlying: <strong title={`Reference snapshot as of ${matrix.underlying.timestamp ?? "unknown"}`} style={{ color: "var(--text-primary)" }}>${matrix.underlying.referencePriceUSD?.toFixed(2)} USD</strong> (Pyth Oracle Snapshot)
         </div>
       </div>
 
@@ -237,7 +238,7 @@ export function TokenValueCalculator({ matrix }: TokenValueCalculatorProps) {
                       textAlign: "center",
                     }}
                   >
-                    {isAvailable ? "Available · Live BNB Chain factor" : "Normalization unavailable"}
+                    {isAvailable ? `Available · ${formatFactorFreshness(rep.dataComponents?.factor)}` : "Normalization unavailable"}
                   </span>
                 </button>
               );
@@ -285,7 +286,7 @@ export function TokenValueCalculator({ matrix }: TokenValueCalculatorProps) {
                       marginTop: "0.18rem",
                     }}
                   >
-                    {isAvailable ? "Available · Live BNB Chain factor" : "Normalization unavailable"}
+                    {isAvailable ? `Available · ${formatFactorFreshness(rep.dataComponents?.factor)}` : "Normalization unavailable"}
                   </span>
                 </button>
               );
@@ -366,7 +367,7 @@ export function TokenValueCalculator({ matrix }: TokenValueCalculatorProps) {
                 </div>
 
                 <div className="tk-calc-metric-tile">
-                  <div style={{ fontSize: "0.72rem", color: "var(--text-muted)" }}>Underlying Stock Price</div>
+                  <div title={formatFreshnessDetail(calculation.dataComponents?.referencePrice)} style={{ fontSize: "0.72rem", color: "var(--text-muted)" }}>Underlying Stock Price (Snapshot)</div>
                   <div style={{ fontSize: "0.95rem", fontWeight: 700, color: "var(--text-primary)", fontFamily: "var(--font-mono)", fontVariantNumeric: "tabular-nums", marginTop: "0.15rem" }}>
                     ${calculation.underlyingReferencePriceUSD?.toFixed(2)} USD
                   </div>
@@ -397,7 +398,7 @@ export function TokenValueCalculator({ matrix }: TokenValueCalculatorProps) {
                   Factor source: <strong style={{ color: "var(--text-secondary)" }}>{calculation.source}</strong>
                 </span>
                 <span>
-                  Status: <span style={{ color: "#16a34a", fontWeight: 700 }}>● VERIFIED LIVE FACTOR</span>
+                  Status: <span title={formatFreshnessDetail(calculation.dataComponents?.factor)} style={{ color: "#16a34a", fontWeight: 700 }}>● {formatFactorFreshness(calculation.dataComponents?.factor)}</span>
                 </span>
               </div>
             </div>

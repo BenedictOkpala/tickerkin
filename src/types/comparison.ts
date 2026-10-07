@@ -13,6 +13,20 @@ export type ReferencePriceStatus =
 
 export type DataFreshnessStatus = "LIVE" | "CACHED" | "STALE" | "UNAVAILABLE";
 
+/** Freshness of one input, independent of normalization availability. */
+export interface DataComponentFreshness {
+  readonly status: "LIVE" | "CACHED" | "SNAPSHOT" | "UNAVAILABLE";
+  readonly source?: string;
+  readonly sourceRef?: string;
+  readonly timestamp?: string;
+}
+
+export interface ComparisonDataComponents {
+  readonly factor: DataComponentFreshness;
+  readonly referencePrice: DataComponentFreshness;
+  readonly dexPrice: DataComponentFreshness;
+}
+
 export type DexLiquidityTier = "HIGH" | "MODERATE" | "LOW" | "UNAVAILABLE";
 
 export type FactorLabel =
@@ -50,7 +64,10 @@ export interface NormalizedRepresentationComparison {
   readonly dexPoolName: string | null;
   readonly referenceDeviationPercent: number | null;
   readonly dataTimestamp?: string;
+  /** Aggregate compatibility field: snapshot-based comparisons are never LIVE. */
   readonly dataFreshness: DataFreshnessStatus;
+  readonly dataComponents?: ComparisonDataComponents;
+  readonly factorProvenance?: EvidenceRecord;
   readonly unavailabilityReason?: string;
   readonly provenance: EvidenceRecord;
   readonly claims: readonly ClaimScopedEvidence[];
@@ -69,6 +86,7 @@ export interface UnderlyingEquityReference {
   readonly referenceSource: string;
   readonly referenceFeedId: string;
   readonly marketStatus: ReferencePriceStatus;
+  readonly freshness?: "SNAPSHOT" | "UNAVAILABLE";
   readonly marketSchedule: string;
   readonly timestamp?: string;
   readonly provenance: EvidenceRecord;
@@ -111,6 +129,7 @@ export interface TokenCalculationOutput {
   readonly mechanismAccretionUSD: number | null;
   readonly source: string;
   readonly freshness: DataFreshnessStatus;
+  readonly dataComponents?: ComparisonDataComponents;
   readonly unavailabilityReason?: string;
   readonly isValid: boolean;
   readonly validationError?: string;

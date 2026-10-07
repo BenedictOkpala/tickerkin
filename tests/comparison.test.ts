@@ -138,7 +138,7 @@ describe("Phase 7D: Comparison Domain & Normalization Engine", () => {
       expect(xstocks.accountingFactor).toBeCloseTo(1.001701, 5);
       expect(xstocks.shareEquivalentPerToken).toBeCloseTo(1.001701, 5);
       expect(xstocks.referenceValuePerTokenUSD).toBeCloseTo(1.0017011968 * 224.15, 2);
-      expect(xstocks.factorSource).toBe("BNB Smart Chain");
+      expect(xstocks.factorSource).toBe("BNB Smart Chain (eth_call multiplier())");
     } else {
       expect(xstocks.unavailabilityReason).toContain(
         "Verified BSC multiplier/conversion factor unavailable. TickerKin will not assume 1 token equals 1 share."

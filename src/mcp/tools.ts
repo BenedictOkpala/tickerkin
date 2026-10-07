@@ -1,3 +1,4 @@
+import { getFactorFreshness } from "@/lens/freshness";
 import { rwaLens } from "@/lens/engine";
 import {
   formatEconomicMechanism,
@@ -52,6 +53,7 @@ export interface FormattedAgentRepresentation {
     readonly confidence?: string;
     readonly matchBasis?: string;
     readonly lastUpdated?: string;
+    readonly freshness?: "LIVE" | "CACHED" | "SNAPSHOT" | "UNAVAILABLE";
     readonly message?: string;
   };
   readonly evidence: readonly ClaimScopedEvidence[];
@@ -239,6 +241,7 @@ function formatRepresentationForAgent(rep: TokenizedRepresentation, underlying: 
           confidence: rep.liveEnrichment.matchConfidence,
           matchBasis: rep.liveEnrichment.matchBasis,
           lastUpdated: rep.liveEnrichment.lastUpdateIso,
+          freshness: getFactorFreshness(rep.liveEnrichment),
         }
       : {
           status: "unavailable",
@@ -350,7 +353,7 @@ export async function handleCompareRepresentations({ ticker }: CompareRepresenta
       "dividendHandling" in r.economicModel ? r.economicModel.dividendHandling : undefined
     ),
     dynamicFactorStatus: r.liveEnrichment
-      ? `Live factor active (${r.liveEnrichment.rawMultiplier})`
+      ? `${getFactorFreshness(r.liveEnrichment) === "LIVE" ? "Live" : "Cached"} factor active (${r.liveEnrichment.rawMultiplier})`
       : "Static baseline (live feed unavailable)",
     evidenceSummary: `${r.provenance.sourceClass} · ${r.provenance.confidence} confidence`,
   }));

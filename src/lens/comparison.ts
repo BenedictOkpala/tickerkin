@@ -8,6 +8,7 @@ import type {
   FactorLabel,
 } from "@/types/comparison";
 import type { TokenizedRepresentation } from "@/types/token";
+import { getFactorFreshness } from "./freshness";
 import { lookupByTicker, lookupByTickerAsync } from "./engine";
 import { formatEconomicMechanism, getClaimScopedEvidence } from "./presentation";
 
@@ -84,6 +85,7 @@ export function getUnderlyingEquityReference(ticker: string): UnderlyingEquityRe
       referenceSource: "Pyth Network Hermes (Equity.US.NVDA/USD)",
       referenceFeedId: "b1073854ed24cbc755dc527418f52b7d271f6cc967bbf8d8129112b18860a593",
       marketStatus: "MARKET_CLOSED",
+      freshness: "SNAPSHOT",
       marketSchedule: "America/New_York;0930-1600,0930-1600,0930-1600,0930-1600,0930-1600,C,C",
       timestamp: "2026-09-29T16:00:00.000Z",
       provenance: {
@@ -134,7 +136,7 @@ export function normalizeRepresentationComparison(
       if (!Number.isNaN(parsed) && Number.isFinite(parsed) && parsed > 0) {
         accountingFactor = parsed;
         normalizationStatus = "AVAILABLE";
-        factorSource = "Binance Web3 RWA API (Type 1)";
+        factorSource = representation.liveEnrichment.provenance.sourceName;
       }
     }
     if (normalizationStatus === "UNAVAILABLE") {
@@ -148,10 +150,7 @@ export function normalizeRepresentationComparison(
       if (!Number.isNaN(parsed) && Number.isFinite(parsed) && parsed > 0) {
         accountingFactor = parsed;
         normalizationStatus = "AVAILABLE";
-        factorSource =
-          representation.liveEnrichment.matchBasis === "DIRECT_ON_CHAIN_BSC_ETH_CALL"
-            ? "BNB Smart Chain"
-            : "Binance Web3 RWA API (Type 3)";
+        factorSource = representation.liveEnrichment.provenance.sourceName;
       }
     }
     if (normalizationStatus === "UNAVAILABLE") {
@@ -165,10 +164,7 @@ export function normalizeRepresentationComparison(
       if (!Number.isNaN(parsed) && Number.isFinite(parsed) && parsed > 0) {
         accountingFactor = parsed;
         normalizationStatus = "AVAILABLE";
-        factorSource =
-          representation.liveEnrichment.matchBasis === "DIRECT_ON_CHAIN_BSC_ETH_CALL"
-            ? "BNB Smart Chain"
-            : "Binance Web3 RWA API (Type 2)";
+        factorSource = representation.liveEnrichment.provenance.sourceName;
       }
     }
     if (normalizationStatus === "UNAVAILABLE") {
@@ -232,8 +228,34 @@ export function normalizeRepresentationComparison(
     dexPoolAddress: dexPool,
     dexPoolName: dexName,
     referenceDeviationPercent,
-    dataTimestamp: representation.liveEnrichment?.lastUpdateIso ?? underlying.timestamp,
-    dataFreshness: normalizationStatus === "AVAILABLE" ? "LIVE" : "UNAVAILABLE",
+    // The aggregate calculation includes a stored underlying reference snapshot.
+    dataTimestamp: underlying.timestamp,
+    dataFreshness: normalizationStatus === "AVAILABLE" ? "CACHED" : "UNAVAILABLE",
+    factorProvenance: normalizationStatus === "AVAILABLE" ? representation.liveEnrichment?.provenance : undefined,
+    dataComponents: {
+      factor: normalizationStatus === "AVAILABLE" && representation.liveEnrichment
+        ? {
+            status: getFactorFreshness(representation.liveEnrichment),
+            source: representation.liveEnrichment.provenance.sourceName,
+            sourceRef: representation.liveEnrichment.provenance.sourceRef,
+            timestamp: representation.liveEnrichment.lastUpdateIso,
+          }
+        : { status: "UNAVAILABLE" },
+      referencePrice: {
+        status: underlying.referencePriceUSD === null ? "UNAVAILABLE" : "SNAPSHOT",
+        source: underlying.referenceSource,
+        sourceRef: underlying.provenance.sourceRef,
+        timestamp: underlying.timestamp,
+      },
+      dexPrice: dexPrice === null
+        ? { status: "UNAVAILABLE" }
+        : {
+            status: "CACHED",
+            source: "GeckoTerminal (" + dexName + " pool snapshot)",
+            sourceRef: dexPool ? "https://www.geckoterminal.com/bsc/pools/" + dexPool : undefined,
+            // The stored pool entries have no preserved capture timestamp.
+          },
+    },
     unavailabilityReason,
     provenance: representation.provenance,
     claims,
@@ -445,6 +467,7 @@ export function calculateTokenValue(
       mechanismAccretionUSD: null,
       source: rep.factorSource ?? "Verified Provider Registry",
       freshness: "UNAVAILABLE",
+      dataComponents: rep.dataComponents,
       unavailabilityReason:
         rep.unavailabilityReason ??
         "Live normalization factor unavailable in this session. TickerKin preserves the verified representation data without assuming a conversion factor.",
@@ -476,9 +499,10 @@ export function calculateTokenValue(
     underlyingReferencePriceUSD: refPrice,
     totalReferenceValueUSD,
     mechanismAccretionUSD,
-    source: rep.factorSource ?? "Binance Web3 RWA API",
-    freshness: rep.dataFreshness,
+    source: rep.factorSource ?? "Verified factor source unavailable",
+    freshness: "CACHED",
+    dataComponents: rep.dataComponents,
     isValid: true,
-    provenance: rep.provenance,
+    provenance: rep.factorProvenance ?? rep.provenance,
   };
 }

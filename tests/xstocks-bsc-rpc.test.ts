@@ -184,7 +184,7 @@ describe("Phase 8C: RWA Lens Engine & Comparison Normalization for NVDAx", () =>
     expect(normalized.accountingFactor).toBeCloseTo(1.001701196801074, 8);
     expect(normalized.shareEquivalentPerToken).toBeCloseTo(1.001701196801074, 8);
     expect(normalized.factorLabel).toBe("Multiplier");
-    expect(normalized.factorSource).toBe("BNB Smart Chain");
+    expect(normalized.factorSource).toBe("BNB Smart Chain (eth_call multiplier())");
     expect(normalized.referenceValuePerTokenUSD).toBeCloseTo(1.001701196801074 * 224.15, 2);
   });
 

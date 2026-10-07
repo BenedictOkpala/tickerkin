@@ -8,9 +8,10 @@ import {
 } from "@/providers/bstocks/bsc-rpc";
 import {
   buildEquityComparison,
-  buildEquityComparisonAsync,
   calculateTokenValue,
 } from "@/lens/comparison";
+import { RWALensEngine } from "@/lens/engine";
+import { BinanceRwaAdapter, BinanceRwaClient } from "@/providers/binance";
 import type { EquityComparisonMatrix } from "@/types/comparison";
 
 describe("BSC RPC Factor Adapter & Decoding", () => {
@@ -133,22 +134,39 @@ describe("BSC RPC Fetch & Fallback Behavior", () => {
 
 describe("NVDAB Live Normalization & Calculator Math", () => {
   it("normalizes NVDAB with live multiplier from BSC", async () => {
-    const matrix = await buildEquityComparisonAsync("NVDA");
+    const engine = new RWALensEngine(
+      undefined,
+      new BinanceRwaAdapter({ client: new BinanceRwaClient({
+        fetchFn: vi.fn(async () => new Response(JSON.stringify({ code: "000000", data: [] }))),
+      }) }),
+      async () => ({
+        rawMultiplier: "1.000778223752807865",
+        multiplierValue: 1.0007782237528078,
+        rawHex: "0x0000000000000000000000000000000000000000000000000de37a7dfdbb85b9",
+        rpcEndpoint: "https://bsc.publicnode.com",
+        fetchedAt: "2026-10-07T10:00:00.000Z",
+      }),
+      async () => null,
+    );
+    const lookup = await engine.lookupByTickerAsync("NVDA");
+    if (!lookup.success) throw new Error(lookup.message);
+    const matrix = buildEquityComparison("NVDA", lookup.representations);
     expect(matrix).not.toBeNull();
 
     const nvdab = matrix?.representations.find((r) => r.providerId === "bstocks");
     expect(nvdab).toBeDefined();
+    expect(nvdab?.normalizationStatus).toBe("AVAILABLE");
 
     if (nvdab?.normalizationStatus === "AVAILABLE") {
       expect(nvdab.accountingFactor).toBeGreaterThan(1.0);
-      expect(nvdab.factorSource).toBe("BNB Smart Chain");
+      expect(nvdab.factorSource).toBe("BNB Smart Chain (eth_call multiplier())");
       expect(nvdab.factorLabel).toBe("Multiplier");
       expect(nvdab.shareEquivalentPerToken).toBe(nvdab.accountingFactor);
       expect(nvdab.referenceValuePerTokenUSD).toBeCloseTo(
         (nvdab.accountingFactor ?? 1) * (matrix?.underlying.referencePriceUSD ?? 224.15),
         2
       );
-      expect(nvdab.dataFreshness).toBe("LIVE");
+      expect(nvdab.dataFreshness).toBe("CACHED");
     }
   }, 15000);
 
@@ -193,7 +211,7 @@ describe("NVDAB Live Normalization & Calculator Math", () => {
           dexPoolAddress: "0x8fb4243b553ac29ba088acf00b9b7da24bd6690c",
           dexPoolName: "PancakeSwap v3/v2",
           referenceDeviationPercent: -0.17797,
-          dataFreshness: "LIVE",
+          dataFreshness: "CACHED",
           provenance: { sourceClass: "ON_CHAIN", sourceName: "BNB Smart Chain", confidence: "HIGH" },
           claims: [],
         },
@@ -218,7 +236,7 @@ describe("NVDAB Live Normalization & Calculator Math", () => {
     expect(calc.totalReferenceValueUSD).toBeCloseTo(22432.44, 2);
     expect(calc.mechanismAccretionUSD).toBeCloseTo(17.44, 2);
     expect(calc.source).toBe("BNB Smart Chain");
-    expect(calc.freshness).toBe("LIVE");
+    expect(calc.freshness).toBe("CACHED");
   });
 
   it("calculates decimal token amounts (0.5 NVDAB)", () => {
@@ -261,7 +279,7 @@ describe("NVDAB Live Normalization & Calculator Math", () => {
           dexPoolAddress: null,
           dexPoolName: null,
           referenceDeviationPercent: null,
-          dataFreshness: "LIVE",
+          dataFreshness: "CACHED",
           provenance: { sourceClass: "ON_CHAIN", sourceName: "BSC", confidence: "HIGH" },
           claims: [],
         },

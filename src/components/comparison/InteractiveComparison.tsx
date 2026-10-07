@@ -1,5 +1,6 @@
 "use client";
 
+import { formatFactorFreshness, formatFreshnessDetail } from "@/lens/freshness";
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import type { EquityComparisonMatrix, NormalizedRepresentationComparison } from "@/types/comparison";
@@ -134,7 +135,7 @@ export function InteractiveComparison({ matrix: initialMatrix }: InteractiveComp
           </div>
 
           <div style={{ borderTop: "1px solid var(--border-subtle)", paddingTop: "0.75rem" }}>
-            <div style={{ fontSize: "0.72rem", color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.03em" }}>
+            <div title={`Reference snapshot as of ${underlying.timestamp ?? "unknown"}`} style={{ fontSize: "0.72rem", color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.03em" }}>
               Reference Price (Pyth Oracle Snapshot)
             </div>
             <div
@@ -300,7 +301,7 @@ export function InteractiveComparison({ matrix: initialMatrix }: InteractiveComp
                   Mechanism: <strong>{rep.economicMechanism}</strong>
                 </div>
                 <div style={{ fontSize: "0.72rem", fontWeight: 600, color: isAvailable ? "#16a34a" : "var(--text-muted)", marginTop: "0.15rem" }}>
-                  {isAvailable ? "Available · Live BNB Chain factor" : "Live normalization factor unavailable"}
+                  {isAvailable ? `Available · ${formatFactorFreshness(rep.dataComponents?.factor)}` : "Live normalization factor unavailable"}
                 </div>
               </div>
             );
@@ -413,6 +414,7 @@ export function InteractiveComparison({ matrix: initialMatrix }: InteractiveComp
                     return (
                       <td
                         key={`factor-${rep.contractAddress}`}
+                        title={formatFreshnessDetail(rep.dataComponents?.factor)}
                         className={`tk-matrix-td ${isColHighlighted ? "tk-matrix-col-highlighted" : ""}`}
                         onMouseEnter={() => setHighlightedRep(rep.contractAddress)}
                         onMouseLeave={() => setHighlightedRep(null)}
@@ -423,7 +425,7 @@ export function InteractiveComparison({ matrix: initialMatrix }: InteractiveComp
                               {rep.accountingFactor?.toFixed(6)}×
                             </span>
                             <span style={{ fontSize: "0.68rem", fontWeight: 600, color: "#16a34a", backgroundColor: "#f0fdf4", border: "1px solid #bbf7d0", padding: "0.1rem 0.35rem", borderRadius: "var(--radius-xs)" }}>
-                              Live BSC
+                              {formatFactorFreshness(rep.dataComponents?.factor)}
                             </span>
                           </div>
                         ) : (
@@ -488,12 +490,13 @@ export function InteractiveComparison({ matrix: initialMatrix }: InteractiveComp
 
                 {/* Row 5: Secondary DEX Spot (Cached) */}
                 <tr className="tk-matrix-row">
-                  <td className="tk-matrix-td tk-matrix-row-label">Secondary DEX Spot</td>
+                  <td className="tk-matrix-td tk-matrix-row-label">Secondary DEX Spot (Cached)</td>
                   {representations.map((rep) => {
                     const isColHighlighted = highlightedRep === rep.contractAddress;
                     return (
                       <td
                         key={`dex-${rep.contractAddress}`}
+                        title={formatFreshnessDetail(rep.dataComponents?.dexPrice)}
                         className={`tk-matrix-td ${isColHighlighted ? "tk-matrix-col-highlighted" : ""}`}
                         onMouseEnter={() => setHighlightedRep(rep.contractAddress)}
                         onMouseLeave={() => setHighlightedRep(null)}
@@ -612,6 +615,7 @@ export function InteractiveComparison({ matrix: initialMatrix }: InteractiveComp
       {/* 6. DEEP REPRESENTATION DETAIL DRAWER */}
       <RepresentationDetailDrawer
         representation={selectedRepForDrawer}
+        comparison={representations.find((rep) => rep.contractAddress === selectedRepForDrawer?.contractAddress)}
         underlying={underlyingForDrawer}
         onClose={() => setSelectedRepForDrawer(null)}
       />

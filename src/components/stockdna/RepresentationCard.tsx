@@ -1,5 +1,6 @@
 "use client";
 
+import { getFactorFreshness } from "@/lens/freshness";
 import { useState } from "react";
 import type { TokenizedRepresentation } from "@/types/token";
 import type { EvidenceRecord } from "@/types/provenance";
@@ -290,7 +291,7 @@ export function RepresentationCard({
               fontWeight: 600,
               cursor: "pointer",
             }}
-            title="Inspect live data provenance"
+            title={representation.liveEnrichment.provenance.sourceName}
           >
             <span
               style={{
@@ -301,9 +302,7 @@ export function RepresentationCard({
               }}
             />
             <span>
-              {representation.liveEnrichment.matchBasis === "DIRECT_ON_CHAIN_BSC_ETH_CALL"
-                ? "Live factor · BNB Chain"
-                : "Binance Web3 Live"}
+              {getFactorFreshness(representation.liveEnrichment) === "LIVE" ? "Live factor" : "Cached factor"}
             </span>
           </button>
         ) : (
